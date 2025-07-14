@@ -35,4 +35,36 @@ export class GameOfLife {
     }
     return <div class="flex flex-col leading-5">{lines}</div>;
   }
+
+  next() {
+    const newGrid = new Uint8Array(this.width * this.height);
+
+    const get = (x: number, y: number): number => {
+      if (x < 0 || y < 0 || x >= this.width || y >= this.height) return 0;
+      return this.grid[y * this.width + x];
+    };
+
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const i = y * this.width + x;
+
+        let liveNeighbors = 0;
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            if (dx === 0 && dy === 0) continue;
+            liveNeighbors += get(x + dx, y + dy);
+          }
+        }
+
+        const isAlive = this.grid[i] === 1;
+        if (isAlive) {
+          newGrid[i] = liveNeighbors === 2 || liveNeighbors === 3 ? 1 : 0;
+        } else {
+          newGrid[i] = liveNeighbors === 3 ? 1 : 0;
+        }
+      }
+    }
+
+    this.grid = newGrid;
+  }
 }
