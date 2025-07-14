@@ -38,6 +38,29 @@ export class GameOfLife {
     return <div class="flex flex-col leading-5">{lines}</div>;
   }
 
+  getCanvas(): HTMLCanvasElement {
+    const cellSize = 10; // px per cell
+    const canvas = document.createElement("canvas");
+
+    canvas.width = this.width * cellSize;
+    canvas.height = this.height * cellSize;
+
+    const ctx = canvas.getContext("2d")!;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const index = y * this.width + x;
+        const isAlive = this.grid[index] === 1;
+
+        ctx.fillStyle = isAlive ? "#000000" : "#ffffff";
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+      }
+    }
+
+    return canvas;
+  }
+
   /* eslint-disable prefer-const */
   next() {
     this.nextGrid.fill(0);
@@ -77,6 +100,8 @@ export class GameOfLife {
   /* eslint-enable prefer-const */
 
   benchmark(iterations = 1000) {
+    console.log("benchmarking");
+
     const start = performance.now();
     for (let i = 0; i < iterations; i++) {
       this.next();
@@ -84,8 +109,24 @@ export class GameOfLife {
     const end = performance.now();
     const durationInSeconds = (end - start) / 1000;
     const generationsPerSecond = iterations / durationInSeconds;
-    return {
-      generationsPerSecond,
-    };
+
+    console.log(`Generations per second: ${generationsPerSecond}`);
+  }
+
+  benchmarkCanvasRender(iterations: number = 100) {
+    console.log("benchmarking canvas render");
+    const start = performance.now();
+
+    let canvas: HTMLCanvasElement;
+
+    for (let i = 0; i < iterations; i++) {
+      canvas = this.getCanvas(); // draw full canvas
+    }
+
+    const end = performance.now();
+    const durationInSeconds = (end - start) / 1000;
+    const drawingsPerSecond = iterations / durationInSeconds;
+
+    console.log(`Drawings per second: ${drawingsPerSecond}`);
   }
 }
