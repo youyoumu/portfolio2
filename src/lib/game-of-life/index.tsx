@@ -8,6 +8,7 @@ export class GameOfLife {
   nextGrid: Uint8Array<ArrayBuffer>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  gap = 2;
 
   constructor({ width, height }: { width: number; height: number }) {
     this.width = width;
@@ -58,13 +59,22 @@ export class GameOfLife {
     ctx.fillRect(0, 0, width * cellSize, height * cellSize);
 
     ctx.fillStyle = "#000000";
+    const circleSize = cellSize - this.gap; // Actual circle size
+    const radius = circleSize / 2;
 
     for (let y = 0; y < height; y++) {
       const rowOffset = y * width;
       for (let x = 0; x < width; x++) {
         const i = rowOffset + x;
         if (this.grid[i]) {
-          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          const cx = x * cellSize + radius;
+          const cy = y * cellSize + radius;
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         }
       }
     }
@@ -75,13 +85,24 @@ export class GameOfLife {
   drawDiff(): void {
     const { width, height, cellSize, ctx, grid, nextGrid } = this;
 
+    const circleSize = cellSize - this.gap; // Actual circle size
+    const radius = circleSize / 2;
+
     for (let y = 0; y < height; y++) {
       const rowOffset = y * width;
       for (let x = 0; x < width; x++) {
         const i = rowOffset + x;
         if (grid[i] !== nextGrid[i]) {
           ctx.fillStyle = grid[i] === 1 ? "#000000" : "#ffffff";
-          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+
+          const cx = x * cellSize + radius;
+          const cy = y * cellSize + radius;
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         }
       }
     }
@@ -123,8 +144,8 @@ export class GameOfLife {
 
     [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
 
-    this.drawDiff();
-    // this.updateCanvas();
+    // this.drawDiff();
+    this.updateCanvas();
   }
   /* eslint-enable prefer-const */
 
