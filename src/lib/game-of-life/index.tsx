@@ -4,27 +4,42 @@ export class GameOfLife {
   width: number;
   cellSize: number;
   height: number;
+  gap: number;
+  pulseStart: number;
+  pulseDuration: number;
   grid: Uint8Array<ArrayBuffer>;
   nextGrid: Uint8Array<ArrayBuffer>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  gap = 2;
 
-  constructor({ width, height }: { width: number; height: number }) {
+  constructor({
+    width,
+    height,
+    cellSize,
+    gap,
+  }: {
+    width: number;
+    height: number;
+    cellSize: number;
+    gap: number;
+  }) {
     this.width = width;
     this.height = height;
+    this.cellSize = cellSize;
+    this.gap = gap;
+    this.pulseStart = 0;
+    this.pulseDuration = 300;
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
     this.randomize();
 
     // Prepare canvas once
-    this.cellSize = 10;
     this.canvas = document.createElement("canvas");
     this.canvas.width = width * this.cellSize;
     this.canvas.height = height * this.cellSize;
     this.ctx = this.canvas.getContext("2d")!;
 
-    this.updateCanvas();
+    this.startPulseRender();
   }
 
   randomize() {
@@ -53,14 +68,20 @@ export class GameOfLife {
   }
 
   updateCanvas(): HTMLCanvasElement {
-    const { ctx, cellSize, width, height } = this;
+    const { ctx, cellSize, width, height, pulseDuration, pulseStart } = this;
+
+    const now = performance.now();
+    const elapsed = now - pulseStart;
+    const t = Math.min(elapsed / pulseDuration, 1); // normalize: 0 → 1
+    const pulseAmount = 0.5;
+    const pulseScale = 1 + (1 - t) * (1 - t) * pulseAmount;
 
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width * cellSize, height * cellSize);
 
     ctx.fillStyle = "#000000";
-    const circleSize = cellSize - this.gap; // Actual circle size
-    const radius = circleSize / 2;
+    const baseRadius = (cellSize - 1) / 2;
+    const radius = baseRadius * pulseScale;
 
     for (let y = 0; y < height; y++) {
       const rowOffset = y * width;
@@ -108,6 +129,18 @@ export class GameOfLife {
     }
   }
 
+  startPulseRender() {
+    const render = () => {
+      this.updateCanvas();
+      // this.drawDiff();
+      if (performance.now() - this.pulseStart < this.pulseDuration) {
+        requestAnimationFrame(render);
+      }
+    };
+
+    requestAnimationFrame(render);
+  }
+
   /* eslint-disable prefer-const */
   next() {
     this.nextGrid.fill(0);
@@ -144,8 +177,9 @@ export class GameOfLife {
 
     [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
 
-    // this.drawDiff();
-    this.updateCanvas();
+    this.pulseStart = performance.now();
+
+    this.startPulseRender();
   }
   /* eslint-enable prefer-const */
 

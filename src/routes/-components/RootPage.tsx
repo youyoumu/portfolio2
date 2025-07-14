@@ -1,7 +1,12 @@
 import { GameOfLife } from "#/lib/game-of-life";
 
 export default function RootPage() {
-  const gameOfLife = new GameOfLife({ height: 100, width: 100 });
+  const gameOfLife = new GameOfLife({
+    height: 30,
+    width: 30,
+    cellSize: 30,
+    gap: 6,
+  });
 
   return (
     <div>
