@@ -1,8 +1,9 @@
-import { RouterProvider, createRouter } from "@tanstack/solid-router";
+import "./styles.css";
+
+import { createRouter,RouterProvider } from "@tanstack/solid-router";
 import { render } from "solid-js/web";
 
 import { routeTree } from "./routeTree.gen";
-import "./styles.css";
 
 const router = createRouter({
   routeTree,
