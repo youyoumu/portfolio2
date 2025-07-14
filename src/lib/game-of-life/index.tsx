@@ -2,19 +2,32 @@ import type { SolidNode } from "@tanstack/solid-router";
 
 export class GameOfLife {
   width: number;
+  cellSize: number;
   height: number;
   grid: Uint8Array<ArrayBuffer>;
   nextGrid: Uint8Array<ArrayBuffer>;
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
 
   constructor({ width, height }: { width: number; height: number }) {
     this.width = width;
     this.height = height;
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
+    this.randomize();
+
+    // Prepare canvas once
+    this.cellSize = 10;
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = width * this.cellSize;
+    this.canvas.height = height * this.cellSize;
+    this.ctx = this.canvas.getContext("2d")!;
+
+    this.updateCanvas();
   }
 
   randomize() {
-    this.grid = this.grid.map(() => (Math.random() > 0.5 ? 1 : 0));
+    this.grid = this.grid.map(() => (Math.random() > 0.8 ? 1 : 0));
   }
 
   getCell(x: number, y: number): number {
@@ -38,27 +51,40 @@ export class GameOfLife {
     return <div class="flex flex-col leading-5">{lines}</div>;
   }
 
-  getCanvas(): HTMLCanvasElement {
-    const cellSize = 10; // px per cell
-    const canvas = document.createElement("canvas");
+  updateCanvas(): HTMLCanvasElement {
+    const { ctx, cellSize, width, height } = this;
 
-    canvas.width = this.width * cellSize;
-    canvas.height = this.height * cellSize;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width * cellSize, height * cellSize);
 
-    const ctx = canvas.getContext("2d")!;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#000000";
 
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        const index = y * this.width + x;
-        const isAlive = this.grid[index] === 1;
-
-        ctx.fillStyle = isAlive ? "#000000" : "#ffffff";
-        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+    for (let y = 0; y < height; y++) {
+      const rowOffset = y * width;
+      for (let x = 0; x < width; x++) {
+        const i = rowOffset + x;
+        if (this.grid[i]) {
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
       }
     }
 
-    return canvas;
+    return this.canvas;
+  }
+
+  drawDiff(): void {
+    const { width, height, cellSize, ctx, grid, nextGrid } = this;
+
+    for (let y = 0; y < height; y++) {
+      const rowOffset = y * width;
+      for (let x = 0; x < width; x++) {
+        const i = rowOffset + x;
+        if (grid[i] !== nextGrid[i]) {
+          ctx.fillStyle = grid[i] === 1 ? "#000000" : "#ffffff";
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+      }
+    }
   }
 
   /* eslint-disable prefer-const */
@@ -95,7 +121,10 @@ export class GameOfLife {
       }
     }
 
-    [this.nextGrid, this.grid] = [this.grid, this.nextGrid];
+    [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
+
+    this.drawDiff();
+    // this.updateCanvas();
   }
   /* eslint-enable prefer-const */
 
@@ -117,10 +146,8 @@ export class GameOfLife {
     console.log("benchmarking canvas render");
     const start = performance.now();
 
-    let canvas: HTMLCanvasElement;
-
     for (let i = 0; i < iterations; i++) {
-      canvas = this.getCanvas(); // draw full canvas
+      this.updateCanvas();
     }
 
     const end = performance.now();
