@@ -9,7 +9,14 @@ export class Visualizer {
   canvas: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
 
-  constructor() {
+  onEnergyUpdate: (energy: number) => void;
+
+  constructor({
+    onEnergyUpdate,
+  }: {
+    onEnergyUpdate: (energy: number) => void;
+  }) {
+    this.onEnergyUpdate = onEnergyUpdate;
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = 8192;
@@ -57,7 +64,8 @@ export class Visualizer {
     for (let i = 0; i < lowFreqBins; i++) {
       energy += this.freqData[i];
     }
-    energy /= lowFreqBins;
+    energy = energy / lowFreqBins / 255;
+    this.onEnergyUpdate(energy);
 
     for (let i = 0; i < lowFreqBins; i++) {
       const value = this.freqData[i];

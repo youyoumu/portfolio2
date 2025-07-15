@@ -4,7 +4,6 @@ export class GameOfLife {
   width: number;
   cellSize: number;
   height: number;
-  gap: number;
   pulseStart: number;
   pulseDuration: number;
   pulseSize: number;
@@ -17,17 +16,14 @@ export class GameOfLife {
     width,
     height,
     cellSize,
-    gap,
   }: {
     width: number;
     height: number;
     cellSize: number;
-    gap: number;
   }) {
     this.width = width;
     this.height = height;
     this.cellSize = cellSize;
-    this.gap = gap;
 
     this.pulseStart = 0;
     this.pulseDuration = 400;
@@ -43,7 +39,8 @@ export class GameOfLife {
     this.canvas.height = height * this.cellSize;
     this.ctx = this.canvas.getContext("2d")!;
 
-    this.startPulseRender();
+    this.next();
+    this.updateCanvas({ pulse: false });
   }
 
   randomize() {
@@ -71,7 +68,13 @@ export class GameOfLife {
     return <div class="flex flex-col leading-5">{lines}</div>;
   }
 
-  updateCanvas(): HTMLCanvasElement {
+  updateCanvas({
+    pulse = false,
+    energy = 0,
+  }: {
+    pulse?: boolean;
+    energy?: number;
+  } = {}): HTMLCanvasElement {
     const {
       ctx,
       cellSize,
@@ -84,15 +87,15 @@ export class GameOfLife {
 
     const now = performance.now();
     const elapsed = now - pulseStart;
-    const t = Math.min(elapsed / pulseDuration, 1); // normalize: 0 → 1
+    const t = Math.min(elapsed / pulseDuration, 1);
     const easeScale = 1 + easeOutExpo(t) * pulseSize;
 
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width * cellSize, height * cellSize);
 
     ctx.fillStyle = "#000000";
-    const baseRadius = (cellSize - 1) / 2;
-    const radius = baseRadius * easeScale * 0.8;
+    const baseRadius = (cellSize * (0.8 + energy / 2) - 1) / 2;
+    const radius = pulse ? baseRadius * easeScale * 0.8 : baseRadius;
 
     for (let y = 0; y < height; y++) {
       const rowOffset = y * width;
@@ -105,8 +108,6 @@ export class GameOfLife {
           ctx.beginPath();
           ctx.arc(cx, cy, radius, 0, Math.PI * 2);
           ctx.fill();
-
-          // ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         }
       }
     }
@@ -114,36 +115,9 @@ export class GameOfLife {
     return this.canvas;
   }
 
-  drawDiff(): void {
-    const { width, height, cellSize, ctx, grid, nextGrid } = this;
-
-    const circleSize = cellSize - this.gap; // Actual circle size
-    const radius = circleSize / 2;
-
-    for (let y = 0; y < height; y++) {
-      const rowOffset = y * width;
-      for (let x = 0; x < width; x++) {
-        const i = rowOffset + x;
-        if (grid[i] !== nextGrid[i]) {
-          ctx.fillStyle = grid[i] === 1 ? "#000000" : "#ffffff";
-
-          const cx = x * cellSize + radius;
-          const cy = y * cellSize + radius;
-
-          ctx.beginPath();
-          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-          ctx.fill();
-
-          // ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-        }
-      }
-    }
-  }
-
   startPulseRender() {
     const render = () => {
-      this.updateCanvas();
-      // this.drawDiff();
+      this.updateCanvas({ pulse: true });
       if (performance.now() - this.pulseStart < this.pulseDuration) {
         requestAnimationFrame(render);
       }
@@ -192,8 +166,6 @@ export class GameOfLife {
     }
 
     [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
-
-    this.pulse();
   }
   /* eslint-enable prefer-const */
 

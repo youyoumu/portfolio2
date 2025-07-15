@@ -3,13 +3,16 @@ import { Visualizer } from "#/lib/visualizer";
 
 export default function RootPage() {
   const gameOfLife = new GameOfLife({
-    height: 10,
-    width: 10,
+    height: 50,
+    width: 50,
     cellSize: 50,
-    gap: 6,
   });
 
-  const visualizer = new Visualizer();
+  const visualizer = new Visualizer({
+    onEnergyUpdate: (energy) => {
+      gameOfLife.updateCanvas({ energy });
+    },
+  });
 
   return (
     <div>
