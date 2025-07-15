@@ -1,4 +1,5 @@
 import { GameOfLife } from "#/lib/game-of-life";
+import { Visualizer } from "#/lib/visualizer";
 
 export default function RootPage() {
   const gameOfLife = new GameOfLife({
@@ -7,6 +8,8 @@ export default function RootPage() {
     cellSize: 50,
     gap: 6,
   });
+
+  const visualizer = new Visualizer();
 
   return (
     <div>
@@ -58,7 +61,17 @@ export default function RootPage() {
         toggle
       </button>
 
+      <button
+        class="btn btn-primary"
+        onClick={() => {
+          visualizer.loadAndPlay("/music/doodle.mp3");
+        }}
+      >
+        play music
+      </button>
+
       <div>{gameOfLife.canvas}</div>
+      <div>{visualizer.canvas}</div>
     </div>
   );
 }
