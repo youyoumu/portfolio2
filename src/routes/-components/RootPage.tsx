@@ -2,15 +2,16 @@ import { GameOfLife } from "#/lib/game-of-life";
 
 export default function RootPage() {
   const gameOfLife = new GameOfLife({
-    height: 30,
-    width: 30,
-    cellSize: 30,
+    height: 10,
+    width: 10,
+    cellSize: 50,
     gap: 6,
   });
 
   return (
     <div>
       <button
+        class="btn btn-primary"
         onClick={() => {
           gameOfLife.next();
         }}
@@ -19,6 +20,26 @@ export default function RootPage() {
       </button>
 
       <button
+        class="btn btn-primary"
+        onClick={() => {
+          gameOfLife.randomize();
+          gameOfLife.next();
+        }}
+      >
+        refresh
+      </button>
+
+      <button
+        class="btn btn-primary"
+        onClick={() => {
+          gameOfLife.pulse();
+        }}
+      >
+        pulse
+      </button>
+
+      <button
+        class="btn btn-primary"
         onClick={() => {
           gameOfLife.benchmark(1000);
         }}
@@ -26,13 +47,16 @@ export default function RootPage() {
         benchmark
       </button>
       <button
+        class="btn btn-primary"
         onClick={() => {
           gameOfLife.benchmarkCanvasRender(1000);
         }}
       >
         benchmark canvas
       </button>
-      <button onClick={() => {}}>toggle</button>
+      <button class="btn btn-primary" onClick={() => {}}>
+        toggle
+      </button>
 
       <div>{gameOfLife.canvas}</div>
     </div>

@@ -7,6 +7,7 @@ export class GameOfLife {
   gap: number;
   pulseStart: number;
   pulseDuration: number;
+  pulseSize: number;
   grid: Uint8Array<ArrayBuffer>;
   nextGrid: Uint8Array<ArrayBuffer>;
   canvas: HTMLCanvasElement;
@@ -27,8 +28,11 @@ export class GameOfLife {
     this.height = height;
     this.cellSize = cellSize;
     this.gap = gap;
+
     this.pulseStart = 0;
-    this.pulseDuration = 300;
+    this.pulseDuration = 400;
+    this.pulseSize = 0.15;
+
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
     this.randomize();
@@ -68,28 +72,35 @@ export class GameOfLife {
   }
 
   updateCanvas(): HTMLCanvasElement {
-    const { ctx, cellSize, width, height, pulseDuration, pulseStart } = this;
+    const {
+      ctx,
+      cellSize,
+      width,
+      height,
+      pulseDuration,
+      pulseStart,
+      pulseSize,
+    } = this;
 
     const now = performance.now();
     const elapsed = now - pulseStart;
     const t = Math.min(elapsed / pulseDuration, 1); // normalize: 0 → 1
-    const pulseAmount = 0.5;
-    const pulseScale = 1 + (1 - t) * (1 - t) * pulseAmount;
+    const easeScale = 1 + easeOutExpo(t) * pulseSize;
 
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width * cellSize, height * cellSize);
 
     ctx.fillStyle = "#000000";
     const baseRadius = (cellSize - 1) / 2;
-    const radius = baseRadius * pulseScale;
+    const radius = baseRadius * easeScale * 0.8;
 
     for (let y = 0; y < height; y++) {
       const rowOffset = y * width;
       for (let x = 0; x < width; x++) {
         const i = rowOffset + x;
         if (this.grid[i]) {
-          const cx = x * cellSize + radius;
-          const cy = y * cellSize + radius;
+          const cx = x * cellSize + cellSize / 2;
+          const cy = y * cellSize + cellSize / 2;
 
           ctx.beginPath();
           ctx.arc(cx, cy, radius, 0, Math.PI * 2);
@@ -141,6 +152,11 @@ export class GameOfLife {
     requestAnimationFrame(render);
   }
 
+  pulse() {
+    this.pulseStart = performance.now();
+    this.startPulseRender();
+  }
+
   /* eslint-disable prefer-const */
   next() {
     this.nextGrid.fill(0);
@@ -177,9 +193,7 @@ export class GameOfLife {
 
     [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
 
-    this.pulseStart = performance.now();
-
-    this.startPulseRender();
+    this.pulse();
   }
   /* eslint-enable prefer-const */
 
@@ -211,4 +225,8 @@ export class GameOfLife {
 
     console.log(`Drawings per second: ${drawingsPerSecond}`);
   }
+}
+
+function easeOutExpo(x: number): number {
+  return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
 }
