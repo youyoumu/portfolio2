@@ -131,6 +131,13 @@ export class GameOfLife {
     this.startPulseRender();
   }
 
+  run(delay: number) {
+    setInterval(() => {
+      this.next();
+      this.updateCanvas();
+    }, delay);
+  }
+
   /* eslint-disable prefer-const */
   next() {
     this.nextGrid.fill(0);

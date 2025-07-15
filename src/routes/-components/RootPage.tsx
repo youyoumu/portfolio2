@@ -3,8 +3,8 @@ import { Visualizer } from "#/lib/visualizer";
 
 export default function RootPage() {
   const gameOfLife = new GameOfLife({
-    height: 50,
-    width: 50,
+    height: 10,
+    width: 10,
     cellSize: 50,
   });
 
@@ -12,6 +12,7 @@ export default function RootPage() {
     onEnergyUpdate: (energy) => {
       gameOfLife.updateCanvas({ energy });
     },
+    bpm: 160,
   });
 
   return (
@@ -68,6 +69,7 @@ export default function RootPage() {
         class="btn btn-primary"
         onClick={() => {
           visualizer.loadAndPlay("/music/doodle.mp3");
+          gameOfLife.run(60000 / 160);
         }}
       >
         play music

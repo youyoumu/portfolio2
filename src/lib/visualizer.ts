@@ -5,6 +5,7 @@ export class Visualizer {
   freqData: Uint8Array;
   gainNode: GainNode;
   playing = false;
+  bpm: number;
 
   canvas: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
@@ -13,9 +14,12 @@ export class Visualizer {
 
   constructor({
     onEnergyUpdate,
+    bpm,
   }: {
     onEnergyUpdate: (energy: number) => void;
+    bpm: number;
   }) {
+    this.bpm = bpm;
     this.onEnergyUpdate = onEnergyUpdate;
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();
@@ -25,7 +29,7 @@ export class Visualizer {
 
     this.canvas = document.createElement("canvas");
     this.canvas.width = 1000;
-    this.canvas.height = 500;
+    this.canvas.height = 300;
     this.canvasContext = this.canvas.getContext("2d")!;
   }
 
