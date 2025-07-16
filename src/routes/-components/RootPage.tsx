@@ -1,21 +1,39 @@
+import { createSignal, onMount } from "solid-js";
+
 import { GameOfLife } from "#/lib/gameOfLife";
 import { Visualizer } from "#/lib/visualizer";
 
 export default function RootPage() {
-  const gameOfLife = new GameOfLife({
-    height: 10,
-    width: 10,
-    cellSize: 50,
-  });
+  let gameOfLife: GameOfLife;
+  let visualizer: Visualizer;
+  const [gameOfLifeCanvas, setGameOfLifeCanvas] =
+    createSignal<HTMLCanvasElement>();
+  const [visualizerCanvas, setVisualizerCanvas] =
+    createSignal<HTMLCanvasElement>();
 
-  const visualizer = new Visualizer({
-    onEnergyUpdate: (energy) => {
-      gameOfLife.updateCanvas(undefined, energy);
-    },
-    onBeat: () => {
-      gameOfLife.next();
-    },
-    music: "doodle",
+  onMount(() => {
+    const cellSize = 30;
+    const width = Math.floor(window.innerWidth / cellSize);
+    const height = Math.floor(window.innerHeight / cellSize);
+
+    gameOfLife = new GameOfLife({
+      width,
+      height,
+      cellSize,
+    });
+
+    visualizer = new Visualizer({
+      onEnergyUpdate: (energy) => {
+        gameOfLife.updateCanvas(undefined, energy);
+      },
+      onBeat: () => {
+        gameOfLife.next();
+      },
+      music: "doodle",
+    });
+
+    setGameOfLifeCanvas(gameOfLife.canvas);
+    setVisualizerCanvas(visualizer.canvas);
   });
 
   return (
@@ -75,17 +93,13 @@ export default function RootPage() {
           setInterval(() => {
             gameOfLife.tick();
           }, 10);
-
-          setInterval(() => {
-            console.log(gameOfLife.offsetX, gameOfLife.offsetY);
-          }, 500);
         }}
       >
         play music
       </button>
 
-      <div>{gameOfLife.canvas}</div>
-      <div>{visualizer.canvas}</div>
+      <div>{gameOfLifeCanvas()}</div>
+      <div>{visualizerCanvas()}</div>
     </div>
   );
 }
