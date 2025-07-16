@@ -203,6 +203,21 @@ export class GameOfLife {
   }
   /* eslint-enable prefer-const */
 
+  resize(width: number, height: number, cellSize: number) {
+    this.width = width;
+    this.height = height;
+    this.cellSize = cellSize;
+
+    this.canvas.width = width * cellSize;
+    this.canvas.height = height * cellSize;
+
+    this.grid = new Uint8Array(width * height);
+    this.nextGrid = new Uint8Array(width * height);
+    this.randomize();
+
+    this.updateCanvas();
+  }
+
   benchmark(iterations = 1000) {
     console.log("benchmarking");
 

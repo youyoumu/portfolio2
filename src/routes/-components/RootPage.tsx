@@ -1,3 +1,4 @@
+import { debounce } from "@solid-primitives/scheduled";
 import { createSignal, onMount } from "solid-js";
 
 import { GameOfLife } from "#/lib/gameOfLife";
@@ -11,11 +12,15 @@ export default function RootPage() {
   const [visualizerCanvas, setVisualizerCanvas] =
     createSignal<HTMLCanvasElement>();
 
-  onMount(() => {
+  function getGameOfLifeSize() {
     const cellSize = 30;
     const width = Math.floor(window.innerWidth / cellSize);
     const height = Math.floor(window.innerHeight / cellSize);
+    return { cellSize, width, height };
+  }
 
+  onMount(() => {
+    const { cellSize, width, height } = getGameOfLifeSize();
     gameOfLife = new GameOfLife({
       width,
       height,
@@ -34,6 +39,15 @@ export default function RootPage() {
 
     setGameOfLifeCanvas(gameOfLife.canvas);
     setVisualizerCanvas(visualizer.canvas);
+
+    const resize = debounce(() => {
+      const { cellSize, width, height } = getGameOfLifeSize();
+      gameOfLife.resize(width, height, cellSize);
+    }, 250);
+
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
   });
 
   return (
