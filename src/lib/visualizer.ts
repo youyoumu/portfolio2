@@ -9,7 +9,7 @@ const musicList = {
 export class Visualizer {
   audioContext: AudioContext;
   analyser: AnalyserNode;
-  source: AudioBufferSourceNode;
+  source: AudioBufferSourceNode | null = null;
   freqData: Uint8Array;
   gainNode: GainNode;
   lowFreqBins = 64;
@@ -19,6 +19,7 @@ export class Visualizer {
 
   canvas: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
+  rafId: number = 0;
   colors = Array.from(
     { length: this.lowFreqBins },
     (_, i) => `hsl(${(i / this.lowFreqBins) * 360}, 100%, 50%)`,
@@ -29,6 +30,7 @@ export class Visualizer {
   src: string;
   bpm: number;
   firstBeatOffest: number;
+  loop = true;
 
   constructor({
     onEnergyUpdate,
@@ -46,7 +48,6 @@ export class Visualizer {
     this.firstBeatOffest = musicList[music].firstBeatOffest;
 
     this.audioContext = new AudioContext();
-    this.source = this.audioContext.createBufferSource();
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = 8192;
     this.freqData = new Uint8Array(this.analyser.frequencyBinCount);
@@ -60,16 +61,18 @@ export class Visualizer {
 
   async play() {
     if (this.playing) {
-      this.source?.stop();
-      this.playing = false;
+      this.loop = false;
+      this.stop();
       return;
     }
+    this.loop = true;
+
     const response = await fetch(this.src);
     const arrayBuffer = await response.arrayBuffer();
     const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
 
+    this.source = this.audioContext.createBufferSource();
     this.source.buffer = audioBuffer;
-    this.source.loop = true;
 
     this.source.connect(this.gainNode);
     this.gainNode.connect(this.analyser);
@@ -78,7 +81,24 @@ export class Visualizer {
 
     this.source.start();
     this.playing = true;
+    this.source.onended = () => {
+      this.stop();
+      if (this.loop) this.play();
+    };
+
     this.listen();
+  }
+
+  stop() {
+    if (this.source) {
+      this.source.stop();
+      this.source.disconnect();
+      this.source = null;
+    }
+
+    this.lastBeat = -1;
+    this.playing = false;
+    cancelAnimationFrame(this.rafId);
   }
 
   private listen = () => {
@@ -119,6 +139,6 @@ export class Visualizer {
       );
     }
 
-    requestAnimationFrame(this.listen);
+    this.rafId = requestAnimationFrame(this.listen);
   };
 }
