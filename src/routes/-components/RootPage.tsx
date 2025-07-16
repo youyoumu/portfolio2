@@ -3,9 +3,9 @@ import { Visualizer } from "#/lib/visualizer";
 
 export default function RootPage() {
   const gameOfLife = new GameOfLife({
-    height: 50,
-    width: 50,
-    cellSize: 30,
+    height: 10,
+    width: 10,
+    cellSize: 50,
   });
 
   const visualizer = new Visualizer({
@@ -72,6 +72,13 @@ export default function RootPage() {
         class="btn btn-primary"
         onClick={() => {
           visualizer.play();
+          setInterval(() => {
+            gameOfLife.tick();
+          }, 10);
+
+          setInterval(() => {
+            console.log(gameOfLife.offsetX, gameOfLife.offsetY);
+          }, 500);
         }}
       >
         play music

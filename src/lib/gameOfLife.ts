@@ -9,6 +9,8 @@ export class GameOfLife {
   nextGrid: Uint8Array<ArrayBuffer>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  offsetX = 0;
+  offsetY = 0;
 
   constructor({
     width,
@@ -45,6 +47,11 @@ export class GameOfLife {
     this.grid = this.grid.map(() => (Math.random() > 0.8 ? 1 : 0));
   }
 
+  tick() {
+    this.offsetX = (this.offsetX + 1) % this.canvas.width;
+    this.offsetY = (this.offsetY + 1) % this.canvas.height;
+  }
+
   updateCanvas(pulse = false, energy = 0): HTMLCanvasElement {
     const {
       ctx,
@@ -54,6 +61,8 @@ export class GameOfLife {
       pulseDuration,
       pulseStart,
       pulseSize,
+      offsetX,
+      offsetY,
     } = this;
 
     const easeScale = pulse
@@ -73,15 +82,22 @@ export class GameOfLife {
 
     const twoPi = Math.PI * 2;
 
+    const pixelOffsetX = offsetX % cellSize;
+    const pixelOffsetY = offsetY % cellSize;
+
+    const cellOffsetX = Math.floor(offsetX / cellSize);
+    const cellOffsetY = Math.floor(offsetY / cellSize);
+
     for (let y = 0; y < height; y++) {
-      const rowOffset = y * width;
-      const cy = y * cellSize + cellSize / 2;
+      const gy = (cellOffsetY + y) % height;
+      const cy = y * cellSize - pixelOffsetY + cellSize / 2;
 
       for (let x = 0; x < width; x++) {
-        const i = rowOffset + x;
-        if (this.grid[i]) {
-          const cx = x * cellSize + cellSize / 2;
+        const gx = (cellOffsetX + x) % width;
+        const cx = x * cellSize - pixelOffsetX + cellSize / 2;
+        const i = gy * width + gx;
 
+        if (this.grid[i]) {
           ctx.beginPath();
           ctx.arc(cx, cy, radius, 0, twoPi);
           ctx.fill();
