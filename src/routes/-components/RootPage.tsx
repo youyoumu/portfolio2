@@ -1,4 +1,4 @@
-import { GameOfLife } from "#/lib/game-of-life";
+import { GameOfLife } from "#/lib/gameOfLife";
 import { Visualizer } from "#/lib/visualizer";
 
 export default function RootPage() {
