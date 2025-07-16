@@ -111,6 +111,7 @@ export class GameOfLife {
   /* eslint-disable prefer-const */
   next() {
     this.nextGrid.fill(0);
+    let aliveCount = 0;
 
     for (let y = 0; y < this.height; y++) {
       let rowOffset = y * this.width,
@@ -135,9 +136,49 @@ export class GameOfLife {
         }
 
         if (this.grid[i] === 1) {
+          aliveCount++;
           this.nextGrid[i] = liveNeighbors === 2 || liveNeighbors === 3 ? 1 : 0;
         } else {
           this.nextGrid[i] = liveNeighbors === 3 ? 1 : 0;
+        }
+      }
+    }
+
+    const density = aliveCount / this.grid.length;
+    const lowDensity = density < 0.1;
+
+    if (lowDensity) {
+      for (let y = 0; y < this.height; y++) {
+        let rowOffset = y * this.width,
+          topRow = (y - 1) * this.width,
+          midRow = y * this.width,
+          bottomRow = (y + 1) * this.width;
+        for (let x = 0; x < this.width; x++) {
+          let i = rowOffset + x,
+            liveNeighbors = 0;
+
+          if (y > 0) {
+            if (x > 0) liveNeighbors += this.grid[topRow + x - 1];
+            liveNeighbors += this.grid[topRow + x];
+            if (x + 1 < this.width) liveNeighbors += this.grid[topRow + x + 1];
+          }
+          if (x > 0) liveNeighbors += this.grid[midRow + x - 1];
+          if (x + 1 < this.width) liveNeighbors += this.grid[midRow + x + 1];
+          if (y + 1 < this.height) {
+            if (x > 0) liveNeighbors += this.grid[bottomRow + x - 1];
+            liveNeighbors += this.grid[bottomRow + x];
+            if (x + 1 < this.width)
+              liveNeighbors += this.grid[bottomRow + x + 1];
+          }
+
+          if (this.grid[i] === 1) {
+            aliveCount++;
+            this.nextGrid[i] =
+              liveNeighbors === 2 || liveNeighbors === 3 ? 1 : 0;
+          } else {
+            this.nextGrid[i] =
+              liveNeighbors === 3 || liveNeighbors === 2 ? 1 : 0;
+          }
         }
       }
     }

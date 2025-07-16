@@ -3,9 +3,9 @@ import { Visualizer } from "#/lib/visualizer";
 
 export default function RootPage() {
   const gameOfLife = new GameOfLife({
-    height: 10,
-    width: 10,
-    cellSize: 50,
+    height: 50,
+    width: 50,
+    cellSize: 30,
   });
 
   const visualizer = new Visualizer({
