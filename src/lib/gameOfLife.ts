@@ -38,28 +38,14 @@ export class GameOfLife {
     this.ctx = this.canvas.getContext("2d")!;
 
     this.next();
-    this.updateCanvas({ pulse: false });
+    this.updateCanvas();
   }
 
   randomize() {
     this.grid = this.grid.map(() => (Math.random() > 0.8 ? 1 : 0));
   }
 
-  getCell(x: number, y: number): number {
-    return this.grid[y * this.width + x];
-  }
-
-  setCell(x: number, y: number, value: number): void {
-    this.grid[y * this.width + x] = value;
-  }
-
-  updateCanvas({
-    pulse = false,
-    energy = 0,
-  }: {
-    pulse?: boolean;
-    energy?: number;
-  } = {}): HTMLCanvasElement {
+  updateCanvas(pulse = false, energy = 0): HTMLCanvasElement {
     const {
       ctx,
       cellSize,
@@ -70,28 +56,34 @@ export class GameOfLife {
       pulseSize,
     } = this;
 
-    const now = performance.now();
-    const elapsed = now - pulseStart;
-    const t = Math.min(elapsed / pulseDuration, 1);
-    const easeScale = 1 + easeOutExpo(t) * pulseSize;
+    const easeScale = pulse
+      ? 1 +
+        easeOutExpo(
+          Math.min(performance.now() - pulseStart / pulseDuration, 1),
+        ) *
+          pulseSize
+      : 1;
 
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, width * cellSize, height * cellSize);
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     ctx.fillStyle = "#000000";
-    const baseRadius = (cellSize * (0.8 + energy / 2) - 1) / 2;
-    const radius = pulse ? baseRadius * easeScale * 0.8 : baseRadius;
+    const baseRadius = (cellSize * (0.8 + energy / 1.75) - 1) / 2;
+    const radius = baseRadius * easeScale;
+
+    const twoPi = Math.PI * 2;
 
     for (let y = 0; y < height; y++) {
       const rowOffset = y * width;
+      const cy = y * cellSize + cellSize / 2;
+
       for (let x = 0; x < width; x++) {
         const i = rowOffset + x;
         if (this.grid[i]) {
           const cx = x * cellSize + cellSize / 2;
-          const cy = y * cellSize + cellSize / 2;
 
           ctx.beginPath();
-          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+          ctx.arc(cx, cy, radius, 0, twoPi);
           ctx.fill();
         }
       }
@@ -102,7 +94,7 @@ export class GameOfLife {
 
   startPulseRender() {
     const render = () => {
-      this.updateCanvas({ pulse: true });
+      this.updateCanvas(true);
       if (performance.now() - this.pulseStart < this.pulseDuration) {
         requestAnimationFrame(render);
       }
@@ -114,13 +106,6 @@ export class GameOfLife {
   pulse() {
     this.pulseStart = performance.now();
     this.startPulseRender();
-  }
-
-  run(delay: number) {
-    setInterval(() => {
-      this.next();
-      this.updateCanvas();
-    }, delay);
   }
 
   /* eslint-disable prefer-const */

@@ -10,7 +10,7 @@ export default function RootPage() {
 
   const visualizer = new Visualizer({
     onEnergyUpdate: (energy) => {
-      gameOfLife.updateCanvas({ energy });
+      gameOfLife.updateCanvas(undefined, energy);
     },
     onBeat: () => {
       gameOfLife.next();
