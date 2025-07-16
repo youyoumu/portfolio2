@@ -4,23 +4,34 @@ export class Visualizer {
   source: AudioBufferSourceNode | undefined;
   freqData: Uint8Array;
   gainNode: GainNode;
+
   playing = false;
   bpm: number;
+  firstBeatOffest: number; // in seconds
+  lastBeat = -1;
 
   canvas: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
 
   onEnergyUpdate: (energy: number) => void;
+  onBeat: () => void;
 
   constructor({
     onEnergyUpdate,
+    onBeat,
     bpm,
+    firstBeatOffest,
   }: {
     onEnergyUpdate: (energy: number) => void;
+    onBeat: () => void;
     bpm: number;
+    firstBeatOffest: number;
   }) {
     this.bpm = bpm;
     this.onEnergyUpdate = onEnergyUpdate;
+    this.onBeat = onBeat;
+    this.firstBeatOffest = firstBeatOffest;
+
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = 8192;
@@ -58,10 +69,20 @@ export class Visualizer {
   }
 
   private listen = () => {
-    const { width, height } = this.canvas;
+    const beat = Math.floor(
+      (this.audioContext.currentTime - this.firstBeatOffest) * (this.bpm / 60),
+    );
+
+    if (
+      this.audioContext.currentTime > this.firstBeatOffest &&
+      beat !== this.lastBeat
+    ) {
+      this.lastBeat = beat;
+      this.onBeat();
+    }
 
     this.analyser.getByteFrequencyData(this.freqData);
-    this.canvasContext.clearRect(0, 0, width, height);
+    this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     const lowFreqBins = 64;
     let energy = 0;
@@ -73,15 +94,15 @@ export class Visualizer {
 
     for (let i = 0; i < lowFreqBins; i++) {
       const value = this.freqData[i];
-      const barHeight = (value / 255) * height;
+      const barHeight = (value / 255) * this.canvas.height;
 
-      const barWidth = width / lowFreqBins;
+      const barWidth = this.canvas.width / lowFreqBins;
       const x = i * barWidth;
 
       this.canvasContext.fillStyle = `hsl(${(i / lowFreqBins) * 360}, 100%, 50%)`;
       this.canvasContext.fillRect(
         x,
-        height - barHeight,
+        this.canvas.height - barHeight,
         barWidth - 2,
         barHeight,
       );

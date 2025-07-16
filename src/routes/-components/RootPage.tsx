@@ -12,7 +12,11 @@ export default function RootPage() {
     onEnergyUpdate: (energy) => {
       gameOfLife.updateCanvas({ energy });
     },
+    onBeat: () => {
+      gameOfLife.next();
+    },
     bpm: 160,
+    firstBeatOffest: 0.5,
   });
 
   return (
@@ -69,7 +73,6 @@ export default function RootPage() {
         class="btn btn-primary"
         onClick={() => {
           visualizer.loadAndPlay("/music/doodle.mp3");
-          gameOfLife.run(60000 / 160);
         }}
       >
         play music
