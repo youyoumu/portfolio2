@@ -15,8 +15,7 @@ export default function RootPage() {
     onBeat: () => {
       gameOfLife.next();
     },
-    bpm: 160,
-    firstBeatOffest: 0.5,
+    music: "doodle",
   });
 
   return (
@@ -72,7 +71,7 @@ export default function RootPage() {
       <button
         class="btn btn-primary"
         onClick={() => {
-          visualizer.loadAndPlay("/music/doodle.mp3");
+          visualizer.play();
         }}
       >
         play music
