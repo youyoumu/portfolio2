@@ -33,13 +33,12 @@ export default function RootPage() {
       },
       onBeat: () => {
         gameOfLife.next();
-        setTimeout(() => {
-          gameOfLife.next();
-        }, 25);
-
-        setTimeout(() => {
-          gameOfLife.next();
-        }, 50);
+      },
+      onStart: () => {
+        gameOfLife.startMoving();
+      },
+      onStop: () => {
+        gameOfLife.startMoving();
       },
       music: "doodle",
     });
@@ -111,7 +110,6 @@ export default function RootPage() {
         class="btn btn-primary"
         onClick={() => {
           visualizer.play();
-          gameOfLife.startMoving();
         }}
       >
         play music

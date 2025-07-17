@@ -27,6 +27,8 @@ export class Visualizer {
 
   onEnergyUpdate: (energy: number) => void;
   onBeat: () => void;
+  onStart: () => void;
+  onStop: () => void;
   src: string;
   bpm: number;
   firstBeatOffest: number;
@@ -35,14 +37,21 @@ export class Visualizer {
   constructor({
     onEnergyUpdate,
     onBeat,
+    onStart,
+    onStop,
     music,
   }: {
     onEnergyUpdate: (energy: number) => void;
     onBeat: () => void;
+    onStart: () => void;
+    onStop: () => void;
     music: keyof typeof musicList;
   }) {
     this.onEnergyUpdate = onEnergyUpdate;
     this.onBeat = onBeat;
+    this.onStart = onStart;
+    this.onStop = onStop;
+
     this.src = musicList[music].src;
     this.bpm = musicList[music].bpm;
     this.firstBeatOffest = musicList[music].firstBeatOffest;
@@ -81,8 +90,9 @@ export class Visualizer {
 
     this.source.start();
     this.playing = true;
+    this.onStart();
     this.source.onended = () => {
-      this.stop();
+      if (this.playing) this.stop();
       if (this.loop) this.play();
     };
 
@@ -98,6 +108,7 @@ export class Visualizer {
 
     this.lastBeat = -1;
     this.playing = false;
+    this.onStop();
     cancelAnimationFrame(this.rafId);
   }
 

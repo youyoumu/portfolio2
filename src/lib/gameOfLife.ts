@@ -52,6 +52,7 @@ export class GameOfLife {
     if (this.#movingId) {
       clearInterval(this.#movingId);
       this.#movingId = null;
+      return;
     }
     this.#movingId = setInterval(() => {
       this.moveCircle();
