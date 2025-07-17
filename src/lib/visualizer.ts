@@ -16,6 +16,7 @@ export class Visualizer {
 
   playing = false;
   startTime = 0;
+  pauseTime = 0;
   lastBeat = -1;
 
   canvas: HTMLCanvasElement;
@@ -33,7 +34,7 @@ export class Visualizer {
   src: string;
   bpm: number;
   firstBeatOffest: number;
-  loop = true;
+  playOnStop = true;
 
   constructor({
     onEnergyUpdate,
@@ -69,13 +70,9 @@ export class Visualizer {
     this.canvasContext = this.canvas.getContext("2d")!;
   }
 
-  async play() {
-    if (this.playing) {
-      this.loop = false;
-      this.stop();
-      return;
-    }
-    this.loop = true;
+  async play(resume = false) {
+    if (this.playing) return;
+    this.playOnStop = true;
 
     const response = await fetch(this.src);
     const arrayBuffer = await response.arrayBuffer();
@@ -89,26 +86,38 @@ export class Visualizer {
     this.analyser.connect(this.audioContext.destination);
     this.gainNode.gain.value = 0.1;
 
-    this.startTime = this.audioContext.currentTime;
-    this.source.start();
+    const offset = resume ? this.pauseTime : 0;
+    this.startTime = this.audioContext.currentTime - offset;
+    this.source.start(0, offset);
     this.playing = true;
     this.onStart();
     this.source.onended = () => {
-      if (this.playing) this.stop();
-      if (this.loop) this.play();
+      if (this.playing) this.stop(undefined, true);
+      if (this.playOnStop) this.play();
     };
 
     this.listen();
   }
 
-  stop() {
+  stop(pause = false, fromOnEnded = false) {
     if (this.source) {
       this.source.stop();
       this.source.disconnect();
       this.source = null;
     }
 
-    this.lastBeat = -1;
+    if (!fromOnEnded) {
+      this.playOnStop = false;
+    }
+
+    if (pause) {
+      this.playOnStop = false;
+      this.pauseTime = this.audioContext.currentTime - this.startTime;
+    } else {
+      this.pauseTime = 0;
+      this.lastBeat = -1;
+    }
+
     this.playing = false;
     this.onStop();
     cancelAnimationFrame(this.rafId);

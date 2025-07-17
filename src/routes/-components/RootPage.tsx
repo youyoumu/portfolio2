@@ -109,10 +109,27 @@ export default function RootPage() {
       <button
         class="btn btn-primary"
         onClick={() => {
-          visualizer.play();
+          if (visualizer.playing) {
+            visualizer.stop();
+          } else {
+            visualizer.play();
+          }
         }}
       >
-        play music
+        play/stop music
+      </button>
+
+      <button
+        class="btn btn-primary"
+        onClick={() => {
+          if (visualizer.playing) {
+            visualizer.stop(true);
+          } else {
+            visualizer.play(true);
+          }
+        }}
+      >
+        resume/pause music
       </button>
 
       <div>{gameOfLifeCanvas()}</div>
