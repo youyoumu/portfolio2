@@ -26,6 +26,7 @@ export default function RootPage() {
       height,
       cellSize,
     });
+    gameOfLife.startMovingSlow();
 
     visualizer = new Visualizer({
       onEnergyUpdate: (energy) => {
@@ -38,7 +39,7 @@ export default function RootPage() {
         gameOfLife.startMoving();
       },
       onStop: () => {
-        gameOfLife.startMoving();
+        gameOfLife.startMovingSlow();
       },
       music: "doodle",
     });

@@ -49,6 +49,8 @@ export class GameOfLife {
 
   #movingId: ReturnType<typeof setInterval> | null = null;
   startMoving() {
+    if (this.#movingSlowId && this.#movingSlowRafId) this.startMovingSlow();
+
     if (this.#movingId) {
       clearInterval(this.#movingId);
       this.#movingId = null;
@@ -59,9 +61,31 @@ export class GameOfLife {
     }, 10);
   }
 
+  #movingSlowId: ReturnType<typeof setInterval> | null = null;
+  #movingSlowRafId: number = 0;
+  startMovingSlow() {
+    if (this.#movingId) this.startMoving();
+    if (this.#movingSlowId && this.#movingSlowRafId) {
+      clearInterval(this.#movingSlowId);
+      this.#movingSlowId = null;
+      cancelAnimationFrame(this.#movingSlowRafId);
+      this.#movingSlowRafId = 0;
+      return;
+    }
+    this.#movingSlowId = setInterval(() => {
+      this.moveCircle(0.2);
+    }, 10);
+
+    const movingSlow = () => {
+      this.updateCanvas();
+      this.#movingSlowRafId = requestAnimationFrame(movingSlow);
+    };
+    this.#movingSlowRafId = requestAnimationFrame(movingSlow);
+  }
+
   #tickTime = 0;
-  moveCircle() {
-    this.#tickTime += 0.001; // Controls speed of the circular motion
+  moveCircle(speed = 1) {
+    this.#tickTime += 0.001 * speed; // Controls speed of the circular motion
 
     const radius = this.canvas.width; // Adjust this based on how big the scroll radius should be
     const centerX = this.canvas.width / 2;
