@@ -111,9 +111,7 @@ export default function RootPage() {
         class="btn btn-primary"
         onClick={() => {
           visualizer.play();
-          setInterval(() => {
-            gameOfLife.tick();
-          }, 10);
+          gameOfLife.startMoving();
         }}
       >
         play music

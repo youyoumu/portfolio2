@@ -11,7 +11,6 @@ export class GameOfLife {
   ctx: CanvasRenderingContext2D;
   offsetX = 0;
   offsetY = 0;
-  density = 1;
 
   constructor({
     width,
@@ -48,7 +47,36 @@ export class GameOfLife {
     this.grid = this.grid.map(() => (Math.random() > 0.8 ? 1 : 0));
   }
 
-  tick() {
+  #movingId: ReturnType<typeof setInterval> | null = null;
+  startMoving() {
+    if (this.#movingId) {
+      clearInterval(this.#movingId);
+      this.#movingId = null;
+    }
+    this.#movingId = setInterval(() => {
+      this.moveCircle();
+    }, 10);
+  }
+
+  #tickTime = 0;
+  moveCircle() {
+    this.#tickTime += 0.001; // Controls speed of the circular motion
+
+    const radius = this.canvas.width; // Adjust this based on how big the scroll radius should be
+    const centerX = this.canvas.width / 2;
+    const centerY = this.canvas.height / 2;
+
+    this.offsetX = wrap(
+      centerX + radius * Math.cos(this.#tickTime),
+      this.canvas.width,
+    );
+    this.offsetY = wrap(
+      centerY + radius * Math.sin(this.#tickTime),
+      this.canvas.height,
+    );
+  }
+
+  moveDiagonal() {
     this.offsetX = (this.offsetX + 1) % this.canvas.width;
     this.offsetY = (this.offsetY + 1) % this.canvas.height;
   }
@@ -69,7 +97,7 @@ export class GameOfLife {
     const easeScale = pulse
       ? 1 +
         easeOutExpo(
-          Math.min(performance.now() - pulseStart / pulseDuration, 1),
+          Math.min((performance.now() - pulseStart) / pulseDuration, 1),
         ) *
           pulseSize
       : 1;
@@ -126,6 +154,7 @@ export class GameOfLife {
   }
 
   /* eslint-disable prefer-const */
+  #density = 1;
   next() {
     this.nextGrid.fill(0);
     let aliveCount = 0;
@@ -158,14 +187,14 @@ export class GameOfLife {
         } else {
           this.nextGrid[i] =
             liveNeighbors === 3 ||
-            (this.density < 0.1 ? liveNeighbors === 4 : false)
+            (this.#density < 0.1 ? liveNeighbors === 4 : false)
               ? 1
               : 0;
         }
       }
     }
 
-    this.density = aliveCount / this.grid.length;
+    this.#density = aliveCount / this.grid.length;
 
     [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
   }
@@ -182,6 +211,7 @@ export class GameOfLife {
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
     this.randomize();
+    this.next();
 
     this.updateCanvas();
   }
@@ -218,4 +248,8 @@ export class GameOfLife {
 
 function easeOutExpo(x: number): number {
   return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+}
+
+function wrap(value: number, max: number): number {
+  return ((value % max) + max) % max;
 }
