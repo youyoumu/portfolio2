@@ -15,6 +15,7 @@ export class Visualizer {
   lowFreqBins = 64;
 
   playing = false;
+  startTime = 0;
   lastBeat = -1;
 
   canvas: HTMLCanvasElement;
@@ -88,6 +89,7 @@ export class Visualizer {
     this.analyser.connect(this.audioContext.destination);
     this.gainNode.gain.value = 0.1;
 
+    this.startTime = this.audioContext.currentTime;
     this.source.start();
     this.playing = true;
     this.onStart();
@@ -115,7 +117,7 @@ export class Visualizer {
   private listen = () => {
     const { lowFreqBins, bpm, firstBeatOffest } = this;
     const { width, height } = this.canvas;
-    const currentTime = this.audioContext.currentTime;
+    const currentTime = this.audioContext.currentTime - this.startTime;
 
     const beat = Math.floor((currentTime - firstBeatOffest) * (bpm / 60));
 
