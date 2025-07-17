@@ -26,8 +26,8 @@ export class GameOfLife {
     this.cellSize = cellSize;
 
     this.pulseStart = 0;
-    this.pulseDuration = 400;
-    this.pulseSize = 0.15;
+    this.pulseDuration = 300;
+    this.pulseSize = 0.25;
 
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
@@ -97,7 +97,7 @@ export class GameOfLife {
 
     const easeScale = pulse
       ? 1 +
-        easeOutExpo(
+        easeOutQuartMirror(
           Math.min((performance.now() - pulseStart) / pulseDuration, 1),
         ) *
           pulseSize
@@ -247,8 +247,12 @@ export class GameOfLife {
   }
 }
 
-function easeOutExpo(x: number): number {
-  return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+function easeOutQuartMirror(x: number): number {
+  if (x < 0.5) {
+    return Math.pow(2 * x, 4); // mirrored rise
+  } else {
+    return Math.pow(2 * (1 - x), 4); // mirrored fall
+  }
 }
 
 function wrap(value: number, max: number): number {

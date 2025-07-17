@@ -81,6 +81,9 @@ export default function RootPage() {
         class="btn btn-primary"
         onClick={() => {
           gameOfLife.pulse();
+          setTimeout(() => {
+            gameOfLife.next();
+          }, gameOfLife.pulseDuration / 2);
         }}
       >
         pulse
