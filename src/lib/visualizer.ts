@@ -34,7 +34,7 @@ export class Visualizer {
   src: string;
   bpm: number;
   firstBeatOffest: number;
-  playOnStop = true;
+  loop = true;
 
   constructor({
     onEnergyUpdate,
@@ -70,48 +70,54 @@ export class Visualizer {
     this.canvasContext = this.canvas.getContext("2d")!;
   }
 
-  async play(resume = false) {
-    if (this.playing) return;
-    this.playOnStop = true;
-
-    const response = await fetch(this.src);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-
-    this.source = this.audioContext.createBufferSource();
-    this.source.buffer = audioBuffer;
-
-    this.source.connect(this.gainNode);
-    this.gainNode.connect(this.analyser);
-    this.analyser.connect(this.audioContext.destination);
-    this.gainNode.gain.value = 0.1;
-
-    const offset = resume ? this.pauseTime : 0;
-    this.startTime = this.audioContext.currentTime - offset;
-    this.source.start(0, offset);
-    this.playing = true;
-    this.onStart();
-    this.source.onended = () => {
-      if (this.playing) this.stop(undefined, true);
-      if (this.playOnStop) this.play();
-    };
-
-    this.listen();
+  #playLock = false;
+  play(resume = false) {
+    if (this.playing || this.#playLock) return;
+    this.#playLock = true;
+    this._play(resume);
   }
 
-  stop(pause = false, fromOnEnded = false) {
+  async _play(resume: boolean) {
+    try {
+      const response = await fetch(this.src);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+
+      this.source = this.audioContext.createBufferSource();
+      this.source.buffer = audioBuffer;
+
+      this.source.connect(this.gainNode);
+      this.gainNode.connect(this.analyser);
+      this.analyser.connect(this.audioContext.destination);
+      this.gainNode.gain.value = 0.1;
+
+      const offset = resume ? this.pauseTime : 0;
+      this.startTime = this.audioContext.currentTime - offset;
+      this.source.start(0, offset);
+      this.playing = true;
+      this.onStart();
+      this.source.onended = () => {
+        this.stop(undefined);
+        if (this.loop) this.play();
+      };
+
+      this.listen();
+    } catch (e) {
+      console.log("DEBUG[316]: e=", e);
+    } finally {
+      this.#playLock = false;
+    }
+  }
+
+  stop(pause = false) {
     if (this.source) {
+      this.source.onended = null;
       this.source.stop();
       this.source.disconnect();
       this.source = null;
     }
 
-    if (!fromOnEnded) {
-      this.playOnStop = false;
-    }
-
     if (pause) {
-      this.playOnStop = false;
       this.pauseTime = this.audioContext.currentTime - this.startTime;
     } else {
       this.pauseTime = 0;
@@ -119,8 +125,8 @@ export class Visualizer {
     }
 
     this.playing = false;
-    this.onStop();
     cancelAnimationFrame(this.rafId);
+    this.onStop();
   }
 
   private listen = () => {

@@ -102,9 +102,6 @@ export default function RootPage() {
       >
         benchmark canvas
       </button>
-      <button class="btn btn-primary" onClick={() => {}}>
-        toggle
-      </button>
 
       <button
         class="btn btn-primary"
