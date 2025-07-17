@@ -33,6 +33,13 @@ export default function RootPage() {
       },
       onBeat: () => {
         gameOfLife.next();
+        setTimeout(() => {
+          gameOfLife.next();
+        }, 25);
+
+        setTimeout(() => {
+          gameOfLife.next();
+        }, 50);
       },
       music: "doodle",
     });
