@@ -40,7 +40,7 @@ export class Visualizer {
 
   onEnergyUpdate: (energy: number) => void;
   onBeat: () => void;
-  onStart: (resume: boolean) => void;
+  onStart: (resume: boolean, bpm: number) => void;
   onStop: (pause: boolean) => void;
   music: keyof typeof musicList;
   loop = true;
@@ -54,7 +54,7 @@ export class Visualizer {
   }: {
     onEnergyUpdate: (energy: number) => void;
     onBeat: () => void;
-    onStart: (resume: boolean) => void;
+    onStart: (resume: boolean, bpm: number) => void;
     onStop: (pause: boolean) => void;
     music: keyof typeof musicList;
   }) {
@@ -107,7 +107,7 @@ export class Visualizer {
       this.startTime = this.audioContext.currentTime - offset;
       this.source.start(0, offset);
       this.playing = true;
-      this.onStart(resume);
+      this.onStart(resume, musicList[this.music].bpm);
       this.source.onended = () => {
         this.stop(undefined, this.loop);
       };

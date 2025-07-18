@@ -50,7 +50,7 @@ export class GameOfLife {
   }
 
   #movingId: ReturnType<typeof setInterval> | null = null;
-  startMoving({ stop = false }: { stop?: boolean } = {}) {
+  startMoving({ stop = false, bpm }: { stop?: boolean; bpm?: number } = {}) {
     if (this.#movingSlowId && this.#movingSlowRafId) this.startMovingSlow();
     if (this.#movingId) {
       clearInterval(this.#movingId);
@@ -59,7 +59,7 @@ export class GameOfLife {
     }
     if (stop) return;
     this.#movingId = setInterval(() => {
-      this.moveCircle();
+      this.moveCircle((bpm ?? 100) / 100);
     }, 10);
   }
 

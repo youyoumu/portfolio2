@@ -48,7 +48,7 @@ export default function RootPage() {
       onBeat: () => {
         gameOfLife.next();
       },
-      onStart: (resume) => {
+      onStart: (resume, bpm) => {
         if (visualizer.music === "bad-apple-ft-sekai") {
           gameOfLife.startMovingSlow({ stop: true });
           gameOfLife.offsetX = 0;
@@ -58,7 +58,7 @@ export default function RootPage() {
           }
           badApple.play();
         } else {
-          gameOfLife.startMoving();
+          gameOfLife.startMoving({ bpm });
         }
       },
       onStop: (pause) => {
@@ -66,6 +66,7 @@ export default function RootPage() {
           badApple.stop(pause);
         } else {
           gameOfLife.startMoving({ stop: true });
+          gameOfLife.startMovingSlow();
         }
       },
       music: "bad-apple",
