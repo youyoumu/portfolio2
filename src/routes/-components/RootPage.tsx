@@ -41,7 +41,7 @@ export default function RootPage() {
       onStop: () => {
         gameOfLife.startMovingSlow();
       },
-      music: "doodle",
+      music: "bad-apple-ft-sekai",
     });
 
     setGameOfLifeCanvas(gameOfLife.canvas);

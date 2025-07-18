@@ -4,6 +4,16 @@ const musicList = {
     bpm: 160,
     firstBeatOffest: 0.5,
   },
+  "bad-apple": {
+    src: "/music/bad-apple.mp3",
+    bpm: 138,
+    firstBeatOffest: 1.275,
+  },
+  "bad-apple-ft-sekai": {
+    src: "/music/bad-apple-ft-sekai.mp3",
+    bpm: 138,
+    firstBeatOffest: 1,
+  },
 };
 
 export class Visualizer {
