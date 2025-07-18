@@ -32,7 +32,7 @@ export default function RootPage() {
       height,
       cellSize,
     });
-    // gameOfLife.startMovingSlow();
+    gameOfLife.startMovingSlow();
 
     badApple = new BadApple({
       src: "/bad-apple-pixel-frame.bin.gz",
@@ -48,12 +48,25 @@ export default function RootPage() {
       onBeat: () => {
         gameOfLife.next();
       },
-      onStart: () => {
-        // gameOfLife.startMoving();
-        badApple.play();
+      onStart: (resume) => {
+        if (visualizer.music === "bad-apple-ft-sekai") {
+          gameOfLife.startMovingSlow({ stop: true });
+          gameOfLife.offsetX = 0;
+          gameOfLife.offsetY = 0;
+          if (!resume) {
+            badApple.frameIndex = 0;
+          }
+          badApple.play();
+        } else {
+          gameOfLife.startMoving();
+        }
       },
-      onStop: () => {
-        // gameOfLife.startMovingSlow();
+      onStop: (pause) => {
+        if (visualizer.music === "bad-apple-ft-sekai") {
+          badApple.stop(pause);
+        } else {
+          gameOfLife.startMoving({ stop: true });
+        }
       },
       music: "bad-apple-ft-sekai",
     });

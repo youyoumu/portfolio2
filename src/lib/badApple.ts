@@ -36,11 +36,12 @@ export class BadApple {
     return bits;
   }
 
-  injectFrameIntoGame(frameIndex: number) {
+  injectFrameIntoGame(_frameIndex?: number) {
     if (!this.data.length) {
       this.load();
       return;
     }
+    const frameIndex = _frameIndex ?? this.frameIndex;
     const _game = this.game;
     const packed = this.getFrame(frameIndex % this.frameCount);
     const unpacked = this.unpackFrame(packed);
@@ -80,16 +81,23 @@ export class BadApple {
 
   play(fps: number = 30) {
     if (!this.data.length) return;
-    this.stop();
     this.intervalId = setInterval(() => {
-      this.injectFrameIntoGame(this.frameIndex++);
+      this.frameIndex++;
+      if (this.frameIndex >= this.frameCount) {
+        this.stop();
+        return;
+      }
+      this.injectFrameIntoGame();
     }, 1000 / fps);
   }
 
-  stop(): void {
+  stop(pause = false): void {
     if (this.intervalId !== null) {
       clearInterval(this.intervalId);
       this.intervalId = null;
+    }
+    if (!pause) {
+      this.frameIndex = 0;
     }
   }
 }

@@ -40,8 +40,9 @@ export class Visualizer {
 
   onEnergyUpdate: (energy: number) => void;
   onBeat: () => void;
-  onStart: () => void;
-  onStop: () => void;
+  onStart: (resume: boolean) => void;
+  onStop: (pause: boolean) => void;
+  music: keyof typeof musicList;
   src: string;
   bpm: number;
   firstBeatOffest: number;
@@ -56,8 +57,8 @@ export class Visualizer {
   }: {
     onEnergyUpdate: (energy: number) => void;
     onBeat: () => void;
-    onStart: () => void;
-    onStop: () => void;
+    onStart: (resume: boolean) => void;
+    onStop: (pause: boolean) => void;
     music: keyof typeof musicList;
   }) {
     this.onEnergyUpdate = onEnergyUpdate;
@@ -65,6 +66,7 @@ export class Visualizer {
     this.onStart = onStart;
     this.onStop = onStop;
 
+    this.music = music;
     this.src = musicList[music].src;
     this.bpm = musicList[music].bpm;
     this.firstBeatOffest = musicList[music].firstBeatOffest;
@@ -85,6 +87,7 @@ export class Visualizer {
   play(resume = false) {
     if (this.playing || this.#playLock) return;
     this.#playLock = true;
+
     this._play(resume);
   }
 
@@ -110,10 +113,9 @@ export class Visualizer {
       this.startTime = this.audioContext.currentTime - offset;
       this.source.start(0, offset);
       this.playing = true;
-      this.onStart();
+      this.onStart(resume);
       this.source.onended = () => {
-        this.stop(undefined);
-        if (this.loop) this.play();
+        this.stop(undefined, this.loop);
       };
 
       this.listen();
@@ -125,7 +127,7 @@ export class Visualizer {
   }
 
   #stopLock = false;
-  stop(pause = false) {
+  stop(pause = false, loop = false) {
     if (this.#stopLock) return;
     this.#stopLock = true;
     const now = this.audioContext.currentTime;
@@ -148,10 +150,11 @@ export class Visualizer {
         this.lastBeat = -1;
       }
 
-      this.playing = false;
       cancelAnimationFrame(this.rafId);
-      this.onStop();
+      this.playing = false;
+      this.onStop(pause);
       this.#stopLock = false;
+      if (loop) this.play();
     }, this.fadeDuration * 1000);
   }
 

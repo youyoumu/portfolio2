@@ -50,14 +50,14 @@ export class GameOfLife {
   }
 
   #movingId: ReturnType<typeof setInterval> | null = null;
-  startMoving() {
+  startMoving({ stop = false }: { stop?: boolean } = {}) {
     if (this.#movingSlowId && this.#movingSlowRafId) this.startMovingSlow();
-
     if (this.#movingId) {
       clearInterval(this.#movingId);
       this.#movingId = null;
       return;
     }
+    if (stop) return;
     this.#movingId = setInterval(() => {
       this.moveCircle();
     }, 10);
@@ -66,7 +66,7 @@ export class GameOfLife {
   #movingSlowId: ReturnType<typeof setInterval> | null = null;
   #movingSlowRafId: number = 0;
   #randomPulseId: ReturnType<typeof setTimeout> | null = null;
-  startMovingSlow() {
+  startMovingSlow({ stop = false }: { stop?: boolean } = {}) {
     if (this.#movingId) this.startMoving();
     if (this.#movingSlowId && this.#movingSlowRafId && this.#randomPulseId) {
       clearInterval(this.#movingSlowId);
@@ -76,6 +76,7 @@ export class GameOfLife {
       clearTimeout(this.#randomPulseId);
       return;
     }
+    if (stop) return;
     this.#movingSlowId = setInterval(() => {
       this.moveCircle(0.2);
     }, 10);
