@@ -114,7 +114,10 @@ export class Visualizer {
     }
   }
 
+  #stopLock = false;
   stop(pause = false) {
+    if (this.#stopLock) return;
+    this.#stopLock = true;
     const now = this.audioContext.currentTime;
     this.gainNode.gain.cancelScheduledValues(now);
     this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
@@ -138,6 +141,7 @@ export class Visualizer {
       this.playing = false;
       cancelAnimationFrame(this.rafId);
       this.onStop();
+      this.#stopLock = false;
     }, this.fadeDuration * 1000);
   }
 
