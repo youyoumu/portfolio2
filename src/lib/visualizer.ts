@@ -13,6 +13,7 @@ export class Visualizer {
   freqData: Uint8Array;
   gainNode: GainNode;
   lowFreqBins = 64;
+  fadeDuration = 0.5;
 
   playing = false;
   startTime = 0;
@@ -89,7 +90,11 @@ export class Visualizer {
       this.source.connect(this.gainNode);
       this.gainNode.connect(this.analyser);
       this.analyser.connect(this.audioContext.destination);
-      this.gainNode.gain.value = 0.1;
+      this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+      this.gainNode.gain.linearRampToValueAtTime(
+        0.1,
+        this.audioContext.currentTime + this.fadeDuration,
+      );
 
       const offset = resume ? this.pauseTime : 0;
       this.startTime = this.audioContext.currentTime - offset;
@@ -110,23 +115,30 @@ export class Visualizer {
   }
 
   stop(pause = false) {
-    if (this.source) {
-      this.source.onended = null;
-      this.source.stop();
-      this.source.disconnect();
-      this.source = null;
-    }
+    const now = this.audioContext.currentTime;
+    this.gainNode.gain.cancelScheduledValues(now);
+    this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
+    this.gainNode.gain.linearRampToValueAtTime(0, now + this.fadeDuration);
 
-    if (pause) {
-      this.pauseTime = this.audioContext.currentTime - this.startTime;
-    } else {
-      this.pauseTime = 0;
-      this.lastBeat = -1;
-    }
+    setTimeout(() => {
+      if (this.source) {
+        this.source.onended = null;
+        this.source.stop();
+        this.source.disconnect();
+        this.source = null;
+      }
 
-    this.playing = false;
-    cancelAnimationFrame(this.rafId);
-    this.onStop();
+      if (pause) {
+        this.pauseTime = this.audioContext.currentTime - this.startTime;
+      } else {
+        this.pauseTime = 0;
+        this.lastBeat = -1;
+      }
+
+      this.playing = false;
+      cancelAnimationFrame(this.rafId);
+      this.onStop();
+    }, this.fadeDuration * 1000);
   }
 
   private listen = () => {
