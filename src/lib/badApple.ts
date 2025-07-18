@@ -36,14 +36,44 @@ export class BadApple {
     return bits;
   }
 
-  async injectFrameIntoGame(
-    game: GameOfLife,
-    frameIndex: number,
-  ): Promise<void> {
-    if (!this.data.length) await this.load();
+  injectFrameIntoGame(game: GameOfLife, frameIndex: number) {
+    if (!this.data.length) {
+      this.load();
+      return;
+    }
     const packed = this.getFrame(frameIndex % this.frameCount);
     const unpacked = this.unpackFrame(packed);
-    game.grid.set(unpacked);
+
+    const targetWidth = game.width;
+    const targetHeight = game.height;
+    const scaled = new Uint8Array(targetWidth * targetHeight);
+
+    const srcAspect = this.width / this.height;
+    const targetAspect = targetWidth / targetHeight;
+
+    let scaledWidth = targetWidth;
+    let scaledHeight = targetHeight;
+
+    if (targetAspect > srcAspect) {
+      scaledWidth = Math.floor(targetHeight * srcAspect);
+    } else {
+      scaledHeight = Math.floor(targetWidth / srcAspect);
+    }
+
+    const offsetX = Math.floor((targetWidth - scaledWidth) / 2);
+    const offsetY = Math.floor((targetHeight - scaledHeight) / 2);
+
+    for (let y = 0; y < scaledHeight; y++) {
+      for (let x = 0; x < scaledWidth; x++) {
+        const srcX = Math.floor((x / scaledWidth) * this.width);
+        const srcY = Math.floor((y / scaledHeight) * this.height);
+        const dstX = x + offsetX;
+        const dstY = y + offsetY;
+        scaled[dstY * targetWidth + dstX] = unpacked[srcY * this.width + srcX];
+      }
+    }
+
+    game.grid.set(scaled);
     game.updateCanvas();
   }
 

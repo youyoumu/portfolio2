@@ -14,13 +14,13 @@ export default function RootPage() {
     createSignal<HTMLCanvasElement>();
 
   function getGameOfLifeSize() {
-    const cellSize = 10;
-    const width = 128;
-    const height = 96;
+    // const cellSize = 10;
+    // const width = 128;
+    // const height = 96;
 
-    // const cellSize = 30;
-    // const width = Math.floor(window.innerWidth / cellSize);
-    // const height = Math.floor(window.innerHeight / cellSize);
+    const cellSize = 20;
+    const width = Math.floor(window.innerWidth / cellSize);
+    const height = Math.floor(window.innerHeight / cellSize);
     return { cellSize, width, height };
   }
 
@@ -31,7 +31,7 @@ export default function RootPage() {
       height,
       cellSize,
     });
-    gameOfLife.startMovingSlow();
+    // gameOfLife.startMovingSlow();
 
     const badApple = new BadApple({
       src: "/bad-apple-pixel-frame.bin.gz",
@@ -44,11 +44,11 @@ export default function RootPage() {
         gameOfLife.updateCanvas(undefined, energy);
       },
       onBeat: () => {
-        gameOfLife.next();
+        // gameOfLife.next();
       },
       onStart: () => {
         gameOfLife.startMoving();
-        badApple.play();
+        // badApple.play();
       },
       onStop: () => {
         gameOfLife.startMovingSlow();
