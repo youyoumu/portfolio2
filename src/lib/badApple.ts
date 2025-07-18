@@ -46,7 +46,6 @@ export class BadApple {
 
     const targetWidth = game.width;
     const targetHeight = game.height;
-    const scaled = new Uint8Array(targetWidth * targetHeight);
 
     const srcAspect = this.width / this.height;
     const targetAspect = targetWidth / targetHeight;
@@ -63,17 +62,20 @@ export class BadApple {
     const offsetX = Math.floor((targetWidth - scaledWidth) / 2);
     const offsetY = Math.floor((targetHeight - scaledHeight) / 2);
 
+    game.injectionMask.fill(0);
     for (let y = 0; y < scaledHeight; y++) {
       for (let x = 0; x < scaledWidth; x++) {
         const srcX = Math.floor((x / scaledWidth) * this.width);
         const srcY = Math.floor((y / scaledHeight) * this.height);
         const dstX = x + offsetX;
         const dstY = y + offsetY;
-        scaled[dstY * targetWidth + dstX] = unpacked[srcY * this.width + srcX];
+
+        const i = dstY * game.width + dstX;
+        game.grid[i] = unpacked[srcY * this.width + srcX];
+        game.injectionMask[i] = 1;
       }
     }
 
-    game.grid.set(scaled);
     game.updateCanvas();
   }
 

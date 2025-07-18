@@ -45,7 +45,7 @@ export default function RootPage() {
         gameOfLife.updateCanvas();
       },
       onBeat: () => {
-        // gameOfLife.next();
+        gameOfLife.next();
       },
       onStart: () => {
         // gameOfLife.startMoving();

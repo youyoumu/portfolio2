@@ -7,6 +7,7 @@ export class GameOfLife {
   pulseSize: number;
   grid: Uint8Array<ArrayBuffer>;
   nextGrid: Uint8Array<ArrayBuffer>;
+  injectionMask: Uint8Array<ArrayBuffer>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   offsetX = 0;
@@ -31,6 +32,7 @@ export class GameOfLife {
 
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
+    this.injectionMask = new Uint8Array(width * height); // 0 = normal, 1 = locked (video-injected)
     this.randomize();
 
     // Prepare canvas once
@@ -207,6 +209,11 @@ export class GameOfLife {
       for (let x = 0; x < this.width; x++) {
         let i = rowOffset + x,
           liveNeighbors = 0;
+
+        if (this.injectionMask[i]) {
+          this.nextGrid[i] = this.grid[i]; // preserve frame pixels
+          continue;
+        }
 
         if (y > 0) {
           if (x > 0) liveNeighbors += this.grid[topRow + x - 1];
