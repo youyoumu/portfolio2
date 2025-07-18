@@ -2,17 +2,17 @@ const musicList = {
   doodle: {
     src: "/music/doodle.mp3",
     bpm: 160,
-    firstBeatOffest: 0.5,
+    firstBeatOffset: 0.5,
   },
   "bad-apple": {
     src: "/music/bad-apple.mp3",
     bpm: 138,
-    firstBeatOffest: 1.275,
+    firstBeatOffset: 1.335,
   },
   "bad-apple-ft-sekai": {
     src: "/music/bad-apple-ft-sekai.mp3",
     bpm: 138,
-    firstBeatOffest: 1,
+    firstBeatOffset: 1,
   },
 };
 
@@ -43,9 +43,6 @@ export class Visualizer {
   onStart: (resume: boolean) => void;
   onStop: (pause: boolean) => void;
   music: keyof typeof musicList;
-  src: string;
-  bpm: number;
-  firstBeatOffest: number;
   loop = true;
 
   constructor({
@@ -67,9 +64,6 @@ export class Visualizer {
     this.onStop = onStop;
 
     this.music = music;
-    this.src = musicList[music].src;
-    this.bpm = musicList[music].bpm;
-    this.firstBeatOffest = musicList[music].firstBeatOffest;
 
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();
@@ -93,7 +87,7 @@ export class Visualizer {
 
   async _play(resume: boolean) {
     try {
-      const response = await fetch(this.src);
+      const response = await fetch(musicList[this.music].src);
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
 
@@ -159,13 +153,14 @@ export class Visualizer {
   }
 
   private listen = () => {
-    const { lowFreqBins, bpm, firstBeatOffest } = this;
+    const { bpm, firstBeatOffset } = musicList[this.music];
+    const { lowFreqBins } = this;
     const { width, height } = this.canvas;
     const currentTime = this.audioContext.currentTime - this.startTime;
 
-    const beat = Math.floor((currentTime - firstBeatOffest) * (bpm / 60));
+    const beat = Math.floor((currentTime - firstBeatOffset) * (bpm / 60));
 
-    if (currentTime > firstBeatOffest && beat !== this.lastBeat) {
+    if (currentTime > firstBeatOffset && beat !== this.lastBeat) {
       this.lastBeat = beat;
       this.onBeat();
     }
