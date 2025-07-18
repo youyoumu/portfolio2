@@ -1,6 +1,7 @@
 import { debounce } from "@solid-primitives/scheduled";
 import { createSignal, onMount } from "solid-js";
 
+import { BadApple } from "#/lib/badApple";
 import { GameOfLife } from "#/lib/gameOfLife";
 import { Visualizer } from "#/lib/visualizer";
 
@@ -13,9 +14,13 @@ export default function RootPage() {
     createSignal<HTMLCanvasElement>();
 
   function getGameOfLifeSize() {
-    const cellSize = 30;
-    const width = Math.floor(window.innerWidth / cellSize);
-    const height = Math.floor(window.innerHeight / cellSize);
+    const cellSize = 10;
+    const width = 128;
+    const height = 96;
+
+    // const cellSize = 30;
+    // const width = Math.floor(window.innerWidth / cellSize);
+    // const height = Math.floor(window.innerHeight / cellSize);
     return { cellSize, width, height };
   }
 
@@ -28,6 +33,12 @@ export default function RootPage() {
     });
     gameOfLife.startMovingSlow();
 
+    const badApple = new BadApple({
+      src: "/bad-apple-pixel-frame.bin.gz",
+      game: gameOfLife,
+    });
+    badApple.load();
+
     visualizer = new Visualizer({
       onEnergyUpdate: (energy) => {
         gameOfLife.updateCanvas(undefined, energy);
@@ -37,6 +48,7 @@ export default function RootPage() {
       },
       onStart: () => {
         gameOfLife.startMoving();
+        badApple.play();
       },
       onStop: () => {
         gameOfLife.startMovingSlow();
