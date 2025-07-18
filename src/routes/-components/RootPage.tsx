@@ -8,6 +8,7 @@ import { Visualizer } from "#/lib/visualizer";
 export default function RootPage() {
   let gameOfLife: GameOfLife;
   let visualizer: Visualizer;
+  let badApple: BadApple;
   const [gameOfLifeCanvas, setGameOfLifeCanvas] =
     createSignal<HTMLCanvasElement>();
   const [visualizerCanvas, setVisualizerCanvas] =
@@ -20,7 +21,7 @@ export default function RootPage() {
 
     const cellSize = 20;
     const width = Math.floor(window.innerWidth / cellSize);
-    const height = Math.floor(window.innerHeight / cellSize);
+    const height = Math.floor((window.innerHeight - 30) / cellSize);
     return { cellSize, width, height };
   }
 
@@ -33,7 +34,7 @@ export default function RootPage() {
     });
     // gameOfLife.startMovingSlow();
 
-    const badApple = new BadApple({
+    badApple = new BadApple({
       src: "/bad-apple-pixel-frame.bin.gz",
       game: gameOfLife,
     });
@@ -52,7 +53,7 @@ export default function RootPage() {
         badApple.play();
       },
       onStop: () => {
-        gameOfLife.startMovingSlow();
+        // gameOfLife.startMovingSlow();
       },
       music: "bad-apple-ft-sekai",
     });
@@ -72,15 +73,6 @@ export default function RootPage() {
 
   return (
     <div>
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          gameOfLife.next();
-        }}
-      >
-        next
-      </button>
-
       <button
         class="btn btn-primary"
         onClick={() => {
@@ -144,6 +136,32 @@ export default function RootPage() {
         }}
       >
         resume/pause music
+      </button>
+
+      <button
+        class="btn btn-primary"
+        onClick={() => {
+          gameOfLife.next();
+        }}
+      >
+        next
+      </button>
+      <button
+        class="btn btn-primary"
+        onClick={() => {
+          badApple.injectFrameIntoGame(10);
+        }}
+      >
+        inject
+      </button>
+
+      <button
+        class="btn btn-primary"
+        onClick={() => {
+          gameOfLife.updateCanvas();
+        }}
+      >
+        updateCanvas
       </button>
 
       <div>{gameOfLifeCanvas()}</div>

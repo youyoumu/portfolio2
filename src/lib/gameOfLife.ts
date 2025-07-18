@@ -211,7 +211,7 @@ export class GameOfLife {
           liveNeighbors = 0;
 
         if (this.injectionMask[i]) {
-          this.nextGrid[i] = this.grid[i]; // preserve frame pixels
+          this.nextGrid[i] = this.grid[i];
           continue;
         }
 
@@ -257,6 +257,7 @@ export class GameOfLife {
 
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
+    this.injectionMask = new Uint8Array(width * height);
     this.randomize();
     this.next();
 

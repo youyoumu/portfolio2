@@ -36,16 +36,17 @@ export class BadApple {
     return bits;
   }
 
-  injectFrameIntoGame(game: GameOfLife, frameIndex: number) {
+  injectFrameIntoGame(frameIndex: number) {
     if (!this.data.length) {
       this.load();
       return;
     }
+    const _game = this.game;
     const packed = this.getFrame(frameIndex % this.frameCount);
     const unpacked = this.unpackFrame(packed);
 
-    const targetWidth = game.width;
-    const targetHeight = game.height;
+    const targetWidth = _game.width;
+    const targetHeight = _game.height;
 
     const srcAspect = this.width / this.height;
     const targetAspect = targetWidth / targetHeight;
@@ -62,7 +63,7 @@ export class BadApple {
     const offsetX = Math.floor((targetWidth - scaledWidth) / 2);
     const offsetY = Math.floor((targetHeight - scaledHeight) / 2);
 
-    game.injectionMask.fill(0);
+    _game.injectionMask.fill(0);
     for (let y = 0; y < scaledHeight; y++) {
       for (let x = 0; x < scaledWidth; x++) {
         const srcX = Math.floor((x / scaledWidth) * this.width);
@@ -70,20 +71,18 @@ export class BadApple {
         const dstX = x + offsetX;
         const dstY = y + offsetY;
 
-        const i = dstY * game.width + dstX;
-        game.grid[i] = unpacked[srcY * this.width + srcX];
-        game.injectionMask[i] = 1;
+        const i = dstY * _game.width + dstX;
+        _game.grid[i] = unpacked[srcY * this.width + srcX];
+        _game.injectionMask[i] = 1;
       }
     }
-
-    game.updateCanvas();
   }
 
-  async play(fps: number = 30): Promise<void> {
-    if (!this.data.length) await this.load();
+  play(fps: number = 30) {
+    if (!this.data.length) return;
     this.stop();
     this.intervalId = setInterval(() => {
-      this.injectFrameIntoGame(this.game, this.frameIndex++);
+      this.injectFrameIntoGame(this.frameIndex++);
     }, 1000 / fps);
   }
 
