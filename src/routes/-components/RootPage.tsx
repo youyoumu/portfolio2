@@ -41,14 +41,15 @@ export default function RootPage() {
 
     visualizer = new Visualizer({
       onEnergyUpdate: (energy) => {
-        gameOfLife.updateCanvas(undefined, energy);
+        gameOfLife.energy = energy;
+        gameOfLife.updateCanvas();
       },
       onBeat: () => {
         // gameOfLife.next();
       },
       onStart: () => {
-        gameOfLife.startMoving();
-        // badApple.play();
+        // gameOfLife.startMoving();
+        badApple.play();
       },
       onStop: () => {
         gameOfLife.startMovingSlow();
