@@ -27,7 +27,7 @@ export class GameOfLife {
 
     this.pulseStart = 0;
     this.pulseDuration = 300;
-    this.pulseSize = 0.25;
+    this.pulseSize = 0.2;
 
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
@@ -63,13 +63,15 @@ export class GameOfLife {
 
   #movingSlowId: ReturnType<typeof setInterval> | null = null;
   #movingSlowRafId: number = 0;
+  #randomPulseId: ReturnType<typeof setTimeout> | null = null;
   startMovingSlow() {
     if (this.#movingId) this.startMoving();
-    if (this.#movingSlowId && this.#movingSlowRafId) {
+    if (this.#movingSlowId && this.#movingSlowRafId && this.#randomPulseId) {
       clearInterval(this.#movingSlowId);
       this.#movingSlowId = null;
       cancelAnimationFrame(this.#movingSlowRafId);
       this.#movingSlowRafId = 0;
+      clearTimeout(this.#randomPulseId);
       return;
     }
     this.#movingSlowId = setInterval(() => {
@@ -81,13 +83,25 @@ export class GameOfLife {
       this.#movingSlowRafId = requestAnimationFrame(movingSlow);
     };
     this.#movingSlowRafId = requestAnimationFrame(movingSlow);
+
+    const startRandomPulse = () => {
+      const delay = Math.random() * (3 - 0.1) + 0.1; // random between 0.1s and 1s
+      this.#randomPulseId = setTimeout(() => {
+        this.pulse(); // Call your pulse function
+        setTimeout(() => {
+          this.next();
+        }, 125);
+        startRandomPulse(); // Schedule next random pulse
+      }, delay * 1000); // Convert to milliseconds
+    };
+    startRandomPulse();
   }
 
-  #tickTime = 0;
+  #tickTime = 15;
   moveCircle(speed = 1) {
     this.#tickTime += 0.001 * speed; // Controls speed of the circular motion
 
-    const radius = this.canvas.width; // Adjust this based on how big the scroll radius should be
+    const radius = (this.canvas.width + this.canvas.height) / 2; // Adjust this based on how big the scroll radius should be
     const centerX = this.canvas.width / 2;
     const centerY = this.canvas.height / 2;
 
