@@ -3,16 +3,19 @@ import { createSignal, onMount } from "solid-js";
 
 import { BadApple } from "#/lib/badApple";
 import { GameOfLife } from "#/lib/gameOfLife";
+import { Lyrics } from "#/lib/lyrics";
 import { Visualizer } from "#/lib/visualizer";
 
 export default function RootPage() {
   let gameOfLife: GameOfLife;
   let visualizer: Visualizer;
+  let lyrics: Lyrics;
   let badApple: BadApple;
   const [gameOfLifeCanvas, setGameOfLifeCanvas] =
     createSignal<HTMLCanvasElement>();
   const [visualizerCanvas, setVisualizerCanvas] =
     createSignal<HTMLCanvasElement>();
+  const [lyricsContainer, setLyricsContainer] = createSignal<HTMLElement>();
 
   function getGameOfLifeSize() {
     const cellSize = 20;
@@ -34,6 +37,8 @@ export default function RootPage() {
       game: gameOfLife,
     });
 
+    lyrics = new Lyrics();
+
     visualizer = new Visualizer({
       onEnergyUpdate: (energy) => {
         gameOfLife.energy = energy;
@@ -43,6 +48,7 @@ export default function RootPage() {
         gameOfLife.next();
       },
       onStart: (resume, bpm) => {
+        lyrics.startSync(() => visualizer.audioContext.currentTime);
         if (
           visualizer.music === "bad-apple-ft-sekai-off-vocal" ||
           visualizer.music === "bad-apple-ft-sekai"
@@ -79,6 +85,7 @@ export default function RootPage() {
 
     setGameOfLifeCanvas(gameOfLife.canvas);
     setVisualizerCanvas(visualizer.canvas);
+    setLyricsContainer(lyrics.container);
 
     const resize = debounce(() => {
       const { cellSize, width, height } = getGameOfLifeSize();
@@ -201,6 +208,7 @@ export default function RootPage() {
         prev track
       </button>
 
+      <div>{lyricsContainer()}</div>
       <div>{gameOfLifeCanvas()}</div>
       <div>{visualizerCanvas()}</div>
     </div>
