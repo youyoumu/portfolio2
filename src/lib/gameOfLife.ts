@@ -51,13 +51,15 @@ export class GameOfLife {
 
   #movingId: ReturnType<typeof setInterval> | null = null;
   startMoving({ stop = false, bpm }: { stop?: boolean; bpm?: number } = {}) {
-    if (this.#movingSlowId && this.#movingSlowRafId) this.startMovingSlow();
-    if (this.#movingId) {
-      clearInterval(this.#movingId);
-      this.#movingId = null;
+    if (this.#movingSlowId && this.#movingSlowRafId)
+      this.startMovingSlow({ stop: true });
+    if (stop) {
+      if (this.#movingId) {
+        clearInterval(this.#movingId);
+        this.#movingId = null;
+      }
       return;
     }
-    if (stop) return;
     this.#movingId = setInterval(() => {
       this.moveCircle((bpm ?? 100) / 100);
     }, 10);
@@ -66,16 +68,17 @@ export class GameOfLife {
   #movingSlowId: ReturnType<typeof setInterval> | null = null;
   #movingSlowRafId: number = 0;
   startMovingSlow({ stop = false }: { stop?: boolean } = {}) {
-    if (this.#movingId) this.startMoving();
-    if (this.#movingSlowId && this.#movingSlowRafId) {
-      clearInterval(this.#movingSlowId);
-      this.#movingSlowId = null;
-      cancelAnimationFrame(this.#movingSlowRafId);
-      this.#movingSlowRafId = 0;
-      this.startRandomPulse({ stop: true });
+    if (this.#movingId) this.startMoving({ stop });
+    if (stop) {
+      if (this.#movingSlowId && this.#movingSlowRafId) {
+        clearInterval(this.#movingSlowId);
+        this.#movingSlowId = null;
+        cancelAnimationFrame(this.#movingSlowRafId);
+        this.#movingSlowRafId = 0;
+        this.startRandomPulse({ stop: true });
+      }
       return;
     }
-    if (stop) return;
     this.#movingSlowId = setInterval(() => {
       this.moveCircle(0.2);
     }, 10);
@@ -90,20 +93,25 @@ export class GameOfLife {
   }
 
   #randomPulseId: ReturnType<typeof setTimeout> | null = null;
+  #randomPulseLock = false;
   startRandomPulse({ stop = false }: { stop?: boolean } = {}) {
+    this.#randomPulseLock = false;
     if (stop) {
+      this.#randomPulseLock = true;
       if (this.#randomPulseId) {
         clearTimeout(this.#randomPulseId);
         this.#randomPulseId = null;
       }
       return;
     }
+
     const delay = Math.random() * (3 - 0.1) + 0.1;
     this.#randomPulseId = setTimeout(() => {
       this.pulse(); // Call your pulse function
       setTimeout(() => {
         this.next();
       }, 125);
+      if (this.#randomPulseLock) return;
       this.startRandomPulse(); // Schedule next random pulse
     }, delay * 1000); // Convert to milliseconds
   }
