@@ -1,21 +1,32 @@
 const musicList = {
   doodle: {
-    src: "/music/doodle.mp3",
+    src: "/music/doodle.webm",
     bpm: 160,
+    startOffset: 0,
     firstBeatOffset: 0.5,
     lowFreqStart: 0,
     lowFreqEnd: 64,
   },
-  "bad-apple": {
-    src: "/music/bad-apple.mp3",
+  discoupled: {
+    src: "/music/discopled.webm",
+    bpm: 152,
+    startOffset: 0,
+    firstBeatOffset: 0,
+    lowFreqStart: 0,
+    lowFreqEnd: 64,
+  },
+  "bad-apple-ft-sekai-off-vocal": {
+    src: "/music/bad-apple-ft-sekai-off-vocal.webm",
     bpm: 138,
-    firstBeatOffset: 1.335,
+    startOffset: 0,
+    firstBeatOffset: 1,
     lowFreqStart: 0,
     lowFreqEnd: 64,
   },
   "bad-apple-ft-sekai": {
-    src: "/music/bad-apple-ft-sekai.mp3",
+    src: "/music/bad-apple-ft-sekai.webm",
     bpm: 138,
+    startOffset: 1,
     firstBeatOffset: 1,
     lowFreqStart: 16,
     lowFreqEnd: 18,
@@ -50,9 +61,10 @@ export class Visualizer {
   onStop: (pause: boolean) => void;
   music: keyof typeof musicList;
   playlist: (keyof typeof musicList)[] = [
-    "bad-apple-ft-sekai",
+    "bad-apple-ft-sekai-off-vocal",
     "doodle",
-    "bad-apple",
+    "bad-apple-ft-sekai",
+    "discoupled",
   ];
   loop = true;
 
@@ -114,7 +126,8 @@ export class Visualizer {
 
   async _play(resume: boolean) {
     try {
-      const response = await fetch(musicList[this.music].src);
+      const { src, bpm, startOffset } = musicList[this.music];
+      const response = await fetch(src);
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
 
@@ -130,11 +143,11 @@ export class Visualizer {
         this.audioContext.currentTime + this.fadeDuration,
       );
 
-      const offset = resume ? this.pauseTime : 0;
+      const offset = resume ? this.pauseTime : startOffset;
       this.startTime = this.audioContext.currentTime - offset;
       this.source.start(0, offset);
       this.playing = true;
-      this.onStart(resume, musicList[this.music].bpm);
+      this.onStart(resume, bpm);
       this.source.onended = () => {
         this.stop({ loop: this.loop });
       };

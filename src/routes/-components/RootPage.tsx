@@ -49,7 +49,10 @@ export default function RootPage() {
         gameOfLife.next();
       },
       onStart: (resume, bpm) => {
-        if (visualizer.music === "bad-apple-ft-sekai") {
+        if (
+          visualizer.music === "bad-apple-ft-sekai-off-vocal" ||
+          visualizer.music === "bad-apple-ft-sekai"
+        ) {
           gameOfLife.startMovingSlow({ stop: true });
           gameOfLife.startRandomPulse({ stop: true });
           gameOfLife.offsetX = 0;
@@ -66,7 +69,10 @@ export default function RootPage() {
       },
       onStop: (pause) => {
         gameOfLife.injectionMask.fill(0);
-        if (visualizer.music === "bad-apple-ft-sekai") {
+        if (
+          visualizer.music === "bad-apple-ft-sekai-off-vocal" ||
+          visualizer.music === "bad-apple-ft-sekai"
+        ) {
           badApple.stop(pause);
           gameOfLife.startRandomPulse();
         } else {
@@ -74,7 +80,7 @@ export default function RootPage() {
           gameOfLife.startMovingSlow();
         }
       },
-      music: "bad-apple-ft-sekai",
+      music: "bad-apple-ft-sekai-off-vocal",
     });
 
     setGameOfLifeCanvas(gameOfLife.canvas);
