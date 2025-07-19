@@ -69,7 +69,7 @@ export default function RootPage() {
           gameOfLife.startMovingSlow();
         }
       },
-      music: "bad-apple",
+      music: "bad-apple-ft-sekai",
     });
 
     setGameOfLifeCanvas(gameOfLife.canvas);

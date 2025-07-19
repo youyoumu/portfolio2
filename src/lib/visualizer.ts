@@ -3,16 +3,22 @@ const musicList = {
     src: "/music/doodle.mp3",
     bpm: 160,
     firstBeatOffset: 0.5,
+    lowFreqStart: 0,
+    lowFreqEnd: 64,
   },
   "bad-apple": {
     src: "/music/bad-apple.mp3",
     bpm: 138,
     firstBeatOffset: 1.335,
+    lowFreqStart: 0,
+    lowFreqEnd: 64,
   },
   "bad-apple-ft-sekai": {
     src: "/music/bad-apple-ft-sekai.mp3",
     bpm: 138,
     firstBeatOffset: 1,
+    lowFreqStart: 16,
+    lowFreqEnd: 18,
   },
 };
 
@@ -153,9 +159,10 @@ export class Visualizer {
   }
 
   private listen = () => {
-    const { bpm, firstBeatOffset } = musicList[this.music];
-    const { lowFreqBins } = this;
+    const { bpm, firstBeatOffset, lowFreqStart, lowFreqEnd } =
+      musicList[this.music];
     const { width, height } = this.canvas;
+    const lowFreqWidth = lowFreqEnd - lowFreqStart;
     const currentTime = this.audioContext.currentTime - this.startTime;
 
     const beat = Math.floor((currentTime - firstBeatOffset) * (bpm / 60));
@@ -169,18 +176,18 @@ export class Visualizer {
     this.canvasContext.clearRect(0, 0, width, height);
 
     let energy = 0;
-    for (let i = 0; i < lowFreqBins; i++) {
+    for (let i = lowFreqStart; i < lowFreqEnd; i++) {
       energy += this.freqData[i];
     }
-    energy = energy / lowFreqBins / 255;
+    energy = energy / lowFreqWidth / 255;
     this.onEnergyUpdate(energy);
 
-    const barWidth = width / lowFreqBins;
-    for (let i = 0; i < lowFreqBins; i++) {
+    const barWidth = width / lowFreqWidth;
+    for (let i = lowFreqStart; i < lowFreqEnd; i++) {
       const value = this.freqData[i];
       const barHeight = (value / 255) * height;
 
-      const x = i * barWidth;
+      const x = (i - lowFreqStart) * barWidth;
 
       this.canvasContext.fillStyle = this.colors[i];
       this.canvasContext.fillRect(
