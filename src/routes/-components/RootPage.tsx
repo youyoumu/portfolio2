@@ -15,10 +15,6 @@ export default function RootPage() {
     createSignal<HTMLCanvasElement>();
 
   function getGameOfLifeSize() {
-    // const cellSize = 10;
-    // const width = 128;
-    // const height = 96;
-
     const cellSize = 20;
     const width = Math.floor(window.innerWidth / cellSize);
     const height = Math.floor((window.innerHeight - 30) / cellSize);
@@ -35,10 +31,8 @@ export default function RootPage() {
     gameOfLife.startMovingSlow();
 
     badApple = new BadApple({
-      src: "/bad-apple-pixel-frame.bin.gz",
       game: gameOfLife,
     });
-    badApple.load();
 
     visualizer = new Visualizer({
       onEnergyUpdate: (energy) => {

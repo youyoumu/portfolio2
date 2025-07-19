@@ -1,25 +1,38 @@
 import type { GameOfLife } from "./gameOfLife";
 
+const src = "/bad-apple-pixel-frame.bin.gz";
+const binMetadata = {
+  width: 128,
+  height: 96,
+  threshold: 127,
+  frames: 6875,
+  duration: 229.184,
+  fps: 29.997731080703716,
+  frame_byte_length: 1536,
+  binary_size: 10560000,
+};
+
 export class BadApple {
   src: string;
   data: Uint8Array = new Uint8Array();
-  width = 128;
-  height = 96;
+  width = binMetadata.width;
+  height = binMetadata.height;
   bytesPerFrame = (this.width * this.height) / 8;
-  frameCount = 0;
+  frameCount = binMetadata.frames;
   frameIndex = 0;
+  fps = binMetadata.fps;
   intervalId: ReturnType<typeof setInterval> | null = null;
   game: GameOfLife;
 
-  constructor({ src, game }: { src: string; game: GameOfLife }) {
+  constructor({ game }: { game: GameOfLife }) {
     this.src = src;
     this.game = game;
+    this.load();
   }
 
   async load(): Promise<void> {
     const res = await fetch(this.src);
     this.data = new Uint8Array(await res.arrayBuffer());
-    this.frameCount = Math.floor(this.data.length / this.bytesPerFrame);
   }
 
   getFrame(index: number): Uint8Array {
@@ -79,7 +92,7 @@ export class BadApple {
     }
   }
 
-  play(fps: number = 30) {
+  play() {
     if (!this.data.length) return;
     this.intervalId = setInterval(() => {
       this.frameIndex++;
@@ -88,7 +101,7 @@ export class BadApple {
         return;
       }
       this.injectFrameIntoGame();
-    }, 1000 / fps);
+    }, 1000 / this.fps);
   }
 
   stop(pause = false): void {
