@@ -101,8 +101,9 @@ export class Lyrics {
     // wait for DOM paint before splitting
     requestAnimationFrame(() => {
       this.split = SplitText.create(this.container, {
-        type: "chars,words",
-        mask: "chars",
+        type: "chars,words,lines",
+        linesClass: "flex! flex-row-reverse!",
+        wordsClass: "w-16 text-6xl",
       });
 
       gsap.from(this.split.chars, {

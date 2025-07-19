@@ -210,6 +210,19 @@ export default function RootPage() {
         prev track
       </button>
 
+      <button
+        class="btn btn-primary"
+        onClick={() => {
+          let seconds = 30;
+          setInterval(() => {
+            seconds++;
+          }, 1000);
+          lyrics.startSync(() => seconds);
+        }}
+      >
+        start lyrics
+      </button>
+
       <div>{lyricsContainer()}</div>
       <div>{gameOfLifeCanvas()}</div>
       <div>{visualizerCanvas()}</div>
