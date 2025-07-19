@@ -51,6 +51,7 @@ export default function RootPage() {
       onStart: (resume, bpm) => {
         if (visualizer.music === "bad-apple-ft-sekai") {
           gameOfLife.startMovingSlow({ stop: true });
+          gameOfLife.startRandomPulse({ stop: true });
           gameOfLife.offsetX = 0;
           gameOfLife.offsetY = 0;
           if (!resume) {
@@ -62,8 +63,10 @@ export default function RootPage() {
         }
       },
       onStop: (pause) => {
+        gameOfLife.injectionMask.fill(0);
         if (visualizer.music === "bad-apple-ft-sekai") {
           badApple.stop(pause);
+          gameOfLife.startRandomPulse();
         } else {
           gameOfLife.startMoving({ stop: true });
           gameOfLife.startMovingSlow();

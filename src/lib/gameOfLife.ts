@@ -65,15 +65,14 @@ export class GameOfLife {
 
   #movingSlowId: ReturnType<typeof setInterval> | null = null;
   #movingSlowRafId: number = 0;
-  #randomPulseId: ReturnType<typeof setTimeout> | null = null;
   startMovingSlow({ stop = false }: { stop?: boolean } = {}) {
     if (this.#movingId) this.startMoving();
-    if (this.#movingSlowId && this.#movingSlowRafId && this.#randomPulseId) {
+    if (this.#movingSlowId && this.#movingSlowRafId) {
       clearInterval(this.#movingSlowId);
       this.#movingSlowId = null;
       cancelAnimationFrame(this.#movingSlowRafId);
       this.#movingSlowRafId = 0;
-      clearTimeout(this.#randomPulseId);
+      this.startRandomPulse({ stop: true });
       return;
     }
     if (stop) return;
@@ -87,17 +86,24 @@ export class GameOfLife {
     };
     this.#movingSlowRafId = requestAnimationFrame(movingSlow);
 
-    const startRandomPulse = () => {
-      const delay = Math.random() * (3 - 0.1) + 0.1; // random between 0.1s and 1s
-      this.#randomPulseId = setTimeout(() => {
-        this.pulse(); // Call your pulse function
-        setTimeout(() => {
-          this.next();
-        }, 125);
-        startRandomPulse(); // Schedule next random pulse
-      }, delay * 1000); // Convert to milliseconds
-    };
-    startRandomPulse();
+    this.startRandomPulse();
+  }
+
+  #randomPulseId: ReturnType<typeof setTimeout> | null = null;
+  startRandomPulse({ stop = false }: { stop?: boolean } = {}) {
+    if (stop && this.#randomPulseId) {
+      clearTimeout(this.#randomPulseId);
+      this.#randomPulseId = null;
+      return;
+    }
+    const delay = Math.random() * (3 - 0.1) + 0.1;
+    this.#randomPulseId = setTimeout(() => {
+      this.pulse(); // Call your pulse function
+      setTimeout(() => {
+        this.next();
+      }, 125);
+      this.startRandomPulse(); // Schedule next random pulse
+    }, delay * 1000); // Convert to milliseconds
   }
 
   #tickTime = 15;
