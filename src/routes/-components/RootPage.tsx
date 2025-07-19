@@ -19,8 +19,8 @@ export default function RootPage() {
 
   function getGameOfLifeSize() {
     const cellSize = 20;
-    const width = Math.floor(window.innerWidth / cellSize);
-    const height = Math.floor((window.innerHeight - 30) / cellSize);
+    const width = Math.floor((window.innerWidth + cellSize) / cellSize);
+    const height = Math.floor((window.innerHeight + cellSize) / cellSize);
     return { cellSize, width, height };
   }
 
@@ -100,132 +100,139 @@ export default function RootPage() {
   });
 
   return (
-    <div>
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          gameOfLife.randomize();
-          gameOfLife.next();
-        }}
-      >
-        refresh
-      </button>
-
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          gameOfLife.pulse();
-          setTimeout(() => {
+    <>
+      <div class="absolute top-0 left-0 overflow-hidden h-svh w-full">
+        {gameOfLifeCanvas()}
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div class="p-8">{lyricsContainer()}</div>
+        </div>
+      </div>
+      <div class="absolute top-0 left-0 flex gap-1 flex-wrap p-1 ">
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            gameOfLife.randomize();
             gameOfLife.next();
-          }, gameOfLife.pulseDuration / 2);
-        }}
-      >
-        pulse
-      </button>
+          }}
+        >
+          refresh
+        </button>
 
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          gameOfLife.benchmark(1000);
-        }}
-      >
-        benchmark
-      </button>
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          gameOfLife.benchmarkCanvasRender(1000);
-        }}
-      >
-        benchmark canvas
-      </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            gameOfLife.pulse();
+            setTimeout(() => {
+              gameOfLife.next();
+            }, gameOfLife.pulseDuration / 2);
+          }}
+        >
+          pulse
+        </button>
 
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          if (visualizer.playing) {
-            visualizer.stop();
-          } else {
-            visualizer.play();
-          }
-        }}
-      >
-        play/stop music
-      </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            gameOfLife.benchmark(1000);
+          }}
+        >
+          benchmark
+        </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            gameOfLife.benchmarkCanvasRender(1000);
+          }}
+        >
+          benchmark canvas
+        </button>
 
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          if (visualizer.playing) {
-            visualizer.stop({ pause: true });
-          } else {
-            visualizer.play(true);
-          }
-        }}
-      >
-        resume/pause music
-      </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            if (visualizer.playing) {
+              visualizer.stop();
+            } else {
+              visualizer.play();
+            }
+          }}
+        >
+          play/stop music
+        </button>
 
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          gameOfLife.next();
-        }}
-      >
-        next
-      </button>
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          badApple.injectFrameIntoGame(10);
-        }}
-      >
-        inject
-      </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            if (visualizer.playing) {
+              visualizer.stop({ pause: true });
+            } else {
+              visualizer.play(true);
+            }
+          }}
+        >
+          resume/pause music
+        </button>
 
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          gameOfLife.updateCanvas();
-        }}
-      >
-        updateCanvas
-      </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            gameOfLife.next();
+          }}
+        >
+          next
+        </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            badApple.injectFrameIntoGame(10);
+          }}
+        >
+          inject
+        </button>
 
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          visualizer.nextTract();
-        }}
-      >
-        next track
-      </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            gameOfLife.updateCanvas();
+          }}
+        >
+          updateCanvas
+        </button>
 
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          visualizer.nextTract({ previous: true });
-        }}
-      >
-        prev track
-      </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            visualizer.nextTract();
+          }}
+        >
+          next track
+        </button>
 
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          let seconds = 30;
-          setInterval(() => {
-            seconds++;
-          }, 1000);
-          lyrics.startSync(() => seconds);
-        }}
-      >
-        start lyrics
-      </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            visualizer.nextTract({ previous: true });
+          }}
+        >
+          prev track
+        </button>
 
-      <div>{lyricsContainer()}</div>
-      <div>{gameOfLifeCanvas()}</div>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            let seconds = 30;
+            setInterval(() => {
+              seconds++;
+            }, 1000);
+            lyrics.startSync(() => seconds);
+          }}
+        >
+          start lyrics
+        </button>
+      </div>
+      <div class="h-svh w-full"></div>
+
       <div>{visualizerCanvas()}</div>
-    </div>
+    </>
   );
 }
