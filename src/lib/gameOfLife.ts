@@ -91,9 +91,11 @@ export class GameOfLife {
 
   #randomPulseId: ReturnType<typeof setTimeout> | null = null;
   startRandomPulse({ stop = false }: { stop?: boolean } = {}) {
-    if (stop && this.#randomPulseId) {
-      clearTimeout(this.#randomPulseId);
-      this.#randomPulseId = null;
+    if (stop) {
+      if (this.#randomPulseId) {
+        clearTimeout(this.#randomPulseId);
+        this.#randomPulseId = null;
+      }
       return;
     }
     const delay = Math.random() * (3 - 0.1) + 0.1;

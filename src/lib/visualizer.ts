@@ -49,6 +49,7 @@ export class Visualizer {
   onStart: (resume: boolean, bpm: number) => void;
   onStop: (pause: boolean) => void;
   music: keyof typeof musicList;
+  playlist: (keyof typeof musicList)[] = ["bad-apple-ft-sekai", "doodle"];
   loop = true;
 
   constructor({
@@ -83,11 +84,25 @@ export class Visualizer {
     this.canvasContext = this.canvas.getContext("2d")!;
   }
 
+  nextTract() {
+    const index = this.playlist.indexOf(this.music);
+    const nextIndex = (index + 1) % this.playlist.length;
+    this.changeMusic(this.playlist[nextIndex]);
+  }
+
+  changeMusic(music: keyof typeof musicList) {
+    this.stop({
+      afterStop: () => {
+        this.music = music;
+        this.play();
+      },
+    });
+  }
+
   #playLock = false;
   play(resume = false) {
     if (this.playing || this.#playLock) return;
     this.#playLock = true;
-
     this._play(resume);
   }
 
@@ -115,7 +130,7 @@ export class Visualizer {
       this.playing = true;
       this.onStart(resume, musicList[this.music].bpm);
       this.source.onended = () => {
-        this.stop(undefined, this.loop);
+        this.stop({ loop: this.loop });
       };
 
       this.listen();
@@ -127,7 +142,7 @@ export class Visualizer {
   }
 
   #stopLock = false;
-  stop(pause = false, loop = false) {
+  stop({ pause = false, loop = false, afterStop = () => {} } = {}) {
     if (this.#stopLock) return;
     this.#stopLock = true;
     const now = this.audioContext.currentTime;
@@ -154,7 +169,11 @@ export class Visualizer {
       this.playing = false;
       this.onStop(pause);
       this.#stopLock = false;
-      if (loop) this.play();
+      if (loop) {
+        this.play();
+      } else {
+        afterStop();
+      }
     }, this.fadeDuration * 1000);
   }
 

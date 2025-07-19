@@ -59,6 +59,8 @@ export default function RootPage() {
           }
           badApple.play();
         } else {
+          gameOfLife.startRandomPulse({ stop: true });
+          gameOfLife.startMovingSlow({ stop: true });
           gameOfLife.startMoving({ bpm });
         }
       },
@@ -146,7 +148,7 @@ export default function RootPage() {
         class="btn btn-primary"
         onClick={() => {
           if (visualizer.playing) {
-            visualizer.stop(true);
+            visualizer.stop({ pause: true });
           } else {
             visualizer.play(true);
           }
@@ -179,6 +181,15 @@ export default function RootPage() {
         }}
       >
         updateCanvas
+      </button>
+
+      <button
+        class="btn btn-primary"
+        onClick={() => {
+          visualizer.nextTract();
+        }}
+      >
+        next track
       </button>
 
       <div>{gameOfLifeCanvas()}</div>
