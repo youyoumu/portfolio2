@@ -48,7 +48,9 @@ export default function RootPage() {
         gameOfLife.next();
       },
       onStart: (resume, bpm) => {
-        lyrics.startSync(() => visualizer.audioContext.currentTime);
+        if (visualizer.music === "bad-apple-ft-sekai") {
+          lyrics.startSync(() => visualizer.audioContext.currentTime);
+        }
         if (
           visualizer.music === "bad-apple-ft-sekai-off-vocal" ||
           visualizer.music === "bad-apple-ft-sekai"
