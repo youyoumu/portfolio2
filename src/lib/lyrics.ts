@@ -103,7 +103,7 @@ export class Lyrics {
       this.split = SplitText.create(this.container, {
         type: "chars,words,lines",
         linesClass: "flex! flex-row-reverse!",
-        wordsClass: "w-16 text-6xl",
+        wordsClass: "w-16 text-6xl font-yuji-syuku",
       });
 
       gsap.from(this.split.chars, {
