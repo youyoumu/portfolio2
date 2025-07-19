@@ -192,6 +192,15 @@ export default function RootPage() {
         next track
       </button>
 
+      <button
+        class="btn btn-primary"
+        onClick={() => {
+          visualizer.nextTract({ previous: true });
+        }}
+      >
+        prev track
+      </button>
+
       <div>{gameOfLifeCanvas()}</div>
       <div>{visualizerCanvas()}</div>
     </div>

@@ -49,7 +49,11 @@ export class Visualizer {
   onStart: (resume: boolean, bpm: number) => void;
   onStop: (pause: boolean) => void;
   music: keyof typeof musicList;
-  playlist: (keyof typeof musicList)[] = ["bad-apple-ft-sekai", "doodle"];
+  playlist: (keyof typeof musicList)[] = [
+    "bad-apple-ft-sekai",
+    "doodle",
+    "bad-apple",
+  ];
   loop = true;
 
   constructor({
@@ -84,9 +88,11 @@ export class Visualizer {
     this.canvasContext = this.canvas.getContext("2d")!;
   }
 
-  nextTract() {
+  nextTract({ previous = false } = {}) {
     const index = this.playlist.indexOf(this.music);
-    const nextIndex = (index + 1) % this.playlist.length;
+    const nextIndex = previous
+      ? (index - 1 + this.playlist.length) % this.playlist.length
+      : (index + 1) % this.playlist.length;
     this.changeMusic(this.playlist[nextIndex]);
   }
 
