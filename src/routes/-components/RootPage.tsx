@@ -135,7 +135,12 @@ export default function RootPage() {
     setGameOfLifeCanvas(gameOfLife.canvas);
     setVisualizerCanvas(visualizer.canvas);
     setLyricsContainer(lyrics.container);
+
     setDuration(visualizer.getDuration());
+    setMusic({
+      artist: visualizer.getMusic().artist,
+      title: visualizer.getMusic().title,
+    });
 
     const resize = debounce(() => {
       const { cellSize, width, height } = getGameOfLifeSize();
@@ -340,18 +345,25 @@ function AudioControl(props: {
         <div class="flex gap-2 items-center justify-between w-full">
           <div class="w-40">
             <div
-              class={cn("line-clamp-1 text-sm text-neutral-content", {
-                invisible: !props.music?.artist?.length,
-              })}
+              class={cn(
+                "line-clamp-1 text-sm text-neutral-content font-bitcount-single",
+                {
+                  invisible: !props.music?.artist?.length,
+                },
+              )}
             >
               {props.music?.artist ?? "a"}
             </div>
             <ScrollingText
               text={props.music?.title ?? "a"}
               classNames={{
-                text: cn("text-neutral-content text-xs me-16", {
-                  invisible: !props.music?.title?.length,
-                }),
+                container: "leading-none",
+                text: cn(
+                  "text-base-300/50 text-xs me-16 font-bitcount-single font-light leading-none",
+                  {
+                    invisible: !props.music?.title?.length,
+                  },
+                ),
               }}
             />
           </div>
@@ -388,6 +400,7 @@ function AudioControl(props: {
 function ScrollingText(props: {
   text: string;
   classNames?: {
+    container?: string;
     text: string;
   };
 }) {
@@ -406,27 +419,29 @@ function ScrollingText(props: {
       return;
     }
 
-    tl = horizontalLoop(clones, {
-      repeat: -1,
-      speed: 0.1,
-    });
+    setTimeout(() => {
+      tl = horizontalLoop(clones, {
+        repeat: -1,
+        speed: 0.1,
+      });
 
-    Observer.create({
-      onChangeY(self) {
-        let factor = 1.5;
-        if (self.deltaY < 0) {
-          factor *= -1;
-        }
-        gsap
-          .timeline({
-            defaults: {
-              ease: "expo.out",
-            },
-          })
-          .to(tl, { timeScale: factor * 2.5, duration: 0.2 })
-          .to(tl, { timeScale: factor / 2.5, duration: 1 });
-      },
-    });
+      Observer.create({
+        onChangeY(self) {
+          let factor = 1.5;
+          if (self.deltaY < 0) {
+            factor *= -1;
+          }
+          gsap
+            .timeline({
+              defaults: {
+                ease: "expo.out",
+              },
+            })
+            .to(tl, { timeScale: factor * 2.5, duration: 0.2 })
+            .to(tl, { timeScale: factor / 2.5, duration: 1 });
+        },
+      });
+    }, 200);
 
     return removeScrolling;
   });
@@ -434,7 +449,10 @@ function ScrollingText(props: {
   return (
     <div
       ref={containerRef}
-      class="relative overflow-hidden whitespace-nowrap max-w-full w-full"
+      class={cn(
+        "relative overflow-hidden whitespace-nowrap max-w-full w-full",
+        props.classNames?.container,
+      )}
     >
       {new Array(isScrolling() ? 5 : 1).fill(0).map((_, i) => (
         <div
@@ -540,7 +558,10 @@ function Slider(props: {
 
   return (
     <div class="flex items-center gap-2">
-      <div class="text-neutral-content">{props.timeElapsed}</div>
+      <div class="text-neutral-content font-bitcount-single font-light text-lg">
+        {props.timeElapsed}
+      </div>
+
       <div
         ref={trackRef}
         class="relative ms-2 h-2 bg-neutral-content rounded-full cursor-pointer"
@@ -560,7 +581,9 @@ function Slider(props: {
         />
       </div>
 
-      <div class="text-neutral-content">{props.maxDuration}</div>
+      <div class="text-neutral-content font-bitcount-single font-light text-lg">
+        {props.maxDuration}
+      </div>
     </div>
   );
 }

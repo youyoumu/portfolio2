@@ -124,7 +124,7 @@ export class Visualizer {
       this.canvas.height = 300;
     } else {
       this.canvas.width = 48;
-      this.canvas.height = 16;
+      this.canvas.height = 32;
     }
     this.canvasContext = this.canvas.getContext("2d")!;
   }
@@ -175,6 +175,10 @@ export class Visualizer {
 
   getDuration(): number {
     return musicList[this.music].duration;
+  }
+
+  getMusic() {
+    return musicList[this.music];
   }
 
   #playLock = false;

@@ -13,6 +13,7 @@ export default defineConfig({
     tailwindcss(),
     webfontDownload([
       "https://fonts.googleapis.com/css2?family=Leckerli+One&family=Yuji+Syuku&display=swap",
+      "https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&family=Leckerli+One&family=Yuji+Syuku&display=swap",
     ]),
   ],
   resolve: {
