@@ -344,17 +344,21 @@ function AudioControl(props: {
       <div class="flex gap-4 items-center w-full">
         <div class="flex gap-2 items-center justify-between w-full">
           <div class="w-40">
-            <div
-              class={cn(
-                "line-clamp-1 text-sm text-neutral-content font-bitcount-single",
-                {
-                  invisible: !props.music?.artist?.length,
-                },
-              )}
-            >
-              {props.music?.artist ?? "a"}
-            </div>
             <ScrollingText
+              trenshold={14}
+              text={props.music?.artist ?? "a"}
+              classNames={{
+                container: "leading-none",
+                text: cn(
+                  "me-16 font-bitcount-single leading-none text-neutral-content",
+                  {
+                    invisible: !props.music?.artist?.length,
+                  },
+                ),
+              }}
+            />
+            <ScrollingText
+              trenshold={21}
               text={props.music?.title ?? "a"}
               classNames={{
                 container: "leading-none",
@@ -399,6 +403,7 @@ function AudioControl(props: {
 
 function ScrollingText(props: {
   text: string;
+  trenshold: number;
   classNames?: {
     container?: string;
     text: string;
@@ -407,7 +412,7 @@ function ScrollingText(props: {
   let containerRef!: HTMLDivElement;
   let tl: ReturnType<typeof horizontalLoop>;
   const clones: HTMLDivElement[] = [];
-  const isScrolling = () => props.text.length > 21;
+  const isScrolling = () => props.text.length > props.trenshold;
 
   function removeScrolling() {
     tl?.kill();
@@ -558,7 +563,7 @@ function Slider(props: {
 
   return (
     <div class="flex items-center gap-2">
-      <div class="text-neutral-content font-bitcount-single font-light text-lg">
+      <div class="text-neutral-content font-bitcount-single font-light text-sm">
         {props.timeElapsed}
       </div>
 
@@ -581,7 +586,7 @@ function Slider(props: {
         />
       </div>
 
-      <div class="text-neutral-content font-bitcount-single font-light text-lg">
+      <div class="text-neutral-content font-bitcount-single font-light text-sm">
         {props.maxDuration}
       </div>
     </div>
