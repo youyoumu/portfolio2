@@ -282,6 +282,7 @@ export default function RootPage() {
         maxDuration={`${formatTime(duration())}`}
         progress={progress()}
         playing={playing()}
+        visualizerCanvas={visualizerCanvas()}
         onSliderChange={(progress) => {
           visualizer.seek(undefined, progress);
         }}
@@ -303,7 +304,7 @@ export default function RootPage() {
       />
       <div class="h-svh w-full"></div>
 
-      <div>{visualizerCanvas()}</div>
+      {/* <div>{visualizerCanvas()}</div> */}
     </>
   );
 }
@@ -313,6 +314,7 @@ function AudioControl(props: {
   maxDuration: string;
   progress: number;
   playing: boolean;
+  visualizerCanvas: HTMLCanvasElement | undefined;
   onSliderChange: (progress: number) => void;
   onPlayPause: () => void;
   onSkipBack: () => void;
@@ -320,23 +322,30 @@ function AudioControl(props: {
 }) {
   return (
     <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
-      <div class="flex gap-4 items-center">
-        <IconPlayerSkipBackFilled
-          onClick={props.onSkipBack}
-          class="text-neutral-content cursor-pointer size-5"
-        />
+      <div class="flex gap-4 items-center w-full">
+        <div class="flex gap-2 items-center justify-between w-full">
+          <div></div>
+          <IconPlayerSkipBackFilled
+            onClick={props.onSkipBack}
+            class="text-neutral-content cursor-pointer size-5"
+          />
+        </div>
         <div
           class="rounded-full bg-neutral-content text-neutral cursor-pointer p-1 flex flex-col items-center justify-center"
           onClick={props.onPlayPause}
         >
           {props.playing ? <IconPlayerPauseFilled /> : <IconPlayerPlayFilled />}
         </div>
-        <IconPlayerSkipForwardFilled
-          onClick={props.onSkipForward}
-          class="text-neutral-content cursor-pointer size-5"
-        />
+        <div class="flex gap-2 items-center justify-between w-full">
+          <IconPlayerSkipForwardFilled
+            onClick={props.onSkipForward}
+            class="text-neutral-content cursor-pointer size-5"
+          />
+          {props.visualizerCanvas}
+        </div>
       </div>
       <Slider
+        width={240}
         timeElapsed={props.timeElapsed}
         maxDuration={props.maxDuration}
         progress={props.progress}

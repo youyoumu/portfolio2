@@ -70,6 +70,9 @@ export class Visualizer {
     { length: this.lowFreqBins },
     (_, i) => `hsl(${(i / this.lowFreqBins) * 360}, 100%, 50%)`,
   );
+  barColor = getComputedStyle(document.documentElement)
+    .getPropertyValue("--color-neutral-content")
+    .trim();
   playlist: (keyof typeof musicList)[] = [
     "bad-apple-ft-sekai-off-vocal",
     "doodle",
@@ -82,6 +85,7 @@ export class Visualizer {
   pauseTime = 0;
   lastBeat = -1;
   loop = true;
+  debug = false;
 
   onEnergyUpdate: VisualizerInit["onEnergyUpdate"];
   onBeat: VisualizerInit["onBeat"];
@@ -107,8 +111,13 @@ export class Visualizer {
     this.gainNode = this.audioContext.createGain();
 
     this.canvas = document.createElement("canvas");
-    this.canvas.width = 1000;
-    this.canvas.height = 300;
+    if (this.debug) {
+      this.canvas.width = 1000;
+      this.canvas.height = 300;
+    } else {
+      this.canvas.width = 48;
+      this.canvas.height = 16;
+    }
     this.canvasContext = this.canvas.getContext("2d")!;
   }
 
@@ -299,20 +308,38 @@ export class Visualizer {
     energy = energy / lowFreqWidth / 255;
     this.onEnergyUpdate(energy);
 
-    const barWidth = width / lowFreqWidth;
-    for (let i = lowFreqStart; i < lowFreqEnd; i++) {
-      const value = this.freqData[i];
-      const barHeight = (value / 255) * height;
+    if (this.debug) {
+      const barWidth = width / lowFreqWidth;
+      for (let i = lowFreqStart; i < lowFreqEnd; i++) {
+        const value = this.freqData[i];
+        const barHeight = (value / 255) * height;
+        const x = (i - lowFreqStart) * barWidth;
+        this.canvasContext.fillStyle = this.colors[i];
+        this.canvasContext.fillRect(
+          x,
+          height - barHeight,
+          barWidth - 2,
+          barHeight,
+        );
+      }
+    } else {
+      const lowFreqStart = 100;
+      const lowFreqEnd = 108;
+      const lowFreqWidth = lowFreqEnd - lowFreqStart;
+      const barWidth = width / lowFreqWidth;
+      this.canvasContext.fillStyle = this.barColor;
 
-      const x = (i - lowFreqStart) * barWidth;
-
-      this.canvasContext.fillStyle = this.colors[i];
-      this.canvasContext.fillRect(
-        x,
-        height - barHeight,
-        barWidth - 2,
-        barHeight,
-      );
+      for (let i = lowFreqStart; i < lowFreqEnd; i++) {
+        const value = this.freqData[i];
+        const barHeight = (value / 255) * height;
+        const x = (i - lowFreqStart) * barWidth;
+        this.canvasContext.fillRect(
+          x,
+          height - barHeight,
+          barWidth - 0.5,
+          barHeight,
+        );
+      }
     }
 
     this.#listenRafId = requestAnimationFrame(this.listen);
