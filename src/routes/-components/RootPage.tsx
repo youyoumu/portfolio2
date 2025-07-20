@@ -4,6 +4,7 @@ import {
   IconPlayerPlayFilled,
   IconPlayerSkipBackFilled,
   IconPlayerSkipForwardFilled,
+  IconVolume,
 } from "@tabler/icons-solidjs";
 import { addSeconds, format } from "date-fns";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
@@ -382,12 +383,26 @@ function AudioControl(props: {
         >
           {props.playing ? <IconPlayerPauseFilled /> : <IconPlayerPlayFilled />}
         </div>
-        <div class="flex gap-2 items-center justify-between w-full">
+        <div class="flex gap-4 items-center justify-between w-full">
           <IconPlayerSkipForwardFilled
             onClick={props.onSkipForward}
             class="text-neutral-content cursor-pointer size-5"
           />
-          {props.visualizerCanvas}
+          <div class="flex items-center gap-4">
+            {props.visualizerCanvas}
+            <div class="flex items-center gap-1.5">
+              <IconVolume class="text-neutral-content cursor-pointer size-5" />
+              <Slider
+                width={80}
+                progress={0}
+                onChange={() => {}}
+                classNames={{
+                  dot: "bg-secondary",
+                  bar: "bg-secondary",
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -396,7 +411,7 @@ function AudioControl(props: {
           {props.timeElapsed}
         </div>
         <Slider
-          width={360}
+          width={400}
           progress={props.progress}
           onChange={props.onSliderChange}
         />
@@ -483,6 +498,11 @@ function Slider(props: {
   progress: number;
   onChange: (value: number) => void;
   width?: number;
+  classNames?: {
+    container?: string;
+    bar?: string;
+    dot?: string;
+  };
 }) {
   const width = props.width ?? 200;
   const step = 1;
@@ -570,16 +590,25 @@ function Slider(props: {
   return (
     <div
       ref={trackRef}
-      class="relative ms-2 h-2 bg-neutral-content rounded-full cursor-pointer"
+      class={cn(
+        "relative ms-2 h-2 bg-neutral-content rounded-full cursor-pointer",
+        props.classNames?.container,
+      )}
       style={{ width: `${width}px` }}
       onPointerDown={handlePointerDown}
     >
       <div
-        class="absolute h-full bg-primary rounded-full"
+        class={cn(
+          "absolute h-full bg-primary rounded-full",
+          props.classNames?.bar,
+        )}
         style={{ width: `${percentFromValue(value())}%` }}
       />
       <div
-        class="absolute top-1/2 size-4 bg-primary rounded-full"
+        class={cn(
+          "absolute top-1/2 size-4 bg-primary rounded-full",
+          props.classNames?.dot,
+        )}
         style={{
           left: `${percentFromValue(value())}%`,
           transform: "translate(-50%, -50%)",
