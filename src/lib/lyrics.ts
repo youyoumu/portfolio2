@@ -8,6 +8,7 @@ type LyricLine = {
   endTime?: number;
 };
 
+const offset = -0.9;
 const lyrics = [
   { text: "流れてく 時の中ででも", startTime: 29 },
   { text: "気だるさが ほらグルグル廻って", startTime: 33.013 },
@@ -67,7 +68,10 @@ const lyrics = [
 
 export class Lyrics {
   container: HTMLElement = document.createElement("div");
-  lyrics: LyricLine[] = lyrics;
+  lyrics: LyricLine[] = lyrics.map((value) => ({
+    ...value,
+    startTime: value.startTime + offset,
+  }));
   currentIndex = -1;
   split?: SplitText;
 
@@ -87,16 +91,33 @@ export class Lyrics {
     this.animate(line.text);
   }
 
-  removeLyrics() {
-    if (this.split) {
-      this.split.revert();
-      this.split = undefined;
-      this.container.textContent = null;
-    }
+  removeLyrics(): Promise<void> {
+    if (!this.split) return Promise.resolve();
+    const chars = this.split.chars;
+
+    return new Promise((resolve) => {
+      gsap.to(chars, {
+        duration: 0.3,
+        yPercent: "random([-100, 100])",
+        xPercent: "random([-100, 100])",
+        opacity: 0,
+        ease: "power3.in",
+        stagger: {
+          from: "center",
+          amount: 0.05,
+        },
+        onComplete: () => {
+          this.split?.revert();
+          this.split = undefined;
+          this.container.textContent = "";
+          resolve();
+        },
+      });
+    });
   }
 
-  animate(text: string) {
-    this.removeLyrics();
+  async animate(text: string) {
+    await this.removeLyrics();
     this.container.textContent = text;
 
     requestAnimationFrame(() => {
@@ -109,14 +130,14 @@ export class Lyrics {
       });
 
       gsap.from(this.split.chars, {
-        duration: 0.6,
+        duration: 0.3,
         yPercent: "random([-150,150])",
         xPercent: "random([-150,150])",
         opacity: 0,
         ease: "power3.out",
         stagger: {
           from: "random",
-          amount: 0.6,
+          amount: 0.3,
         },
       });
     });
