@@ -110,6 +110,7 @@ export default function RootPage() {
       onElapsedTimeUpdate(duration) {
         setElapsedTime(duration);
       },
+      onSeek({ target }) {},
       music: "bad-apple-ft-sekai-off-vocal",
     });
 

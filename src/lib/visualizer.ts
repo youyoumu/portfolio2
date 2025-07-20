@@ -39,28 +39,7 @@ const musicList = {
 
 const audioBufferCache = new Map<string, AudioBuffer>();
 
-export class Visualizer {
-  audioContext: AudioContext;
-  analyser: AnalyserNode;
-  source: AudioBufferSourceNode | null = null;
-  freqData: Uint8Array;
-  gainNode: GainNode;
-  lowFreqBins = 64;
-  fadeDuration = 0.5;
-
-  playing = false;
-  startTime = 0;
-  pauseTime = 0;
-  lastBeat = -1;
-
-  canvas: HTMLCanvasElement;
-  canvasContext: CanvasRenderingContext2D;
-  rafId: number = 0;
-  colors = Array.from(
-    { length: this.lowFreqBins },
-    (_, i) => `hsl(${(i / this.lowFreqBins) * 360}, 100%, 50%)`,
-  );
-
+type VisualizerInit = {
   onEnergyUpdate: (energy: number) => void;
   onBeat: () => void;
   onStart: ({
@@ -73,44 +52,53 @@ export class Visualizer {
   }) => void;
   onStop: ({ pause, isSeek }: { pause: boolean; isSeek: boolean }) => void;
   onElapsedTimeUpdate: (duration: number) => void;
+  onSeek: ({ target }: { target: number }) => void;
   music: keyof typeof musicList;
+};
+
+export class Visualizer {
+  audioContext: AudioContext;
+  analyser: AnalyserNode;
+  source: AudioBufferSourceNode | null = null;
+  freqData: Uint8Array;
+  gainNode: GainNode;
+  lowFreqBins = 64;
+  fadeDuration = 0.5;
+  canvas: HTMLCanvasElement;
+  canvasContext: CanvasRenderingContext2D;
+  colors = Array.from(
+    { length: this.lowFreqBins },
+    (_, i) => `hsl(${(i / this.lowFreqBins) * 360}, 100%, 50%)`,
+  );
   playlist: (keyof typeof musicList)[] = [
     "bad-apple-ft-sekai-off-vocal",
     "doodle",
     "bad-apple-ft-sekai",
     "discoupled",
   ];
+
+  playing = false;
+  startTime = 0;
+  pauseTime = 0;
+  lastBeat = -1;
   loop = true;
 
-  constructor({
-    onEnergyUpdate,
-    onBeat,
-    onStart,
-    onStop,
-    onElapsedTimeUpdate,
-    music,
-  }: {
-    onEnergyUpdate: (energy: number) => void;
-    onBeat: () => void;
-    onStart: ({
-      resume,
-      bpm,
-    }: {
-      resume: boolean;
-      bpm: number;
-      duration: number;
-    }) => void;
-    onStop: ({ pause, isSeek }: { pause: boolean; isSeek: boolean }) => void;
-    onElapsedTimeUpdate: (duration: number) => void;
-    music: keyof typeof musicList;
-  }) {
-    this.onEnergyUpdate = onEnergyUpdate;
-    this.onBeat = onBeat;
-    this.onStart = onStart;
-    this.onStop = onStop;
-    this.onElapsedTimeUpdate = onElapsedTimeUpdate;
+  onEnergyUpdate: VisualizerInit["onEnergyUpdate"];
+  onBeat: VisualizerInit["onBeat"];
+  onStart: VisualizerInit["onStart"];
+  onStop: VisualizerInit["onStop"];
+  onElapsedTimeUpdate: VisualizerInit["onElapsedTimeUpdate"];
+  onSeek: VisualizerInit["onSeek"];
+  music: VisualizerInit["music"];
 
-    this.music = music;
+  constructor(init: VisualizerInit) {
+    this.onEnergyUpdate = init.onEnergyUpdate;
+    this.onBeat = init.onBeat;
+    this.onStart = init.onStart;
+    this.onStop = init.onStop;
+    this.onElapsedTimeUpdate = init.onElapsedTimeUpdate;
+    this.onSeek = init.onSeek;
+    this.music = init.music;
 
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();
@@ -148,6 +136,7 @@ export class Visualizer {
     const target = Math.max(0, Math.min(duration, max));
     this.onElapsedTimeUpdate(target);
     this.pauseTime = target;
+    this.onSeek({ target });
 
     if (!this.source || !this.playing) return;
 
@@ -270,7 +259,7 @@ export class Visualizer {
           this.lastBeat = -1;
         }
 
-        cancelAnimationFrame(this.rafId);
+        cancelAnimationFrame(this.#listenRafId);
         this.playing = false;
         this.onStop({ pause, isSeek });
         this.#stopLock = false;
@@ -284,6 +273,7 @@ export class Visualizer {
     );
   }
 
+  #listenRafId: number = 0;
   private listen = () => {
     const { bpm, firstBeatOffset, lowFreqStart, lowFreqEnd } =
       musicList[this.music];
@@ -324,6 +314,6 @@ export class Visualizer {
       );
     }
 
-    this.rafId = requestAnimationFrame(this.listen);
+    this.#listenRafId = requestAnimationFrame(this.listen);
   };
 }
