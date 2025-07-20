@@ -355,10 +355,14 @@ function Slider(props: {
     window.removeEventListener("pointerup", handlePointerUp);
   }
 
+  const onChangeDebounce = debounce((newValue: number) => {
+    props.onChange(newValue);
+  }, 250);
+
   function updateValue(clientX: number) {
     const newValue = valueFromClientX(clientX);
     setValue(newValue);
-    props.onChange(newValue);
+    onChangeDebounce(newValue);
   }
 
   createEffect(() => {
