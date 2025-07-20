@@ -69,7 +69,7 @@ export class Visualizer {
     bpm: number;
     duration: number;
   }) => void;
-  onStop: (pause: boolean) => void;
+  onStop: ({ pause, isSeek }: { pause: boolean; isSeek: boolean }) => void;
   onElapsedTimeUpdate: (duration: number) => void;
   music: keyof typeof musicList;
   playlist: (keyof typeof musicList)[] = [
@@ -98,7 +98,7 @@ export class Visualizer {
       bpm: number;
       duration: number;
     }) => void;
-    onStop: (pause: boolean) => void;
+    onStop: ({ pause, isSeek }: { pause: boolean; isSeek: boolean }) => void;
     onElapsedTimeUpdate: (duration: number) => void;
     music: keyof typeof musicList;
   }) {
@@ -152,6 +152,7 @@ export class Visualizer {
     this.stop({
       pause: true,
       fadeDuration: 0,
+      isSeek: true,
       afterStop: () => {
         this.pauseTime = target;
         this.play({ resume: true, fadeDuration: 0 }); // resume from the new time
@@ -231,6 +232,7 @@ export class Visualizer {
     loop = false,
     afterStop = () => {},
     fadeDuration = undefined as undefined | number,
+    isSeek = false,
   } = {}) {
     if (this.#stopLock) return;
     this.#stopLock = true;
@@ -261,7 +263,7 @@ export class Visualizer {
 
         cancelAnimationFrame(this.rafId);
         this.playing = false;
-        this.onStop(pause);
+        this.onStop({ pause, isSeek });
         this.#stopLock = false;
         if (loop) {
           this.play();

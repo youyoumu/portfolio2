@@ -87,8 +87,8 @@ export default function RootPage() {
           gameOfLife.startMoving({ bpm });
         }
       },
-      onStop: (pause) => {
-        gameOfLife.injectionMask.fill(0);
+      onStop: ({ pause, isSeek }) => {
+        if (!isSeek) gameOfLife.injectionMask.fill(0);
 
         if (visualizer.music === "bad-apple-ft-sekai") {
           lyrics.stopSync();
@@ -101,10 +101,10 @@ export default function RootPage() {
           visualizer.music === "bad-apple-ft-sekai"
         ) {
           badApple.stop(pause);
-          gameOfLife.startRandomPulse();
+          if (!isSeek) gameOfLife.startRandomPulse();
         } else {
           gameOfLife.startMoving({ stop: true });
-          gameOfLife.startMovingSlow();
+          if (!isSeek) gameOfLife.startMovingSlow();
         }
       },
       onElapsedTimeUpdate(duration) {
@@ -195,7 +195,7 @@ export default function RootPage() {
             if (visualizer.playing) {
               visualizer.stop({ pause: true });
             } else {
-              visualizer.play(true);
+              visualizer.play({ resume: true });
             }
           }}
         >
