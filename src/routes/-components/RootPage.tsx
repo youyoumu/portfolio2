@@ -1,5 +1,6 @@
 import { debounce } from "@solid-primitives/scheduled";
 import {
+  IconPlayerPauseFilled,
   IconPlayerPlayFilled,
   IconPlayerSkipBackFilled,
   IconPlayerSkipForwardFilled,
@@ -24,6 +25,7 @@ export default function RootPage() {
   const [lyricsContainer, setLyricsContainer] = createSignal<HTMLElement>();
   const [elapsedTime, setElapsedTime] = createSignal(0);
   const [duration, setDuration] = createSignal(0);
+  const [playing, setPlaying] = createSignal(false);
 
   const progress = () => {
     const dur = duration();
@@ -66,6 +68,7 @@ export default function RootPage() {
       },
       onStart: ({ resume, bpm, duration }) => {
         setDuration(duration);
+        setPlaying(true);
         if (visualizer.music === "bad-apple-ft-sekai") {
           lyrics.startSync(() => visualizer.getTime());
         }
@@ -88,7 +91,10 @@ export default function RootPage() {
         }
       },
       onStop: ({ pause, isSeek }) => {
-        if (!isSeek) gameOfLife.injectionMask.fill(0);
+        if (!isSeek) {
+          gameOfLife.injectionMask.fill(0);
+          setPlaying(false);
+        }
 
         if (visualizer.music === "bad-apple-ft-sekai") {
           lyrics.stopSync();
@@ -275,8 +281,24 @@ export default function RootPage() {
         timeElapsed={`${formatTime(elapsedTime())}`}
         maxDuration={`${formatTime(duration())}`}
         progress={progress()}
+        playing={playing()}
         onSliderChange={(progress) => {
           visualizer.seek(undefined, progress);
+        }}
+        onPlayPause={() => {
+          if (visualizer.playing) {
+            visualizer.stop({ pause: true });
+            setPlaying(false);
+          } else {
+            visualizer.play({ resume: true });
+            setPlaying(true);
+          }
+        }}
+        onSkipBack={() => {
+          visualizer.nextTract({ previous: true });
+        }}
+        onSkipForward={() => {
+          visualizer.nextTract();
         }}
       />
       <div class="h-svh w-full"></div>
@@ -290,16 +312,29 @@ function AudioControl(props: {
   timeElapsed: string;
   maxDuration: string;
   progress: number;
+  playing: boolean;
   onSliderChange: (progress: number) => void;
+  onPlayPause: () => void;
+  onSkipBack: () => void;
+  onSkipForward: () => void;
 }) {
   return (
     <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
       <div class="flex gap-4 items-center">
-        <IconPlayerSkipBackFilled class="text-neutral-content cursor-pointer size-5" />
-        <div class="rounded-full bg-neutral-content text-neutral cursor-pointer p-1">
-          <IconPlayerPlayFilled />
+        <IconPlayerSkipBackFilled
+          onClick={props.onSkipBack}
+          class="text-neutral-content cursor-pointer size-5"
+        />
+        <div
+          class="rounded-full bg-neutral-content text-neutral cursor-pointer p-1 flex flex-col items-center justify-center"
+          onClick={props.onPlayPause}
+        >
+          {props.playing ? <IconPlayerPauseFilled /> : <IconPlayerPlayFilled />}
         </div>
-        <IconPlayerSkipForwardFilled class="text-neutral-content cursor-pointer size-5" />
+        <IconPlayerSkipForwardFilled
+          onClick={props.onSkipForward}
+          class="text-neutral-content cursor-pointer size-5"
+        />
       </div>
       <Slider
         timeElapsed={props.timeElapsed}

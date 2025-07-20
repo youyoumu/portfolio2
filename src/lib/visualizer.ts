@@ -209,6 +209,7 @@ export class Visualizer {
         this.stop({ loop: this.loop });
       };
 
+      this.onElapsedTimeUpdate(this.getTime());
       this.#elapsedIntervalId = window.setInterval(() => {
         this.onElapsedTimeUpdate(this.getTime());
       }, 1000);
