@@ -144,6 +144,10 @@ export class Visualizer {
     return this.audioContext.currentTime - this.startTime;
   }
 
+  getDuration(): number {
+    return musicList[this.music].duration;
+  }
+
   #playLock = false;
   play(resume = false) {
     if (this.playing || this.#playLock) return;

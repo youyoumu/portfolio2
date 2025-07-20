@@ -4,7 +4,8 @@ import {
   IconPlayerSkipBackFilled,
   IconPlayerSkipForwardFilled,
 } from "@tabler/icons-solidjs";
-import { createSignal, onCleanup, onMount } from "solid-js";
+import { addSeconds, format } from "date-fns";
+import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
 import { BadApple } from "#/lib/badApple";
 import { GameOfLife } from "#/lib/gameOfLife";
@@ -23,6 +24,15 @@ export default function RootPage() {
   const [lyricsContainer, setLyricsContainer] = createSignal<HTMLElement>();
   const [elapsedTime, setElapsedTime] = createSignal(0);
   const [duration, setDuration] = createSignal(0);
+
+  const progress = () => {
+    const dur = duration();
+    return dur > 0 ? Math.floor((elapsedTime() / dur) * 100) : 0;
+  };
+
+  function formatTime(seconds: number): string {
+    return format(addSeconds(new Date(0), Math.floor(seconds)), "m:ss");
+  }
 
   function getGameOfLifeSize() {
     const cellSize = 20;
@@ -106,6 +116,7 @@ export default function RootPage() {
     setGameOfLifeCanvas(gameOfLife.canvas);
     setVisualizerCanvas(visualizer.canvas);
     setLyricsContainer(lyrics.container);
+    setDuration(visualizer.getDuration());
 
     const resize = debounce(() => {
       const { cellSize, width, height } = getGameOfLifeSize();
@@ -257,8 +268,9 @@ export default function RootPage() {
         </button>
       </div>
       <AudioControl
-        timeElapsed={`${elapsedTime()}`}
-        maxDuration={`${duration()}`}
+        timeElapsed={`${formatTime(elapsedTime())}`}
+        maxDuration={`${formatTime(duration())}`}
+        progress={progress()}
       />
       <div class="h-svh w-full"></div>
 
@@ -267,9 +279,13 @@ export default function RootPage() {
   );
 }
 
-function AudioControl(props: { timeElapsed: string; maxDuration: string }) {
+function AudioControl(props: {
+  timeElapsed: string;
+  maxDuration: string;
+  progress: number;
+}) {
   return (
-    <div class="fixed bottom-8 left-1/2 translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
       <div class="flex gap-4 items-center">
         <IconPlayerSkipBackFilled class="text-neutral-content cursor-pointer size-5" />
         <div class="rounded-full bg-neutral-content text-neutral cursor-pointer p-1">
@@ -280,7 +296,7 @@ function AudioControl(props: { timeElapsed: string; maxDuration: string }) {
       <Slider
         timeElapsed={props.timeElapsed}
         maxDuration={props.maxDuration}
-        valueProp={0}
+        progress={props.progress}
         onChange={() => {}}
       />
     </div>
@@ -288,7 +304,7 @@ function AudioControl(props: { timeElapsed: string; maxDuration: string }) {
 }
 
 function Slider(props: {
-  valueProp: number;
+  progress: number;
   onChange: (value: number) => void;
   width?: number;
   timeElapsed?: string;
@@ -299,7 +315,7 @@ function Slider(props: {
   const min = 0;
   const max = 100;
   const [dragging, setDragging] = createSignal(false);
-  const [value, setValue] = createSignal(props.valueProp);
+  const [value, setValue] = createSignal(0);
   let trackRef: HTMLDivElement | undefined;
 
   function clamp(v: number) {
@@ -344,6 +360,10 @@ function Slider(props: {
     setValue(newValue);
     props.onChange(newValue);
   }
+
+  createEffect(() => {
+    setValue(props.progress);
+  });
 
   onCleanup(() => {
     window.removeEventListener("pointermove", handlePointerMove);
