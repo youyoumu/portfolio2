@@ -92,6 +92,11 @@ export class BadApple {
     }
   }
 
+  onSeek({ target }: { target: number }) {
+    const newFrameIndex = Math.floor(target * this.fps);
+    this.frameIndex = Math.max(0, Math.min(this.frameCount - 1, newFrameIndex));
+  }
+
   play() {
     if (!this.data.length) return;
     this.intervalId = setInterval(() => {

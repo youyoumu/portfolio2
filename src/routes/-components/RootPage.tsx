@@ -110,7 +110,10 @@ export default function RootPage() {
       onElapsedTimeUpdate(duration) {
         setElapsedTime(duration);
       },
-      onSeek({ target }) {},
+      onSeek({ target }) {
+        badApple.onSeek({ target });
+        lyrics.removeLyrics();
+      },
       music: "bad-apple-ft-sekai-off-vocal",
     });
 
