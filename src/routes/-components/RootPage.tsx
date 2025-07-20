@@ -271,6 +271,9 @@ export default function RootPage() {
         timeElapsed={`${formatTime(elapsedTime())}`}
         maxDuration={`${formatTime(duration())}`}
         progress={progress()}
+        onSliderChange={(progress) => {
+          visualizer.seek(undefined, progress);
+        }}
       />
       <div class="h-svh w-full"></div>
 
@@ -283,6 +286,7 @@ function AudioControl(props: {
   timeElapsed: string;
   maxDuration: string;
   progress: number;
+  onSliderChange: (progress: number) => void;
 }) {
   return (
     <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
@@ -297,7 +301,7 @@ function AudioControl(props: {
         timeElapsed={props.timeElapsed}
         maxDuration={props.maxDuration}
         progress={props.progress}
-        onChange={() => {}}
+        onChange={props.onSliderChange}
       />
     </div>
   );
@@ -316,6 +320,7 @@ function Slider(props: {
   const max = 100;
   const [dragging, setDragging] = createSignal(false);
   const [value, setValue] = createSignal(0);
+  let lockSetValue = false;
   let trackRef: HTMLDivElement | undefined;
 
   function clamp(v: number) {
@@ -355,18 +360,36 @@ function Slider(props: {
     window.removeEventListener("pointerup", handlePointerUp);
   }
 
-  const onChangeDebounce = debounce((newValue: number) => {
-    props.onChange(newValue);
-  }, 250);
+  let firstCall = true;
+  const onChangeDebounce = (() => {
+    const debounced = debounce((newValue: number) => {
+      props.onChange(newValue);
+    }, 250);
+
+    return (newValue: number) => {
+      if (firstCall) {
+        firstCall = false;
+        props.onChange(newValue); // immediate on first call
+      } else {
+        debounced(newValue); // debounce after
+      }
+    };
+  })();
 
   function updateValue(clientX: number) {
     const newValue = valueFromClientX(clientX);
     setValue(newValue);
+    lockSetValue = true;
     onChangeDebounce(newValue);
   }
 
   createEffect(() => {
-    setValue(props.progress);
+    const progress = props.progress;
+    if (lockSetValue) {
+      lockSetValue = false;
+      return;
+    }
+    setValue(progress);
   });
 
   onCleanup(() => {

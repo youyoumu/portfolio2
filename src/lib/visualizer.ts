@@ -139,6 +139,25 @@ export class Visualizer {
     });
   }
 
+  seek(duration: number | undefined, percentage = 0) {
+    // Clamp duration to track bounds
+    const max = musicList[this.music].duration;
+    duration = duration ?? (percentage / 100) * max;
+    const target = Math.max(0, Math.min(duration, max));
+    this.onElapsedTimeUpdate(target);
+    this.pauseTime = target;
+
+    if (!this.source || !this.playing) return;
+
+    this.stop({
+      pause: true,
+      afterStop: () => {
+        this.pauseTime = target;
+        this.play(true); // resume from the new time
+      },
+    });
+  }
+
   getTime(): number {
     if (!this.playing) return this.pauseTime;
     return this.audioContext.currentTime - this.startTime;
