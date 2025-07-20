@@ -16,6 +16,8 @@ import { Lyrics } from "#/lib/lyrics";
 import { cn } from "#/lib/utils/cn";
 import { Visualizer } from "#/lib/visualizer";
 
+const MAX_VOLUME = 0.3;
+
 export default function RootPage() {
   let gameOfLife: GameOfLife;
   let visualizer: Visualizer;
@@ -33,6 +35,7 @@ export default function RootPage() {
     artist: string;
     title: string;
   }>();
+  const [volume, setVolume] = createSignal(0);
 
   const progress = () => {
     const dur = duration();
@@ -142,6 +145,7 @@ export default function RootPage() {
       artist: visualizer.getMusic().artist,
       title: visualizer.getMusic().title,
     });
+    setVolume(visualizer.volume);
 
     const resize = debounce(() => {
       const { cellSize, width, height } = getGameOfLifeSize();
@@ -297,10 +301,16 @@ export default function RootPage() {
         maxDuration={`${formatTime(duration())}`}
         progress={progress()}
         playing={playing()}
+        volume={volume()}
         visualizerCanvas={visualizerCanvas()}
         music={music()}
-        onSliderChange={(progress) => {
+        onProgressChange={(progress) => {
           visualizer.seek(undefined, progress);
+        }}
+        onVolumeChange={(percentage) => {
+          const actualVolume = (percentage / 100) * MAX_VOLUME;
+          visualizer.setVolume(actualVolume);
+          setVolume(actualVolume);
         }}
         onPlayPause={() => {
           if (visualizer.playing) {
@@ -330,8 +340,10 @@ function AudioControl(props: {
   maxDuration: string;
   progress: number;
   playing: boolean;
+  volume: number;
   visualizerCanvas: HTMLCanvasElement | undefined;
-  onSliderChange: (progress: number) => void;
+  onProgressChange: (progress: number) => void;
+  onVolumeChange: (percentage: number) => void;
   onPlayPause: () => void;
   onSkipBack: () => void;
   onSkipForward: () => void;
@@ -394,8 +406,9 @@ function AudioControl(props: {
               <IconVolume class="text-neutral-content cursor-pointer size-5" />
               <Slider
                 width={80}
-                progress={0}
-                onChange={() => {}}
+                progress={(props.volume / MAX_VOLUME) * 100}
+                debounceDuration={50}
+                onChange={props.onVolumeChange}
                 classNames={{
                   dot: "bg-secondary",
                   bar: "bg-secondary",
@@ -413,7 +426,7 @@ function AudioControl(props: {
         <Slider
           width={400}
           progress={props.progress}
-          onChange={props.onSliderChange}
+          onChange={props.onProgressChange}
         />
 
         <div class="text-neutral-content font-bitcount-single font-light text-sm">
@@ -498,6 +511,7 @@ function Slider(props: {
   progress: number;
   onChange: (value: number) => void;
   width?: number;
+  debounceDuration?: number;
   classNames?: {
     container?: string;
     bar?: string;
@@ -505,6 +519,7 @@ function Slider(props: {
   };
 }) {
   const width = props.width ?? 200;
+  const debounceDuration = props.debounceDuration ?? 250;
   const step = 1;
   const min = 0;
   const max = 100;
@@ -554,7 +569,7 @@ function Slider(props: {
   const onChangeDebounce = (() => {
     const debounced = debounce((newValue: number) => {
       props.onChange(newValue);
-    }, 250);
+    }, debounceDuration);
 
     return (newValue: number) => {
       if (firstCall) {

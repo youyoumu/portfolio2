@@ -92,6 +92,7 @@ export class Visualizer {
   startTime = 0;
   pauseTime = 0;
   lastBeat = -1;
+  volume = 0.1;
   loop = true;
   debug = false;
 
@@ -168,6 +169,12 @@ export class Visualizer {
     });
   }
 
+  setVolume(volume: number) {
+    // Clamp volume between 0 and 1
+    this.volume = Math.max(0, Math.min(volume, 1));
+    this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
+  }
+
   getTime(): number {
     if (!this.playing) return this.pauseTime;
     return this.audioContext.currentTime - this.startTime;
@@ -221,7 +228,7 @@ export class Visualizer {
       this.analyser.connect(this.audioContext.destination);
       this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
       this.gainNode.gain.linearRampToValueAtTime(
-        0.1,
+        this.volume,
         this.audioContext.currentTime + (fadeDuration ?? this.fadeDuration),
       );
 
