@@ -1,5 +1,6 @@
 import { debounce } from "@solid-primitives/scheduled";
 import {
+  IconExternalLink,
   IconPlayerPauseFilled,
   IconPlayerPlayFilled,
   IconPlayerSkipBackFilled,
@@ -39,6 +40,7 @@ export default function RootPage() {
   const [music, setMusic] = createSignal<{
     artist: string;
     title: string;
+    link: string;
   }>();
   const [volume, setVolume] = createSignal(0);
 
@@ -81,9 +83,13 @@ export default function RootPage() {
       onBeat: () => {
         gameOfLife.next();
       },
-      onStart: ({ resume, bpm, duration, artist, title, isSeek }) => {
+      onStart: ({ resume, bpm, duration, isSeek, music }) => {
         if (!isSeek) {
-          setMusic({ artist, title });
+          setMusic({
+            artist: music.artist,
+            title: music.title,
+            link: music.link,
+          });
         }
         setDuration(duration);
         setPlaying(true);
@@ -149,6 +155,7 @@ export default function RootPage() {
     setMusic({
       artist: visualizer.getMusic().artist,
       title: visualizer.getMusic().title,
+      link: visualizer.getMusic().link,
     });
     setVolume(visualizer.volume);
 
@@ -357,42 +364,49 @@ function AudioControl(props: {
   music?: {
     artist: string;
     title: string;
+    link: string;
   };
 }) {
   const [previousPercentage, setPreviousPercentage] = createSignal(0);
   const percentage = () => (props.volume / MAX_VOLUME) * 100;
 
   return (
-    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-8 rounded-full flex flex-col gap-2 items-center w-[600px]">
       <div class="flex gap-4 items-center w-full">
         <div class="flex gap-4 items-center justify-between w-full">
-          <div class="w-40">
-            <ScrollingText
-              trenshold={14}
-              text={props.music?.artist ?? "a"}
-              classNames={{
-                container: "leading-none",
-                text: cn(
-                  "me-16 font-bitcount-single leading-none text-neutral-content",
-                  {
-                    invisible: !props.music?.artist?.length,
-                  },
-                ),
-              }}
-            />
-            <ScrollingText
-              trenshold={21}
-              text={props.music?.title ?? "a"}
-              classNames={{
-                container: "leading-none",
-                text: cn(
-                  "text-base-300/50 text-xs me-16 font-bitcount-single font-light leading-none",
-                  {
-                    invisible: !props.music?.title?.length,
-                  },
-                ),
-              }}
-            />
+          <div class="flex gap-4 items-center">
+            <div class="w-40">
+              <ScrollingText
+                trenshold={14}
+                text={props.music?.artist ?? "a"}
+                classNames={{
+                  container: "leading-none",
+                  text: cn(
+                    "me-16 font-bitcount-single leading-none text-neutral-content",
+                    {
+                      invisible: !props.music?.artist?.length,
+                    },
+                  ),
+                }}
+              />
+              <ScrollingText
+                trenshold={21}
+                text={props.music?.title ?? "a"}
+                classNames={{
+                  container: "leading-none",
+                  text: cn(
+                    "text-base-300/50 text-xs me-16 font-bitcount-single font-light leading-none",
+                    {
+                      invisible: !props.music?.title?.length,
+                    },
+                  ),
+                }}
+              />
+            </div>
+
+            <a href={props.music?.link} target="_blank">
+              <IconExternalLink class="text-neutral-content cursor-pointer size-5" />
+            </a>
           </div>
           <IconPlayerSkipBackFilled
             onClick={props.onSkipBack}

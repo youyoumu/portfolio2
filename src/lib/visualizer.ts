@@ -3,6 +3,7 @@ const musicList = {
     src: "/music/doodle.webm",
     artist: "Zachz Winner",
     title: "doodle",
+    link: "https://youtu.be/-iM7KCEt5zs?si=HrqlfZiWwmGMJI7n",
     bpm: 160,
     startOffset: 0,
     firstBeatOffset: 0.5,
@@ -14,6 +15,7 @@ const musicList = {
     src: "/music/discopled.webm",
     artist: "Zachz Winner",
     title: "discopled",
+    link: "https://youtu.be/UWpUCmXokgM?si=dIlTlGougOkcY3bT",
     bpm: 152,
     startOffset: 0,
     firstBeatOffset: 0,
@@ -26,6 +28,7 @@ const musicList = {
     bpm: 138,
     artist: "25-ji, Nightcord de",
     title: "(off vocal) Bad Apple!! feat.SEKAI",
+    link: "https://youtu.be/h87WUOEPUCg?si=jTRAN3sUJ1XVZQBh",
     startOffset: 0,
     firstBeatOffset: 1,
     lowFreqStart: 0,
@@ -37,6 +40,7 @@ const musicList = {
     bpm: 138,
     artist: "25-ji, Nightcord de",
     title: "Bad Apple!! feat.SEKAI",
+    link: "https://youtu.be/v-fc1zv31zE?si=9NauF-kKzT6IqQsx",
     startOffset: 1,
     firstBeatOffset: 1,
     lowFreqStart: 16,
@@ -54,9 +58,8 @@ type VisualizerInit = {
     resume: boolean;
     bpm: number;
     duration: number;
-    artist: string;
-    title: string;
     isSeek: boolean;
+    music: (typeof musicList)[keyof typeof musicList];
   }) => void;
   onStop: (param: { pause: boolean; isSeek: boolean }) => void;
   onElapsedTimeUpdate: (duration: number) => void;
@@ -210,8 +213,7 @@ export class Visualizer {
     isSeek: boolean;
   }) {
     try {
-      const { src, bpm, startOffset, duration, artist, title } =
-        musicList[this.music];
+      const { src, bpm, startOffset, duration } = musicList[this.music];
       let audioBuffer = audioBufferCache.get(src);
       if (!audioBuffer) {
         const response = await fetch(src);
@@ -236,7 +238,13 @@ export class Visualizer {
       this.startTime = this.audioContext.currentTime - offset;
       this.source.start(0, offset);
       this.playing = true;
-      this.onStart({ resume, bpm, duration, artist, title, isSeek });
+      this.onStart({
+        resume,
+        bpm,
+        duration,
+        isSeek,
+        music: musicList[this.music],
+      });
       this.source.onended = () => {
         this.stop({ loop: this.loop });
       };
