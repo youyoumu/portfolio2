@@ -21,6 +21,8 @@ export default function RootPage() {
   const [visualizerCanvas, setVisualizerCanvas] =
     createSignal<HTMLCanvasElement>();
   const [lyricsContainer, setLyricsContainer] = createSignal<HTMLElement>();
+  const [elapsedTime, setElapsedTime] = createSignal(0);
+  const [duration, setDuration] = createSignal(0);
 
   function getGameOfLifeSize() {
     const cellSize = 20;
@@ -52,7 +54,8 @@ export default function RootPage() {
       onBeat: () => {
         gameOfLife.next();
       },
-      onStart: (resume, bpm) => {
+      onStart: ({ resume, bpm, duration }) => {
+        setDuration(duration);
         if (visualizer.music === "bad-apple-ft-sekai") {
           lyrics.startSync(() => visualizer.getTime());
         }
@@ -93,6 +96,9 @@ export default function RootPage() {
           gameOfLife.startMoving({ stop: true });
           gameOfLife.startMovingSlow();
         }
+      },
+      onElapsedTimeUpdate(duration) {
+        setElapsedTime(duration);
       },
       music: "bad-apple-ft-sekai-off-vocal",
     });
@@ -250,7 +256,10 @@ export default function RootPage() {
           remove lyrics
         </button>
       </div>
-      <AudioControl />
+      <AudioControl
+        timeElapsed={`${elapsedTime()}`}
+        maxDuration={`${duration()}`}
+      />
       <div class="h-svh w-full"></div>
 
       <div>{visualizerCanvas()}</div>
@@ -258,7 +267,7 @@ export default function RootPage() {
   );
 }
 
-function AudioControl() {
+function AudioControl(props: { timeElapsed: string; maxDuration: string }) {
   return (
     <div class="fixed bottom-8 left-1/2 translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
       <div class="flex gap-4 items-center">
@@ -268,25 +277,29 @@ function AudioControl() {
         </div>
         <IconPlayerSkipForwardFilled class="text-neutral-content cursor-pointer size-5" />
       </div>
-      <Slider value={0} onChange={() => {}} />
+      <Slider
+        timeElapsed={props.timeElapsed}
+        maxDuration={props.maxDuration}
+        valueProp={0}
+        onChange={() => {}}
+      />
     </div>
   );
 }
 
-function Slider({
-  value: valueProp,
-  onChange,
-  width = 200,
-}: {
-  value: number;
+function Slider(props: {
+  valueProp: number;
   onChange: (value: number) => void;
   width?: number;
+  timeElapsed?: string;
+  maxDuration?: string;
 }) {
+  const width = props.width ?? 200;
   const step = 1;
   const min = 0;
   const max = 100;
   const [dragging, setDragging] = createSignal(false);
-  const [value, setValue] = createSignal(valueProp);
+  const [value, setValue] = createSignal(props.valueProp);
   let trackRef: HTMLDivElement | undefined;
 
   function clamp(v: number) {
@@ -329,7 +342,7 @@ function Slider({
   function updateValue(clientX: number) {
     const newValue = valueFromClientX(clientX);
     setValue(newValue);
-    onChange(newValue);
+    props.onChange(newValue);
   }
 
   onCleanup(() => {
@@ -338,23 +351,28 @@ function Slider({
   });
 
   return (
-    <div
-      ref={trackRef}
-      class="relative h-2 bg-neutral-content rounded-full cursor-pointer"
-      style={{ width: `${width}px` }}
-      onPointerDown={handlePointerDown}
-    >
+    <div class="flex items-center gap-2">
+      <div class="text-neutral-content">{props.timeElapsed}</div>
       <div
-        class="absolute h-full bg-primary rounded-full"
-        style={{ width: `${percentFromValue(value())}%` }}
-      />
-      <div
-        class="absolute top-1/2 size-4 bg-primary rounded-full"
-        style={{
-          left: `${percentFromValue(value())}%`,
-          transform: "translate(-50%, -50%)",
-        }}
-      />
+        ref={trackRef}
+        class="relative ms-2 h-2 bg-neutral-content rounded-full cursor-pointer"
+        style={{ width: `${width}px` }}
+        onPointerDown={handlePointerDown}
+      >
+        <div
+          class="absolute h-full bg-primary rounded-full"
+          style={{ width: `${percentFromValue(value())}%` }}
+        />
+        <div
+          class="absolute top-1/2 size-4 bg-primary rounded-full"
+          style={{
+            left: `${percentFromValue(value())}%`,
+            transform: "translate(-50%, -50%)",
+          }}
+        />
+      </div>
+
+      <div class="text-neutral-content">{props.maxDuration}</div>
     </div>
   );
 }

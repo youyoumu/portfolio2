@@ -6,6 +6,7 @@ const musicList = {
     firstBeatOffset: 0.5,
     lowFreqStart: 0,
     lowFreqEnd: 64,
+    duration: 74,
   },
   discoupled: {
     src: "/music/discopled.webm",
@@ -14,6 +15,7 @@ const musicList = {
     firstBeatOffset: 0,
     lowFreqStart: 0,
     lowFreqEnd: 64,
+    duration: 86,
   },
   "bad-apple-ft-sekai-off-vocal": {
     src: "/music/bad-apple-ft-sekai-off-vocal.webm",
@@ -22,6 +24,7 @@ const musicList = {
     firstBeatOffset: 1,
     lowFreqStart: 0,
     lowFreqEnd: 64,
+    duration: 229,
   },
   "bad-apple-ft-sekai": {
     src: "/music/bad-apple-ft-sekai.webm",
@@ -30,6 +33,7 @@ const musicList = {
     firstBeatOffset: 1,
     lowFreqStart: 16,
     lowFreqEnd: 18,
+    duration: 231,
   },
 };
 
@@ -57,8 +61,16 @@ export class Visualizer {
 
   onEnergyUpdate: (energy: number) => void;
   onBeat: () => void;
-  onStart: (resume: boolean, bpm: number) => void;
+  onStart: ({
+    resume,
+    bpm,
+  }: {
+    resume: boolean;
+    bpm: number;
+    duration: number;
+  }) => void;
   onStop: (pause: boolean) => void;
+  onElapsedTimeUpdate: (duration: number) => void;
   music: keyof typeof musicList;
   playlist: (keyof typeof musicList)[] = [
     "bad-apple-ft-sekai-off-vocal",
@@ -73,18 +85,28 @@ export class Visualizer {
     onBeat,
     onStart,
     onStop,
+    onElapsedTimeUpdate,
     music,
   }: {
     onEnergyUpdate: (energy: number) => void;
     onBeat: () => void;
-    onStart: (resume: boolean, bpm: number) => void;
+    onStart: ({
+      resume,
+      bpm,
+    }: {
+      resume: boolean;
+      bpm: number;
+      duration: number;
+    }) => void;
     onStop: (pause: boolean) => void;
+    onElapsedTimeUpdate: (duration: number) => void;
     music: keyof typeof musicList;
   }) {
     this.onEnergyUpdate = onEnergyUpdate;
     this.onBeat = onBeat;
     this.onStart = onStart;
     this.onStop = onStop;
+    this.onElapsedTimeUpdate = onElapsedTimeUpdate;
 
     this.music = music;
 
@@ -129,9 +151,10 @@ export class Visualizer {
     this._play(resume);
   }
 
+  #elapsedIntervalId: number | null = null;
   async _play(resume: boolean) {
     try {
-      const { src, bpm, startOffset } = musicList[this.music];
+      const { src, bpm, startOffset, duration } = musicList[this.music];
       const response = await fetch(src);
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
@@ -152,10 +175,14 @@ export class Visualizer {
       this.startTime = this.audioContext.currentTime - offset;
       this.source.start(0, offset);
       this.playing = true;
-      this.onStart(resume, bpm);
+      this.onStart({ resume, bpm, duration });
       this.source.onended = () => {
         this.stop({ loop: this.loop });
       };
+
+      this.#elapsedIntervalId = window.setInterval(() => {
+        this.onElapsedTimeUpdate(this.getTime());
+      }, 1000);
 
       this.listen();
     } catch (e) {
@@ -173,6 +200,10 @@ export class Visualizer {
     this.gainNode.gain.cancelScheduledValues(now);
     this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
     this.gainNode.gain.linearRampToValueAtTime(0, now + this.fadeDuration);
+    if (this.#elapsedIntervalId !== null) {
+      clearInterval(this.#elapsedIntervalId);
+      this.#elapsedIntervalId = null;
+    }
 
     setTimeout(() => {
       if (this.source) {
