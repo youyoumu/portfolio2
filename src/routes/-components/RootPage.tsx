@@ -28,6 +28,10 @@ export default function RootPage() {
   const [elapsedTime, setElapsedTime] = createSignal(0);
   const [duration, setDuration] = createSignal(0);
   const [playing, setPlaying] = createSignal(false);
+  const [music, setMusic] = createSignal<{
+    artist: string;
+    title: string;
+  }>();
 
   const progress = () => {
     const dur = duration();
@@ -68,7 +72,10 @@ export default function RootPage() {
       onBeat: () => {
         gameOfLife.next();
       },
-      onStart: ({ resume, bpm, duration }) => {
+      onStart: ({ resume, bpm, duration, artist, title, isSeek }) => {
+        if (!isSeek) {
+          setMusic({ artist, title });
+        }
         setDuration(duration);
         setPlaying(true);
         if (visualizer.music === "bad-apple-ft-sekai") {
@@ -285,6 +292,7 @@ export default function RootPage() {
         progress={progress()}
         playing={playing()}
         visualizerCanvas={visualizerCanvas()}
+        music={music()}
         onSliderChange={(progress) => {
           visualizer.seek(undefined, progress);
         }}
@@ -321,16 +329,29 @@ function AudioControl(props: {
   onPlayPause: () => void;
   onSkipBack: () => void;
   onSkipForward: () => void;
+  music?: {
+    artist: string;
+    title: string;
+  };
 }) {
   return (
     <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
       <div class="flex gap-4 items-center w-full">
         <div class="flex gap-2 items-center justify-between w-full">
-          <div class="w-32">
+          <div class="w-40">
+            <div
+              class={cn("line-clamp-1 text-sm text-neutral-content", {
+                invisible: !props.music?.artist?.length,
+              })}
+            >
+              {props.music?.artist ?? "a"}
+            </div>
             <ScrollingText
-              text="こんな自分に未来はあるの?"
+              text={props.music?.title ?? "a"}
               classNames={{
-                text: "text-neutral-content text-xs",
+                text: cn("text-neutral-content text-xs me-16", {
+                  invisible: !props.music?.title?.length,
+                }),
               }}
             />
           </div>
@@ -354,7 +375,7 @@ function AudioControl(props: {
         </div>
       </div>
       <Slider
-        width={320}
+        width={360}
         timeElapsed={props.timeElapsed}
         maxDuration={props.maxDuration}
         progress={props.progress}
@@ -371,24 +392,23 @@ function ScrollingText(props: {
   };
 }) {
   let containerRef!: HTMLDivElement;
-  let textRef!: HTMLDivElement;
   let tl: ReturnType<typeof horizontalLoop>;
   const clones: HTMLDivElement[] = [];
+  const isScrolling = () => props.text.length > 21;
 
-  onMount(() => {
-    const container = containerRef;
-    const textEl = textRef;
-    if (!container || !textEl) return;
+  function removeScrolling() {
+    tl?.kill();
+  }
 
-    for (let i = 0; i < 5; i++) {
-      const clone = textEl.cloneNode(true) as HTMLDivElement;
-      container.appendChild(clone);
-      clones.push(clone);
+  createEffect(() => {
+    if (!isScrolling()) {
+      removeScrolling();
+      return;
     }
 
-    tl = horizontalLoop([textEl, ...clones], {
+    tl = horizontalLoop(clones, {
       repeat: -1,
-      speed: 0.3,
+      speed: 0.1,
     });
 
     Observer.create({
@@ -407,15 +427,8 @@ function ScrollingText(props: {
           .to(tl, { timeScale: factor / 2.5, duration: 1 });
       },
     });
-  });
 
-  onCleanup(() => {
-    tl.kill();
-    for (const clone of clones) {
-      if (clone.parentElement === containerRef) {
-        containerRef.removeChild(clone);
-      }
-    }
+    return removeScrolling;
   });
 
   return (
@@ -423,12 +436,14 @@ function ScrollingText(props: {
       ref={containerRef}
       class="relative overflow-hidden whitespace-nowrap max-w-full w-full"
     >
-      <div
-        ref={textRef}
-        class={cn("inline-block pe-2", props?.classNames?.text)}
-      >
-        {props.text}
-      </div>
+      {new Array(isScrolling() ? 5 : 1).fill(0).map((_, i) => (
+        <div
+          ref={clones[i]}
+          class={cn("inline-block pe-2", props?.classNames?.text)}
+        >
+          {props.text}
+        </div>
+      ))}
     </div>
   );
 }

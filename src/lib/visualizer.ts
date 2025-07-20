@@ -1,6 +1,8 @@
 const musicList = {
   doodle: {
     src: "/music/doodle.webm",
+    artist: "Zachz Winner",
+    title: "doodle",
     bpm: 160,
     startOffset: 0,
     firstBeatOffset: 0.5,
@@ -10,6 +12,8 @@ const musicList = {
   },
   discoupled: {
     src: "/music/discopled.webm",
+    artist: "Zachz Winner",
+    title: "discopled",
     bpm: 152,
     startOffset: 0,
     firstBeatOffset: 0,
@@ -20,6 +24,8 @@ const musicList = {
   "bad-apple-ft-sekai-off-vocal": {
     src: "/music/bad-apple-ft-sekai-off-vocal.webm",
     bpm: 138,
+    artist: "25-ji, Nightcord de",
+    title: "(off vocal) Bad Apple!! feat.SEKAI",
     startOffset: 0,
     firstBeatOffset: 1,
     lowFreqStart: 0,
@@ -29,6 +35,8 @@ const musicList = {
   "bad-apple-ft-sekai": {
     src: "/music/bad-apple-ft-sekai.webm",
     bpm: 138,
+    artist: "25-ji, Nightcord de",
+    title: "Bad Apple!! feat.SEKAI",
     startOffset: 1,
     firstBeatOffset: 1,
     lowFreqStart: 16,
@@ -42,15 +50,15 @@ const audioBufferCache = new Map<string, AudioBuffer>();
 type VisualizerInit = {
   onEnergyUpdate: (energy: number) => void;
   onBeat: () => void;
-  onStart: ({
-    resume,
-    bpm,
-  }: {
+  onStart: (param: {
     resume: boolean;
     bpm: number;
     duration: number;
+    artist: string;
+    title: string;
+    isSeek: boolean;
   }) => void;
-  onStop: ({ pause, isSeek }: { pause: boolean; isSeek: boolean }) => void;
+  onStop: (param: { pause: boolean; isSeek: boolean }) => void;
   onElapsedTimeUpdate: (duration: number) => void;
   onSeek: ({ target }: { target: number }) => void;
   music: keyof typeof musicList;
@@ -155,7 +163,7 @@ export class Visualizer {
       isSeek: true,
       afterStop: () => {
         this.pauseTime = target;
-        this.play({ resume: true, fadeDuration: 0 }); // resume from the new time
+        this.play({ resume: true, fadeDuration: 0, isSeek: true }); // resume from the new time
       },
     });
   }
@@ -173,22 +181,26 @@ export class Visualizer {
   play({
     resume = false,
     fadeDuration = undefined as undefined | number,
+    isSeek = false,
   } = {}) {
     if (this.playing || this.#playLock) return;
     this.#playLock = true;
-    this._play({ resume, fadeDuration });
+    this._play({ resume, fadeDuration, isSeek });
   }
 
   #elapsedIntervalId: number | null = null;
   async _play({
     resume,
     fadeDuration,
+    isSeek,
   }: {
     resume: boolean;
     fadeDuration: undefined | number;
+    isSeek: boolean;
   }) {
     try {
-      const { src, bpm, startOffset, duration } = musicList[this.music];
+      const { src, bpm, startOffset, duration, artist, title } =
+        musicList[this.music];
       let audioBuffer = audioBufferCache.get(src);
       if (!audioBuffer) {
         const response = await fetch(src);
@@ -213,7 +225,7 @@ export class Visualizer {
       this.startTime = this.audioContext.currentTime - offset;
       this.source.start(0, offset);
       this.playing = true;
-      this.onStart({ resume, bpm, duration });
+      this.onStart({ resume, bpm, duration, artist, title, isSeek });
       this.source.onended = () => {
         this.stop({ loop: this.loop });
       };
