@@ -5,6 +5,7 @@ import {
   IconPlayerSkipBackFilled,
   IconPlayerSkipForwardFilled,
   IconVolume,
+  IconVolume3,
 } from "@tabler/icons-solidjs";
 import * as slider from "@zag-js/slider";
 import { addSeconds, format } from "date-fns";
@@ -355,6 +356,9 @@ function AudioControl(props: {
     title: string;
   };
 }) {
+  const [previousPercentage, setPreviousPercentage] = createSignal(0);
+  const percentage = () => (props.volume / MAX_VOLUME) * 100;
+
   return (
     <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
       <div class="flex gap-4 items-center w-full">
@@ -406,9 +410,24 @@ function AudioControl(props: {
           <div class="flex items-center gap-4">
             {props.visualizerCanvas}
             <div class="flex items-center gap-4">
-              <IconVolume class="text-neutral-content cursor-pointer size-5" />
+              {percentage() === 0 ? (
+                <IconVolume3
+                  onClick={() => {
+                    props.onVolumeChange(previousPercentage());
+                  }}
+                  class="text-neutral-content cursor-pointer size-5"
+                />
+              ) : (
+                <IconVolume
+                  onClick={() => {
+                    setPreviousPercentage(percentage());
+                    props.onVolumeChange(0);
+                  }}
+                  class="text-neutral-content cursor-pointer size-5"
+                />
+              )}
               <ZagSlider
-                value={(props.volume / MAX_VOLUME) * 100}
+                value={percentage()}
                 debounceDuration={50}
                 onValueChange={props.onVolumeChange}
                 classNames={{
