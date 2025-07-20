@@ -6,6 +6,7 @@ import {
   IconPlayerSkipForwardFilled,
   IconVolume,
 } from "@tabler/icons-solidjs";
+import * as slider from "@zag-js/slider";
 import { addSeconds, format } from "date-fns";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
@@ -15,6 +16,8 @@ import { horizontalLoop } from "#/lib/gsap/horizontalLoop";
 import { Lyrics } from "#/lib/lyrics";
 import { cn } from "#/lib/utils/cn";
 import { Visualizer } from "#/lib/visualizer";
+
+import { ZagSlider } from "./ZagSlider";
 
 const MAX_VOLUME = 0.3;
 
@@ -355,7 +358,7 @@ function AudioControl(props: {
   return (
     <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
       <div class="flex gap-4 items-center w-full">
-        <div class="flex gap-2 items-center justify-between w-full">
+        <div class="flex gap-4 items-center justify-between w-full">
           <div class="w-40">
             <ScrollingText
               trenshold={14}
@@ -402,16 +405,16 @@ function AudioControl(props: {
           />
           <div class="flex items-center gap-4">
             {props.visualizerCanvas}
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-4">
               <IconVolume class="text-neutral-content cursor-pointer size-5" />
-              <Slider
-                width={80}
-                progress={(props.volume / MAX_VOLUME) * 100}
+              <ZagSlider
+                value={(props.volume / MAX_VOLUME) * 100}
                 debounceDuration={50}
-                onChange={props.onVolumeChange}
+                onValueChange={props.onVolumeChange}
                 classNames={{
-                  dot: "bg-secondary",
-                  bar: "bg-secondary",
+                  root: "w-20",
+                  thumb: "bg-secondary",
+                  range: "bg-secondary",
                 }}
               />
             </div>
@@ -419,14 +422,14 @@ function AudioControl(props: {
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-4">
         <div class="text-neutral-content font-bitcount-single font-light text-sm">
           {props.timeElapsed}
         </div>
-        <Slider
-          width={400}
-          progress={props.progress}
-          onChange={props.onProgressChange}
+        <ZagSlider
+          value={props.progress}
+          onValueChange={props.onProgressChange}
+          debounceDuration={250}
         />
 
         <div class="text-neutral-content font-bitcount-single font-light text-sm">
@@ -503,132 +506,6 @@ function ScrollingText(props: {
           {props.text}
         </div>
       ))}
-    </div>
-  );
-}
-
-function Slider(props: {
-  progress: number;
-  onChange: (value: number) => void;
-  width?: number;
-  debounceDuration?: number;
-  classNames?: {
-    container?: string;
-    bar?: string;
-    dot?: string;
-  };
-}) {
-  const width = props.width ?? 200;
-  const debounceDuration = props.debounceDuration ?? 250;
-  const step = 1;
-  const min = 0;
-  const max = 100;
-  const [dragging, setDragging] = createSignal(false);
-  const [value, setValue] = createSignal(0);
-  let lockSetValue = false;
-  let trackRef: HTMLDivElement | undefined;
-
-  function clamp(v: number) {
-    return Math.min(max, Math.max(min, v));
-  }
-
-  function percentFromValue(value: number) {
-    return ((value - min) / (max - min)) * 100;
-  }
-
-  function valueFromClientX(clientX: number) {
-    if (!trackRef) return value();
-    const rect = trackRef.getBoundingClientRect();
-    const ratio = (clientX - rect.left) / rect.width;
-    const raw = min + ratio * (max - min);
-    return clamp(Math.round(raw / step) * step);
-  }
-
-  function handlePointerDown(e: PointerEvent) {
-    trackRef?.setPointerCapture(e.pointerId);
-    setDragging(true);
-    updateValue(e.clientX);
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-  }
-
-  function handlePointerMove(e: PointerEvent) {
-    if (dragging()) {
-      updateValue(e.clientX);
-    }
-  }
-
-  function handlePointerUp(e: PointerEvent) {
-    trackRef?.releasePointerCapture(e.pointerId);
-    setDragging(false);
-    window.removeEventListener("pointermove", handlePointerMove);
-    window.removeEventListener("pointerup", handlePointerUp);
-  }
-
-  let firstCall = true;
-  const onChangeDebounce = (() => {
-    const debounced = debounce((newValue: number) => {
-      props.onChange(newValue);
-    }, debounceDuration);
-
-    return (newValue: number) => {
-      if (firstCall) {
-        firstCall = false;
-        props.onChange(newValue); // immediate on first call
-      } else {
-        debounced(newValue); // debounce after
-      }
-    };
-  })();
-
-  function updateValue(clientX: number) {
-    const newValue = valueFromClientX(clientX);
-    setValue(newValue);
-    lockSetValue = true;
-    onChangeDebounce(newValue);
-  }
-
-  createEffect(() => {
-    const progress = props.progress;
-    if (lockSetValue) {
-      lockSetValue = false;
-      return;
-    }
-    setValue(progress);
-  });
-
-  onCleanup(() => {
-    window.removeEventListener("pointermove", handlePointerMove);
-    window.removeEventListener("pointerup", handlePointerUp);
-  });
-
-  return (
-    <div
-      ref={trackRef}
-      class={cn(
-        "relative ms-2 h-2 bg-neutral-content rounded-full cursor-pointer",
-        props.classNames?.container,
-      )}
-      style={{ width: `${width}px` }}
-      onPointerDown={handlePointerDown}
-    >
-      <div
-        class={cn(
-          "absolute h-full bg-primary rounded-full",
-          props.classNames?.bar,
-        )}
-        style={{ width: `${percentFromValue(value())}%` }}
-      />
-      <div
-        class={cn(
-          "absolute top-1/2 size-4 bg-primary rounded-full",
-          props.classNames?.dot,
-        )}
-        style={{
-          left: `${percentFromValue(value())}%`,
-          transform: "translate(-50%, -50%)",
-        }}
-      />
     </div>
   );
 }

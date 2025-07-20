@@ -26,6 +26,12 @@ importers:
       '@tanstack/solid-router-devtools':
         specifier: ^1.121.3
         version: 1.127.3(@tanstack/router-core@1.127.3)(@tanstack/solid-router@1.127.3(solid-js@1.9.7))(csstype@3.1.3)(solid-js@1.9.7)(tiny-invariant@1.3.3)
+      '@zag-js/slider':
+        specifier: ^1.19.0
+        version: 1.19.0
+      '@zag-js/solid':
+        specifier: ^1.19.0
+        version: 1.19.0(solid-js@1.9.7)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -600,6 +606,11 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
+  '@solid-primitives/keyed@1.5.2':
+    resolution: {integrity: sha512-BgoEdqPw48URnI+L5sZIHdF4ua4Las1eWEBBPaoSFs42kkhnHue+rwCBPL2Z9ebOyQ75sUhUfOETdJfmv0D6Kg==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
   '@solid-primitives/media@2.3.3':
     resolution: {integrity: sha512-hQ4hLOGvfbugQi5Eu1BFWAIJGIAzztq9x0h02xgBGl2l0Jaa3h7tg6bz5tV1NSuNYVGio4rPoa7zVQQLkkx9dA==}
     peerDependencies:
@@ -899,6 +910,32 @@ packages:
   '@typescript-eslint/visitor-keys@8.36.0':
     resolution: {integrity: sha512-vZrhV2lRPWDuGoxcmrzRZyxAggPL+qp3WzUrlZD+slFueDiYHxeBa34dUXPuC0RmGKzl4lS5kFJYvKCq9cnNDA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@zag-js/anatomy@1.19.0':
+    resolution: {integrity: sha512-0sM2sV9Z6jjHMD2LGgjYTL91s7Ud5ih8wtb9BPVftJckdOwtU6tpgEDmWVM7PWf4m1oR/p+h75wjzICDDxcN6Q==}
+
+  '@zag-js/core@1.19.0':
+    resolution: {integrity: sha512-f1h4q/quCnz6X+mxEsDUSBDrUu6d3EO00X+DztdewU6KVBBW6ZYIIHtSRYT4FSsSV/Wi4OuhxwUKtlXDervhVg==}
+
+  '@zag-js/dom-query@1.19.0':
+    resolution: {integrity: sha512-h8TyG79w9AsCKWqAGJ5Uvk/qYfyfCry5F+3K/+uCdkIFTDiuAoNU6TitHwKaYvVsvD8WmOrNHNfZR8X3UwVakw==}
+
+  '@zag-js/slider@1.19.0':
+    resolution: {integrity: sha512-LQ4F7kQfp+4klsOZbZFTmDKySckhWVboLjzkMkI48KiaKZhCnZ85+d8SWtQlEQMbxEbg0ywgZhRaFa9P+ZDKHw==}
+
+  '@zag-js/solid@1.19.0':
+    resolution: {integrity: sha512-zCV2C5/1FHz6E9IVgeRhp2DnmE63spvezgj1kpt8kTGAi0tl1YE1DsrOXnEh0YJtb6TXbTK6+BKIo3S8hD+Ruw==}
+    peerDependencies:
+      solid-js: '>=1.1.3'
+
+  '@zag-js/store@1.19.0':
+    resolution: {integrity: sha512-yPvmf+COJdebxzIFnh0xa2eVfP7LETHPycmTET5MyrRlWVqDK2+51w0wcXk3LBsmanTC1kvndD2ZlIXHxrJ/AA==}
+
+  '@zag-js/types@1.19.0':
+    resolution: {integrity: sha512-4oJPNGO00+fmIElaJayHSW8nuc0Dgb//u639BsHn3GzW1gsekfHcn8ZmNsBBp7yOBhrEBYpe9qp6YpKQYsmFcQ==}
+
+  '@zag-js/utils@1.19.0':
+    resolution: {integrity: sha512-wFMIOs3vePtVtEr9nmipZoCi6YLf2diWX+q+rbUfKKwMvejiP++lWpoU7oZEB/C6B9yoE77AF+OyjDQyqQaqRg==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -1579,6 +1616,9 @@ packages:
     resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
     engines: {node: '>=14'}
     hasBin: true
+
+  proxy-compare@3.0.1:
+    resolution: {integrity: sha512-V9plBAt3qjMlS1+nC8771KNf6oJ12gExvaxnNzN/9yVRLdTv/lc+oJlnSzrdYDAvBfTStPCoiaCOTmTs0adv7Q==}
 
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
@@ -2320,6 +2360,10 @@ snapshots:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.7)
       solid-js: 1.9.7
 
+  '@solid-primitives/keyed@1.5.2(solid-js@1.9.7)':
+    dependencies:
+      solid-js: 1.9.7
+
   '@solid-primitives/media@2.3.3(solid-js@1.9.7)':
     dependencies:
       '@solid-primitives/event-listener': 2.4.3(solid-js@1.9.7)
@@ -2669,6 +2713,44 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.36.0
       eslint-visitor-keys: 4.2.1
+
+  '@zag-js/anatomy@1.19.0': {}
+
+  '@zag-js/core@1.19.0':
+    dependencies:
+      '@zag-js/dom-query': 1.19.0
+      '@zag-js/utils': 1.19.0
+
+  '@zag-js/dom-query@1.19.0':
+    dependencies:
+      '@zag-js/types': 1.19.0
+
+  '@zag-js/slider@1.19.0':
+    dependencies:
+      '@zag-js/anatomy': 1.19.0
+      '@zag-js/core': 1.19.0
+      '@zag-js/dom-query': 1.19.0
+      '@zag-js/types': 1.19.0
+      '@zag-js/utils': 1.19.0
+
+  '@zag-js/solid@1.19.0(solid-js@1.9.7)':
+    dependencies:
+      '@solid-primitives/keyed': 1.5.2(solid-js@1.9.7)
+      '@zag-js/core': 1.19.0
+      '@zag-js/store': 1.19.0
+      '@zag-js/types': 1.19.0
+      '@zag-js/utils': 1.19.0
+      solid-js: 1.9.7
+
+  '@zag-js/store@1.19.0':
+    dependencies:
+      proxy-compare: 3.0.1
+
+  '@zag-js/types@1.19.0':
+    dependencies:
+      csstype: 3.1.3
+
+  '@zag-js/utils@1.19.0': {}
 
   acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
@@ -3319,6 +3401,8 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   prettier@3.6.2: {}
+
+  proxy-compare@3.0.1: {}
 
   proxy-from-env@1.1.0: {}
 
