@@ -11,6 +11,9 @@ importers:
       '@solid-primitives/scheduled':
         specifier: ^1.5.2
         version: 1.5.2(solid-js@1.9.7)
+      '@t3-oss/env-core':
+        specifier: ^0.13.8
+        version: 0.13.8(typescript@5.8.3)(zod@4.0.5)
       '@tabler/icons-solidjs':
         specifier: ^3.34.0
         version: 3.34.0(solid-js@1.9.7)
@@ -50,6 +53,9 @@ importers:
       tailwindcss:
         specifier: ^4.0.6
         version: 4.1.11
+      zod:
+        specifier: ^4.0.5
+        version: 4.0.5
     devDependencies:
       '@eslint/js':
         specifier: ^9.31.0
@@ -655,6 +661,23 @@ packages:
     resolution: {integrity: sha512-zdIWBGpR9zGx1p1bzIPqF5Gs+Ks/BH8R6fWhmUa/dcK1L2rUC8BAcZJzNRYBQv74kScf1TSOs0EY//Vd/I0V8g==}
     peerDependencies:
       solid-js: '>=1.8.4'
+
+  '@t3-oss/env-core@0.13.8':
+    resolution: {integrity: sha512-L1inmpzLQyYu4+Q1DyrXsGJYCXbtXjC4cICw1uAKv0ppYPQv656lhZPU91Qd1VS6SO/bou1/q5ufVzBGbNsUpw==}
+    peerDependencies:
+      arktype: ^2.1.0
+      typescript: '>=5.0.0'
+      valibot: ^1.0.0-beta.7 || ^1.0.0
+      zod: ^3.24.0 || ^4.0.0-beta.0
+    peerDependenciesMeta:
+      arktype:
+        optional: true
+      typescript:
+        optional: true
+      valibot:
+        optional: true
+      zod:
+        optional: true
 
   '@tabler/icons-solidjs@3.34.0':
     resolution: {integrity: sha512-O6RI1dz4o2MhsyMUk4tELySY25deyB+cHsREwQdYynB+8K9CncVgi9vlpG7lE14lmJ64edduDpCkMxqKdev5jQ==}
@@ -1878,6 +1901,9 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.0.5:
+    resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -2412,6 +2438,11 @@ snapshots:
   '@solidjs/meta@0.29.4(solid-js@1.9.7)':
     dependencies:
       solid-js: 1.9.7
+
+  '@t3-oss/env-core@0.13.8(typescript@5.8.3)(zod@4.0.5)':
+    optionalDependencies:
+      typescript: 5.8.3
+      zod: 4.0.5
 
   '@tabler/icons-solidjs@3.34.0(solid-js@1.9.7)':
     dependencies:
@@ -3635,3 +3666,5 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   zod@3.25.76: {}
+
+  zod@4.0.5: {}

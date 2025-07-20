@@ -11,6 +11,7 @@ import * as slider from "@zag-js/slider";
 import { addSeconds, format } from "date-fns";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
+import { env } from "#/env";
 import { BadApple } from "#/lib/badApple";
 import { GameOfLife } from "#/lib/gameOfLife";
 import { horizontalLoop } from "#/lib/gsap/horizontalLoop";
@@ -169,137 +170,139 @@ export default function RootPage() {
           <div class="p-8">{lyricsContainer()}</div>
         </div>
       </div>
-      <div class="absolute top-0 left-0 flex gap-1 flex-wrap p-1 ">
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            gameOfLife.randomize();
-            gameOfLife.next();
-          }}
-        >
-          refresh
-        </button>
-
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            gameOfLife.pulse();
-            setTimeout(() => {
+      {env.DEV && (
+        <div class="absolute top-0 left-0 flex gap-1 flex-wrap p-1 ">
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              gameOfLife.randomize();
               gameOfLife.next();
-            }, gameOfLife.pulseDuration / 2);
-          }}
-        >
-          pulse
-        </button>
+            }}
+          >
+            refresh
+          </button>
 
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            gameOfLife.benchmark(1000);
-          }}
-        >
-          benchmark
-        </button>
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            gameOfLife.benchmarkCanvasRender(1000);
-          }}
-        >
-          benchmark canvas
-        </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              gameOfLife.pulse();
+              setTimeout(() => {
+                gameOfLife.next();
+              }, gameOfLife.pulseDuration / 2);
+            }}
+          >
+            pulse
+          </button>
 
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            if (visualizer.playing) {
-              visualizer.stop();
-            } else {
-              visualizer.play();
-            }
-          }}
-        >
-          play/stop music
-        </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              gameOfLife.benchmark(1000);
+            }}
+          >
+            benchmark
+          </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              gameOfLife.benchmarkCanvasRender(1000);
+            }}
+          >
+            benchmark canvas
+          </button>
 
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            if (visualizer.playing) {
-              visualizer.stop({ pause: true });
-            } else {
-              visualizer.play({ resume: true });
-            }
-          }}
-        >
-          resume/pause music
-        </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              if (visualizer.playing) {
+                visualizer.stop();
+              } else {
+                visualizer.play();
+              }
+            }}
+          >
+            play/stop music
+          </button>
 
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            gameOfLife.next();
-          }}
-        >
-          next
-        </button>
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            badApple.injectFrameIntoGame(10);
-          }}
-        >
-          inject
-        </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              if (visualizer.playing) {
+                visualizer.stop({ pause: true });
+              } else {
+                visualizer.play({ resume: true });
+              }
+            }}
+          >
+            resume/pause music
+          </button>
 
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            gameOfLife.updateCanvas();
-          }}
-        >
-          updateCanvas
-        </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              gameOfLife.next();
+            }}
+          >
+            next
+          </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              badApple.injectFrameIntoGame(10);
+            }}
+          >
+            inject
+          </button>
 
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            visualizer.nextTract();
-          }}
-        >
-          next track
-        </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              gameOfLife.updateCanvas();
+            }}
+          >
+            updateCanvas
+          </button>
 
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            visualizer.nextTract({ previous: true });
-          }}
-        >
-          prev track
-        </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              visualizer.nextTract();
+            }}
+          >
+            next track
+          </button>
 
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            let seconds = 20;
-            setInterval(() => {
-              seconds++;
-            }, 1000);
-            lyrics.startSync(() => seconds);
-          }}
-        >
-          start lyrics
-        </button>
-        <button
-          class="btn btn-primary"
-          onClick={() => {
-            lyrics.removeLyrics();
-          }}
-        >
-          remove lyrics
-        </button>
-      </div>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              visualizer.nextTract({ previous: true });
+            }}
+          >
+            prev track
+          </button>
+
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              let seconds = 20;
+              setInterval(() => {
+                seconds++;
+              }, 1000);
+              lyrics.startSync(() => seconds);
+            }}
+          >
+            start lyrics
+          </button>
+          <button
+            class="btn btn-primary"
+            onClick={() => {
+              lyrics.removeLyrics();
+            }}
+          >
+            remove lyrics
+          </button>
+        </div>
+      )}
       <AudioControl
         timeElapsed={`${formatTime(elapsedTime())}`}
         maxDuration={`${formatTime(duration())}`}
