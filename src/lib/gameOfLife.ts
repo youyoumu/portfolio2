@@ -165,7 +165,7 @@ export class GameOfLife {
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     ctx.fillStyle = "#000000";
-    const baseRadius = (cellSize * (0.8 + this.energy / 1.75) - 1) / 2;
+    const baseRadius = (cellSize * (0.9 + this.energy / 1.75) - 1) / 2;
     const radius = baseRadius * easeScale;
 
     const twoPi = Math.PI * 2;

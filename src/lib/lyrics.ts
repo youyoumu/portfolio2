@@ -63,7 +63,7 @@ const lyrics = [
   { text: "貴方の事も 私の事も", startTime: 195.825 },
   { text: "全ての事も まだ知らないの", startTime: 199.317 },
   { text: "重い目蓋を 開けたのならば", startTime: 202.809 },
-  { text: "全壊すのなら 黒になれ", startTime: 206.256 },
+  { text: "全壊すのなら 黒になれ", startTime: 206.256, endTime: 210.256 },
 ];
 
 export class Lyrics {
@@ -78,6 +78,19 @@ export class Lyrics {
   constructor() {}
 
   render(currentTime: number) {
+    const line = this.lyrics[this.currentIndex];
+    const endTime =
+      line?.endTime ??
+      this.lyrics[this.currentIndex + 1]?.startTime ??
+      Infinity;
+
+    // If current line has ended, remove it
+    if (this.currentIndex !== -1 && currentTime >= endTime) {
+      this.removeLyrics(); // with animation
+      this.currentIndex = -1;
+    }
+
+    // Find and show the correct lyric line
     const nextIndex = this.lyrics.findIndex((l, i) => {
       const next = this.lyrics[i + 1];
       const end = l.endTime ?? next?.startTime ?? Infinity;
@@ -87,8 +100,7 @@ export class Lyrics {
     if (nextIndex === -1 || nextIndex === this.currentIndex) return;
 
     this.currentIndex = nextIndex;
-    const line = this.lyrics[nextIndex];
-    this.animate(line.text);
+    this.animate(this.lyrics[nextIndex].text);
   }
 
   removeLyrics(): Promise<void> {

@@ -227,7 +227,7 @@ export default function RootPage() {
         <button
           class="btn btn-primary"
           onClick={() => {
-            let seconds = 30;
+            let seconds = 20;
             setInterval(() => {
               seconds++;
             }, 1000);
