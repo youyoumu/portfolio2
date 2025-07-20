@@ -390,13 +390,21 @@ function AudioControl(props: {
           {props.visualizerCanvas}
         </div>
       </div>
-      <Slider
-        width={360}
-        timeElapsed={props.timeElapsed}
-        maxDuration={props.maxDuration}
-        progress={props.progress}
-        onChange={props.onSliderChange}
-      />
+
+      <div class="flex items-center gap-2">
+        <div class="text-neutral-content font-bitcount-single font-light text-sm">
+          {props.timeElapsed}
+        </div>
+        <Slider
+          width={360}
+          progress={props.progress}
+          onChange={props.onSliderChange}
+        />
+
+        <div class="text-neutral-content font-bitcount-single font-light text-sm">
+          {props.maxDuration}
+        </div>
+      </div>
     </div>
   );
 }
@@ -475,8 +483,6 @@ function Slider(props: {
   progress: number;
   onChange: (value: number) => void;
   width?: number;
-  timeElapsed?: string;
-  maxDuration?: string;
 }) {
   const width = props.width ?? 200;
   const step = 1;
@@ -562,33 +568,23 @@ function Slider(props: {
   });
 
   return (
-    <div class="flex items-center gap-2">
-      <div class="text-neutral-content font-bitcount-single font-light text-sm">
-        {props.timeElapsed}
-      </div>
-
+    <div
+      ref={trackRef}
+      class="relative ms-2 h-2 bg-neutral-content rounded-full cursor-pointer"
+      style={{ width: `${width}px` }}
+      onPointerDown={handlePointerDown}
+    >
       <div
-        ref={trackRef}
-        class="relative ms-2 h-2 bg-neutral-content rounded-full cursor-pointer"
-        style={{ width: `${width}px` }}
-        onPointerDown={handlePointerDown}
-      >
-        <div
-          class="absolute h-full bg-primary rounded-full"
-          style={{ width: `${percentFromValue(value())}%` }}
-        />
-        <div
-          class="absolute top-1/2 size-4 bg-primary rounded-full"
-          style={{
-            left: `${percentFromValue(value())}%`,
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-      </div>
-
-      <div class="text-neutral-content font-bitcount-single font-light text-sm">
-        {props.maxDuration}
-      </div>
+        class="absolute h-full bg-primary rounded-full"
+        style={{ width: `${percentFromValue(value())}%` }}
+      />
+      <div
+        class="absolute top-1/2 size-4 bg-primary rounded-full"
+        style={{
+          left: `${percentFromValue(value())}%`,
+          transform: "translate(-50%, -50%)",
+        }}
+      />
     </div>
   );
 }
