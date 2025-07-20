@@ -151,9 +151,10 @@ export class Visualizer {
 
     this.stop({
       pause: true,
+      fadeDuration: 0,
       afterStop: () => {
         this.pauseTime = target;
-        this.play(true); // resume from the new time
+        this.play({ resume: true, fadeDuration: 0 }); // resume from the new time
       },
     });
   }
@@ -168,14 +169,23 @@ export class Visualizer {
   }
 
   #playLock = false;
-  play(resume = false) {
+  play({
+    resume = false,
+    fadeDuration = undefined as undefined | number,
+  } = {}) {
     if (this.playing || this.#playLock) return;
     this.#playLock = true;
-    this._play(resume);
+    this._play({ resume, fadeDuration });
   }
 
   #elapsedIntervalId: number | null = null;
-  async _play(resume: boolean) {
+  async _play({
+    resume,
+    fadeDuration,
+  }: {
+    resume: boolean;
+    fadeDuration: undefined | number;
+  }) {
     try {
       const { src, bpm, startOffset, duration } = musicList[this.music];
       const response = await fetch(src);
@@ -191,7 +201,7 @@ export class Visualizer {
       this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
       this.gainNode.gain.linearRampToValueAtTime(
         0.1,
-        this.audioContext.currentTime + this.fadeDuration,
+        this.audioContext.currentTime + (fadeDuration ?? this.fadeDuration),
       );
 
       const offset = resume ? this.pauseTime : startOffset;
@@ -216,7 +226,12 @@ export class Visualizer {
   }
 
   #stopLock = false;
-  stop({ pause = false, loop = false, afterStop = () => {} } = {}) {
+  stop({
+    pause = false,
+    loop = false,
+    afterStop = () => {},
+    fadeDuration = undefined as undefined | number,
+  } = {}) {
     if (this.#stopLock) return;
     this.#stopLock = true;
     const now = this.audioContext.currentTime;
@@ -228,31 +243,34 @@ export class Visualizer {
       this.#elapsedIntervalId = null;
     }
 
-    setTimeout(() => {
-      if (this.source) {
-        this.source.onended = null;
-        this.source.stop();
-        this.source.disconnect();
-        this.source = null;
-      }
+    setTimeout(
+      () => {
+        if (this.source) {
+          this.source.onended = null;
+          this.source.stop();
+          this.source.disconnect();
+          this.source = null;
+        }
 
-      if (pause) {
-        this.pauseTime = this.audioContext.currentTime - this.startTime;
-      } else {
-        this.pauseTime = 0;
-        this.lastBeat = -1;
-      }
+        if (pause) {
+          this.pauseTime = this.audioContext.currentTime - this.startTime;
+        } else {
+          this.pauseTime = 0;
+          this.lastBeat = -1;
+        }
 
-      cancelAnimationFrame(this.rafId);
-      this.playing = false;
-      this.onStop(pause);
-      this.#stopLock = false;
-      if (loop) {
-        this.play();
-      } else {
-        afterStop();
-      }
-    }, this.fadeDuration * 1000);
+        cancelAnimationFrame(this.rafId);
+        this.playing = false;
+        this.onStop(pause);
+        this.#stopLock = false;
+        if (loop) {
+          this.play();
+        } else {
+          afterStop();
+        }
+      },
+      (fadeDuration ?? this.fadeDuration) * 1000,
+    );
   }
 
   private listen = () => {
