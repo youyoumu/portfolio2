@@ -11,6 +11,9 @@ importers:
       '@solid-primitives/scheduled':
         specifier: ^1.5.2
         version: 1.5.2(solid-js@1.9.7)
+      '@tabler/icons-solidjs':
+        specifier: ^3.34.0
+        version: 3.34.0(solid-js@1.9.7)
       '@tailwindcss/vite':
         specifier: ^4.0.6
         version: 4.1.11(vite@6.3.5(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.20.3))
@@ -632,6 +635,14 @@ packages:
     resolution: {integrity: sha512-zdIWBGpR9zGx1p1bzIPqF5Gs+Ks/BH8R6fWhmUa/dcK1L2rUC8BAcZJzNRYBQv74kScf1TSOs0EY//Vd/I0V8g==}
     peerDependencies:
       solid-js: '>=1.8.4'
+
+  '@tabler/icons-solidjs@3.34.0':
+    resolution: {integrity: sha512-O6RI1dz4o2MhsyMUk4tELySY25deyB+cHsREwQdYynB+8K9CncVgi9vlpG7lE14lmJ64edduDpCkMxqKdev5jQ==}
+    peerDependencies:
+      solid-js: ^1.4.7
+
+  '@tabler/icons@3.34.0':
+    resolution: {integrity: sha512-jtVqv0JC1WU2TTEBN32D9+R6mc1iEBuPwLnBsWaR02SIEciu9aq5806AWkCHuObhQ4ERhhXErLEK7Fs+tEZxiA==}
 
   '@tailwindcss/node@4.1.11':
     resolution: {integrity: sha512-yzhzuGRmv5QyU9qLNg4GTlYI6STedBWRE7NjxP45CsFYYq9taI0zJXZBMqIC/c8fViNLhmrbpSFS57EoxUmD6Q==}
@@ -2342,6 +2353,13 @@ snapshots:
   '@solidjs/meta@0.29.4(solid-js@1.9.7)':
     dependencies:
       solid-js: 1.9.7
+
+  '@tabler/icons-solidjs@3.34.0(solid-js@1.9.7)':
+    dependencies:
+      '@tabler/icons': 3.34.0
+      solid-js: 1.9.7
+
+  '@tabler/icons@3.34.0': {}
 
   '@tailwindcss/node@4.1.11':
     dependencies:

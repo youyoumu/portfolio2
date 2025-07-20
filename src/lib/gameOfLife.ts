@@ -10,6 +10,8 @@ export class GameOfLife {
   injectionMask: Uint8Array<ArrayBuffer>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  bgColor: string;
+  cellColor: string;
   offsetX = 0;
   offsetY = 0;
 
@@ -40,6 +42,12 @@ export class GameOfLife {
     this.canvas.width = width * this.cellSize;
     this.canvas.height = height * this.cellSize;
     this.ctx = this.canvas.getContext("2d")!;
+    this.bgColor = getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-neutral-content")
+      .trim();
+    this.cellColor = getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-neutral")
+      .trim();
 
     this.next();
     this.updateCanvas();
@@ -161,10 +169,10 @@ export class GameOfLife {
           pulseSize
       : 1;
 
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = this.bgColor;
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = this.cellColor;
     const baseRadius = (cellSize * (0.9 + this.energy / 1.75) - 1) / 2;
     const radius = baseRadius * easeScale;
 

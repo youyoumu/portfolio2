@@ -1,4 +1,9 @@
 import { debounce } from "@solid-primitives/scheduled";
+import {
+  IconPlayerPlayFilled,
+  IconPlayerSkipBackFilled,
+  IconPlayerSkipForwardFilled,
+} from "@tabler/icons-solidjs";
 import { createSignal, onMount } from "solid-js";
 
 import { BadApple } from "#/lib/badApple";
@@ -245,9 +250,24 @@ export default function RootPage() {
           remove lyrics
         </button>
       </div>
+      <AudioControl />
       <div class="h-svh w-full"></div>
 
       <div>{visualizerCanvas()}</div>
     </>
+  );
+}
+
+function AudioControl() {
+  return (
+    <div class="fixed bottom-8 left-1/2 translate-x-1/2 bg-neutral p-4 rounded-full">
+      <div class="flex gap-4 items-center">
+        <IconPlayerSkipBackFilled class="text-neutral-content cursor-pointer size-5" />
+        <div class="rounded-full bg-neutral-content text-neutral cursor-pointer p-1">
+          <IconPlayerPlayFilled />
+        </div>
+        <IconPlayerSkipForwardFilled class="text-neutral-content cursor-pointer size-5" />
+      </div>
+    </div>
   );
 }
