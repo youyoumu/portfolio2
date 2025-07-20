@@ -37,6 +37,8 @@ const musicList = {
   },
 };
 
+const audioBufferCache = new Map<string, AudioBuffer>();
+
 export class Visualizer {
   audioContext: AudioContext;
   analyser: AnalyserNode;
@@ -189,9 +191,13 @@ export class Visualizer {
   }) {
     try {
       const { src, bpm, startOffset, duration } = musicList[this.music];
-      const response = await fetch(src);
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+      let audioBuffer = audioBufferCache.get(src);
+      if (!audioBuffer) {
+        const response = await fetch(src);
+        const arrayBuffer = await response.arrayBuffer();
+        audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+        audioBufferCache.set(src, audioBuffer);
+      }
 
       this.source = this.audioContext.createBufferSource();
       this.source.buffer = audioBuffer;
@@ -239,7 +245,10 @@ export class Visualizer {
     const now = this.audioContext.currentTime;
     this.gainNode.gain.cancelScheduledValues(now);
     this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
-    this.gainNode.gain.linearRampToValueAtTime(0, now + this.fadeDuration);
+    this.gainNode.gain.linearRampToValueAtTime(
+      0,
+      now + (fadeDuration ?? this.fadeDuration),
+    );
     if (this.#elapsedIntervalId !== null) {
       clearInterval(this.#elapsedIntervalId);
       this.#elapsedIntervalId = null;
