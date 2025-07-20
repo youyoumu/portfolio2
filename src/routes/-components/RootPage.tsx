@@ -4,7 +4,7 @@ import {
   IconPlayerSkipBackFilled,
   IconPlayerSkipForwardFilled,
 } from "@tabler/icons-solidjs";
-import { createSignal, onMount } from "solid-js";
+import { createSignal, onCleanup, onMount } from "solid-js";
 
 import { BadApple } from "#/lib/badApple";
 import { GameOfLife } from "#/lib/gameOfLife";
@@ -260,7 +260,7 @@ export default function RootPage() {
 
 function AudioControl() {
   return (
-    <div class="fixed bottom-8 left-1/2 translate-x-1/2 bg-neutral p-4 rounded-full">
+    <div class="fixed bottom-8 left-1/2 translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
       <div class="flex gap-4 items-center">
         <IconPlayerSkipBackFilled class="text-neutral-content cursor-pointer size-5" />
         <div class="rounded-full bg-neutral-content text-neutral cursor-pointer p-1">
@@ -268,6 +268,93 @@ function AudioControl() {
         </div>
         <IconPlayerSkipForwardFilled class="text-neutral-content cursor-pointer size-5" />
       </div>
+      <Slider value={0} onChange={() => {}} />
+    </div>
+  );
+}
+
+function Slider({
+  value: valueProp,
+  onChange,
+  width = 200,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+  width?: number;
+}) {
+  const step = 1;
+  const min = 0;
+  const max = 100;
+  const [dragging, setDragging] = createSignal(false);
+  const [value, setValue] = createSignal(valueProp);
+  let trackRef: HTMLDivElement | undefined;
+
+  function clamp(v: number) {
+    return Math.min(max, Math.max(min, v));
+  }
+
+  function percentFromValue(value: number) {
+    return ((value - min) / (max - min)) * 100;
+  }
+
+  function valueFromClientX(clientX: number) {
+    if (!trackRef) return value();
+    const rect = trackRef.getBoundingClientRect();
+    const ratio = (clientX - rect.left) / rect.width;
+    const raw = min + ratio * (max - min);
+    return clamp(Math.round(raw / step) * step);
+  }
+
+  function handlePointerDown(e: PointerEvent) {
+    trackRef?.setPointerCapture(e.pointerId);
+    setDragging(true);
+    updateValue(e.clientX);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+  }
+
+  function handlePointerMove(e: PointerEvent) {
+    if (dragging()) {
+      updateValue(e.clientX);
+    }
+  }
+
+  function handlePointerUp(e: PointerEvent) {
+    trackRef?.releasePointerCapture(e.pointerId);
+    setDragging(false);
+    window.removeEventListener("pointermove", handlePointerMove);
+    window.removeEventListener("pointerup", handlePointerUp);
+  }
+
+  function updateValue(clientX: number) {
+    const newValue = valueFromClientX(clientX);
+    setValue(newValue);
+    onChange(newValue);
+  }
+
+  onCleanup(() => {
+    window.removeEventListener("pointermove", handlePointerMove);
+    window.removeEventListener("pointerup", handlePointerUp);
+  });
+
+  return (
+    <div
+      ref={trackRef}
+      class="relative h-2 bg-neutral-content rounded-full cursor-pointer"
+      style={{ width: `${width}px` }}
+      onPointerDown={handlePointerDown}
+    >
+      <div
+        class="absolute h-full bg-primary rounded-full"
+        style={{ width: `${percentFromValue(value())}%` }}
+      />
+      <div
+        class="absolute top-1/2 size-4 bg-primary rounded-full"
+        style={{
+          left: `${percentFromValue(value())}%`,
+          transform: "translate(-50%, -50%)",
+        }}
+      />
     </div>
   );
 }
