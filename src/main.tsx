@@ -3,7 +3,10 @@ import "./styles.css";
 import { createRouter, RouterProvider } from "@tanstack/solid-router";
 import { render } from "solid-js/web";
 
+import gsapInit from "./lib/gsap/gsapInit";
 import { routeTree } from "./routeTree.gen";
+
+gsapInit();
 
 const router = createRouter({
   routeTree,

@@ -10,7 +10,9 @@ import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
 import { BadApple } from "#/lib/badApple";
 import { GameOfLife } from "#/lib/gameOfLife";
+import { horizontalLoop } from "#/lib/gsap/horizontalLoop";
 import { Lyrics } from "#/lib/lyrics";
+import { cn } from "#/lib/utils/cn";
 import { Visualizer } from "#/lib/visualizer";
 
 export default function RootPage() {
@@ -324,7 +326,14 @@ function AudioControl(props: {
     <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-12 rounded-full flex flex-col gap-2 items-center">
       <div class="flex gap-4 items-center w-full">
         <div class="flex gap-2 items-center justify-between w-full">
-          <div></div>
+          <div class="w-32">
+            <ScrollingText
+              text="こんな自分に未来はあるの?"
+              classNames={{
+                text: "text-neutral-content text-xs",
+              }}
+            />
+          </div>
           <IconPlayerSkipBackFilled
             onClick={props.onSkipBack}
             class="text-neutral-content cursor-pointer size-5"
@@ -345,12 +354,81 @@ function AudioControl(props: {
         </div>
       </div>
       <Slider
-        width={240}
+        width={320}
         timeElapsed={props.timeElapsed}
         maxDuration={props.maxDuration}
         progress={props.progress}
         onChange={props.onSliderChange}
       />
+    </div>
+  );
+}
+
+function ScrollingText(props: {
+  text: string;
+  classNames?: {
+    text: string;
+  };
+}) {
+  let containerRef!: HTMLDivElement;
+  let textRef!: HTMLDivElement;
+  let tl: ReturnType<typeof horizontalLoop>;
+  const clones: HTMLDivElement[] = [];
+
+  onMount(() => {
+    const container = containerRef;
+    const textEl = textRef;
+    if (!container || !textEl) return;
+
+    for (let i = 0; i < 5; i++) {
+      const clone = textEl.cloneNode(true) as HTMLDivElement;
+      container.appendChild(clone);
+      clones.push(clone);
+    }
+
+    tl = horizontalLoop([textEl, ...clones], {
+      repeat: -1,
+      speed: 0.3,
+    });
+
+    Observer.create({
+      onChangeY(self) {
+        let factor = 1.5;
+        if (self.deltaY < 0) {
+          factor *= -1;
+        }
+        gsap
+          .timeline({
+            defaults: {
+              ease: "expo.out",
+            },
+          })
+          .to(tl, { timeScale: factor * 2.5, duration: 0.2 })
+          .to(tl, { timeScale: factor / 2.5, duration: 1 });
+      },
+    });
+  });
+
+  onCleanup(() => {
+    tl.kill();
+    for (const clone of clones) {
+      if (clone.parentElement === containerRef) {
+        containerRef.removeChild(clone);
+      }
+    }
+  });
+
+  return (
+    <div
+      ref={containerRef}
+      class="relative overflow-hidden whitespace-nowrap max-w-full w-full"
+    >
+      <div
+        ref={textRef}
+        class={cn("inline-block pe-2", props?.classNames?.text)}
+      >
+        {props.text}
+      </div>
     </div>
   );
 }
