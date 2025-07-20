@@ -8,7 +8,6 @@ type LyricLine = {
   endTime?: number;
 };
 
-const offset = 1;
 const lyrics = [
   { text: "流れてく 時の中ででも", startTime: 29 },
   { text: "気だるさが ほらグルグル廻って", startTime: 33.013 },
@@ -68,10 +67,7 @@ const lyrics = [
 
 export class Lyrics {
   container: HTMLElement = document.createElement("div");
-  lyrics: LyricLine[] = lyrics.map((value) => ({
-    ...value,
-    startTime: value.startTime + offset,
-  }));
+  lyrics: LyricLine[] = lyrics;
   currentIndex = -1;
   split?: SplitText;
 
@@ -91,11 +87,16 @@ export class Lyrics {
     this.animate(line.text);
   }
 
-  animate(text: string) {
+  removeLyrics() {
     if (this.split) {
       this.split.revert();
       this.split = undefined;
+      this.container.textContent = null;
     }
+  }
+
+  animate(text: string) {
+    this.removeLyrics();
     this.container.textContent = text;
 
     requestAnimationFrame(() => {
@@ -121,12 +122,18 @@ export class Lyrics {
     });
   }
 
+  startSyncRafId: number = 0;
   startSync(getTime: () => number) {
     const loop = () => {
       const time = getTime();
       this.render(time);
-      requestAnimationFrame(loop);
+      this.startSyncRafId = requestAnimationFrame(loop);
     };
     loop();
+  }
+
+  stopSync() {
+    cancelAnimationFrame(this.startSyncRafId);
+    this.startSyncRafId = 0;
   }
 }

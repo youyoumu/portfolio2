@@ -117,6 +117,11 @@ export class Visualizer {
     });
   }
 
+  getTime(): number {
+    if (!this.playing) return this.pauseTime;
+    return this.audioContext.currentTime - this.startTime;
+  }
+
   #playLock = false;
   play(resume = false) {
     if (this.playing || this.#playLock) return;

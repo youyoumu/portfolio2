@@ -49,7 +49,7 @@ export default function RootPage() {
       },
       onStart: (resume, bpm) => {
         if (visualizer.music === "bad-apple-ft-sekai") {
-          lyrics.startSync(() => visualizer.audioContext.currentTime);
+          lyrics.startSync(() => visualizer.getTime());
         }
         if (
           visualizer.music === "bad-apple-ft-sekai-off-vocal" ||
@@ -71,6 +71,13 @@ export default function RootPage() {
       },
       onStop: (pause) => {
         gameOfLife.injectionMask.fill(0);
+
+        if (visualizer.music === "bad-apple-ft-sekai") {
+          lyrics.stopSync();
+          if (!pause) {
+            lyrics.removeLyrics();
+          }
+        }
         if (
           visualizer.music === "bad-apple-ft-sekai-off-vocal" ||
           visualizer.music === "bad-apple-ft-sekai"
@@ -228,6 +235,14 @@ export default function RootPage() {
           }}
         >
           start lyrics
+        </button>
+        <button
+          class="btn btn-primary"
+          onClick={() => {
+            lyrics.removeLyrics();
+          }}
+        >
+          remove lyrics
         </button>
       </div>
       <div class="h-svh w-full"></div>
