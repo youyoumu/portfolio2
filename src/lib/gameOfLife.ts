@@ -9,7 +9,7 @@ export class GameOfLife {
   nextGrid: Uint8Array<ArrayBuffer>;
   injectionMask: Uint8Array<ArrayBuffer>;
   canvas: HTMLCanvasElement;
-  devicePixelRatio = Math.ceil(window.devicePixelRatio);
+  devicePixelRatio = Math.ceil(window.devicePixelRatio) + 1;
   ctx: CanvasRenderingContext2D;
   bgColor: string;
   cellColor: string;
@@ -137,7 +137,7 @@ export class GameOfLife {
 
   #tickTime = 15;
   moveCircle(speed = 1) {
-    this.#tickTime += 0.001 * speed; // Controls speed of the circular motion
+    this.#tickTime += 0.001 * speed * (1 / this.devicePixelRatio); // Controls speed of the circular motion
 
     const radius = (this.canvas.width + this.canvas.height) / 2; // Adjust this based on how big the scroll radius should be
     const centerX = this.canvas.width / 2;
