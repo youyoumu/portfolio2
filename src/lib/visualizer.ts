@@ -65,6 +65,7 @@ type VisualizerInit = {
   onElapsedTimeUpdate: (duration: number) => void;
   onSeek: ({ target }: { target: number }) => void;
   music: keyof typeof musicList;
+  volume?: number;
 };
 
 export class Visualizer {
@@ -115,6 +116,7 @@ export class Visualizer {
     this.onElapsedTimeUpdate = init.onElapsedTimeUpdate;
     this.onSeek = init.onSeek;
     this.music = init.music;
+    this.volume = init.volume ?? this.volume;
 
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();

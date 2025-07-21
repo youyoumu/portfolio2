@@ -62,6 +62,7 @@ export default function RootPage() {
   }
 
   onMount(() => {
+    const isMobile = window.innerWidth < 640;
     const { cellSize, width, height } = getGameOfLifeSize();
     gameOfLife = new GameOfLife({
       width,
@@ -146,6 +147,7 @@ export default function RootPage() {
         lyrics.removeLyrics();
       },
       music: "bad-apple-ft-sekai-off-vocal",
+      volume: isMobile ? MAX_VOLUME : 0.1,
     });
 
     setGameOfLifeCanvas(gameOfLife.canvas);
