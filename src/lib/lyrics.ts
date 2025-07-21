@@ -80,7 +80,6 @@ export class Lyrics {
       "text-7xl",
       "text-gray-300",
       "font-yuji-syuku",
-      "invisible",
       "flex",
       "[&>div]:flex!",
       "[&>div]:flex-row-reverse!",
@@ -133,8 +132,7 @@ export class Lyrics {
         onComplete: () => {
           this.split?.revert();
           this.split = undefined;
-          this.container.textContent = null;
-          this.container.classList.add("invisible");
+          this.container.textContent = "";
           resolve();
         },
       });
@@ -146,7 +144,6 @@ export class Lyrics {
 
     this.container.textContent = text;
     await document.fonts.ready;
-    this.container.classList.remove("invisible");
 
     requestAnimationFrame(() => {
       this.split = SplitText.create(this.container, {
