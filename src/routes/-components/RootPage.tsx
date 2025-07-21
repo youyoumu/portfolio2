@@ -63,7 +63,7 @@ export default function RootPage() {
 
   function getGameOfLifeSize() {
     const isMobile = window.innerWidth < 640;
-    const cellSize = isMobile ? 12 : 20;
+    const cellSize = isMobile ? 10 : 20;
     const width = Math.floor((window.innerWidth + cellSize) / cellSize);
     const height = Math.floor((window.innerHeight + cellSize) / cellSize);
 

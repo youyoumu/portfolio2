@@ -9,6 +9,7 @@ export class GameOfLife {
   nextGrid: Uint8Array<ArrayBuffer>;
   injectionMask: Uint8Array<ArrayBuffer>;
   canvas: HTMLCanvasElement;
+  devicePixelRatio = Math.ceil(window.devicePixelRatio);
   ctx: CanvasRenderingContext2D;
   bgColor: string;
   cellColor: string;
@@ -39,9 +40,19 @@ export class GameOfLife {
 
     // Prepare canvas once
     this.canvas = document.createElement("canvas");
-    this.canvas.width = width * this.cellSize;
-    this.canvas.height = height * this.cellSize;
+    this.canvas.width = width * this.cellSize * this.devicePixelRatio;
+    this.canvas.height = height * this.cellSize * this.devicePixelRatio;
+    this.canvas.style.width = `${width * this.cellSize}px`;
+    this.canvas.style.height = `${height * this.cellSize}px`;
     this.ctx = this.canvas.getContext("2d")!;
+    this.ctx.setTransform(
+      this.devicePixelRatio,
+      0,
+      0,
+      this.devicePixelRatio,
+      0,
+      0,
+    );
     this.bgColor = getComputedStyle(document.documentElement)
       .getPropertyValue("--color-neutral-content")
       .trim();
@@ -277,8 +288,18 @@ export class GameOfLife {
     this.height = height;
     this.cellSize = cellSize;
 
-    this.canvas.width = width * cellSize;
-    this.canvas.height = height * cellSize;
+    this.canvas.width = width * this.cellSize * this.devicePixelRatio;
+    this.canvas.height = height * this.cellSize * this.devicePixelRatio;
+    this.canvas.style.width = `${width * this.cellSize}px`;
+    this.canvas.style.height = `${height * this.cellSize}px`;
+    this.ctx.setTransform(
+      this.devicePixelRatio,
+      0,
+      0,
+      this.devicePixelRatio,
+      0,
+      0,
+    );
 
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
