@@ -1,3 +1,4 @@
+import { debounce } from "@solid-primitives/scheduled";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 gsap.registerPlugin(SplitText);
@@ -116,7 +117,11 @@ export class Lyrics {
   }
 
   removeLyrics(): Promise<void> {
-    if (!this.split) return Promise.resolve();
+    if (!this.split) {
+      this.container.textContent = "";
+      this.container.classList.add("invisible");
+      return Promise.resolve();
+    }
     const chars = this.split.chars;
 
     return new Promise((resolve) => {
@@ -143,14 +148,21 @@ export class Lyrics {
     });
   }
 
-  async animate(text: string) {
+  animate(text: string) {
+    this.#debounceAnimate(text);
+  }
+
+  #debounceAnimate = debounce((text: string) => {
+    this.#animate_(text);
+  }, 500);
+
+  async #animate_(text: string) {
     await this.removeLyrics();
 
     this.container.textContent = text;
     await document.fonts.ready;
 
     requestAnimationFrame(() => {
-      this.container.classList.remove("invisible");
       this.split = SplitText.create(this.container, {
         type: "chars,words,lines",
         autoSplit: true,
@@ -159,15 +171,17 @@ export class Lyrics {
         // charsClass: "mix-blend-difference",
       });
 
+      this.container.classList.remove("invisible");
+
       gsap.from(this.split.chars, {
         duration: 0.3,
-        yPercent: "random([-150,150])",
-        xPercent: "random([-150,150])",
+        yPercent: "random([-100,100])",
+        xPercent: "random([-100,100])",
         opacity: 0,
         ease: "power3.out",
         stagger: {
           from: "random",
-          amount: 0.3,
+          amount: 0.2,
         },
       });
     });
