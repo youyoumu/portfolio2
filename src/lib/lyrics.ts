@@ -80,6 +80,7 @@ export class Lyrics {
       "text-7xl",
       "text-gray-300",
       "font-yuji-syuku",
+      "invisible",
       "flex",
       "[&>div]:flex!",
       "[&>div]:flex-row-reverse!",
@@ -119,22 +120,25 @@ export class Lyrics {
     const chars = this.split.chars;
 
     return new Promise((resolve) => {
-      gsap.to(chars, {
-        duration: 0.3,
-        yPercent: "random([-100, 100])",
-        xPercent: "random([-100, 100])",
-        opacity: 0,
-        ease: "power3.in",
-        stagger: {
-          from: "center",
-          amount: 0.05,
-        },
-        onComplete: () => {
-          this.split?.revert();
-          this.split = undefined;
-          this.container.textContent = "";
-          resolve();
-        },
+      requestAnimationFrame(() => {
+        gsap.to(chars, {
+          duration: 0.3,
+          yPercent: "random([-100, 100])",
+          xPercent: "random([-100, 100])",
+          opacity: 0,
+          ease: "power3.in",
+          stagger: {
+            from: "center",
+            amount: 0.05,
+          },
+          onComplete: () => {
+            this.split?.revert();
+            this.split = undefined;
+            this.container.textContent = "";
+            this.container.classList.add("invisible");
+            resolve();
+          },
+        });
       });
     });
   }
@@ -146,6 +150,7 @@ export class Lyrics {
     await document.fonts.ready;
 
     requestAnimationFrame(() => {
+      this.container.classList.remove("invisible");
       this.split = SplitText.create(this.container, {
         type: "chars,words,lines",
         autoSplit: true,
