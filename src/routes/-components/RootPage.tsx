@@ -10,7 +10,14 @@ import {
 } from "@tabler/icons-solidjs";
 import * as slider from "@zag-js/slider";
 import { addSeconds, format } from "date-fns";
-import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import {
+  createEffect,
+  createMemo,
+  createSignal,
+  onCleanup,
+  onMount,
+  Show,
+} from "solid-js";
 
 import { env } from "#/env";
 import { BadApple } from "#/lib/badApple";
@@ -55,9 +62,11 @@ export default function RootPage() {
   }
 
   function getGameOfLifeSize() {
-    const cellSize = 20;
+    const isMobile = window.innerWidth < 640;
+    const cellSize = isMobile ? 12 : 20;
     const width = Math.floor((window.innerWidth + cellSize) / cellSize);
     const height = Math.floor((window.innerHeight + cellSize) / cellSize);
+
     return { cellSize, width, height };
   }
 
@@ -374,11 +383,9 @@ function AudioControl(props: {
   const percentage = () => (props.volume / MAX_VOLUME) * 100;
   const matches = tailwindBreakpoints();
 
-  createEffect(() => {
-    console.log("DEBUG[403]: a=", matches.sm);
-  });
+  const isMobile = createMemo(() => !matches.sm);
 
-  const progressBar = (
+  const ProgressBar = () => (
     <div class="flex items-center gap-4">
       <div class="text-neutral-content font-bitcount-single font-light text-sm">
         {props.timeElapsed}
@@ -438,7 +445,9 @@ function AudioControl(props: {
             <IconExternalLink class="text-neutral-content cursor-pointer size-5" />
           </a>
         </div>
-        {!matches.sm && progressBar}
+        <Show when={isMobile()}>
+          <ProgressBar />
+        </Show>
 
         <div class="flex gap-4 items-center justify-between">
           <IconPlayerSkipBackFilled
@@ -494,7 +503,9 @@ function AudioControl(props: {
         </div>
       </div>
 
-      {matches.sm && progressBar}
+      <Show when={!isMobile()}>
+        <ProgressBar />
+      </Show>
     </div>
   );
 }
