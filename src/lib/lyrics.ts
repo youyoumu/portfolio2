@@ -75,7 +75,19 @@ export class Lyrics {
   currentIndex = -1;
   split?: SplitText;
 
-  constructor() {}
+  constructor() {
+    this.container.classList.add(
+      "text-7xl",
+      "text-gray-300",
+      "font-yuji-syuku",
+      "invisible",
+      "flex",
+      "[&>div]:flex!",
+      "[&>div]:flex-row-reverse!",
+      "[&>div>div]:w-22",
+      "[&>div>div>div]:mix-blend-difference",
+    );
+  }
 
   render(currentTime: number) {
     const line = this.lyrics[this.currentIndex];
@@ -121,7 +133,8 @@ export class Lyrics {
         onComplete: () => {
           this.split?.revert();
           this.split = undefined;
-          this.container.textContent = "";
+          this.container.textContent = null;
+          this.container.classList.add("invisible");
           resolve();
         },
       });
@@ -130,15 +143,18 @@ export class Lyrics {
 
   async animate(text: string) {
     await this.removeLyrics();
+
     this.container.textContent = text;
+    await document.fonts.ready;
+    this.container.classList.remove("invisible");
 
     requestAnimationFrame(() => {
       this.split = SplitText.create(this.container, {
         type: "chars,words,lines",
-        linesClass: "flex! flex-row-reverse!",
-        wordsClass: "w-22",
-        charsClass:
-          "text-7xl text-gray-300 font-yuji-syuku mix-blend-difference",
+        autoSplit: true,
+        // linesClass: "flex! flex-row-reverse!",
+        // wordsClass: "w-22",
+        // charsClass: "mix-blend-difference",
       });
 
       gsap.from(this.split.chars, {

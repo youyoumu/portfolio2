@@ -10,6 +10,11 @@
   --font-bitcount-single: "Bitcount Single", "sans-serif";
 }
 
+@font-face {
+  font-family: "Yuji Syuku";
+  font-display: block;
+}
+
 body {
   @apply m-0;
   font-family:
