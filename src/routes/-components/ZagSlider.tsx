@@ -18,6 +18,7 @@ export function ZagSlider(props: {
   label?: string;
   classNames?: {
     root?: string;
+    control?: string;
     range?: string;
     thumb?: string;
   };
@@ -73,7 +74,10 @@ export function ZagSlider(props: {
         <output {...api().getValueTextProps()}>{api().value.at(0)}</output>
       </div>
       <div
-        class={cn("h-2 bg-neutral-content rounded-full cursor-pointer")}
+        class={cn(
+          "h-2 bg-neutral-content rounded-full cursor-pointer",
+          props.classNames?.control,
+        )}
         {...api().getControlProps()}
       >
         <div {...api().getTrackProps()}>
@@ -86,7 +90,7 @@ export function ZagSlider(props: {
           {(_, index) => (
             <div
               class={cn(
-                "size-4 -translate-y-1/4 bg-primary rounded-full focus:outline-0",
+                "size-4 -translate-y-1 bg-primary rounded-full focus:outline-0",
                 props.classNames?.thumb,
               )}
               {...api().getThumbProps({ index: index() })}

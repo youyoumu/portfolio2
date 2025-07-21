@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@solid-primitives/media':
+        specifier: ^2.3.3
+        version: 2.3.3(solid-js@1.9.7)
       '@solid-primitives/scheduled':
         specifier: ^1.5.2
         version: 1.5.2(solid-js@1.9.7)
