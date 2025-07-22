@@ -1,28 +1,11 @@
 import { createSignal } from "solid-js";
 
 import { signalToObj } from "./utils/signalToObj";
-import { withInit } from "./utils/withInit";
 import { musicList } from "./vars";
 
 const audioBufferCache = new Map<string, AudioBuffer>();
 
-interface VisualizerInit {
-  onEnergyUpdate: (energy: number) => void;
-  onBeat: () => void;
-  onStart: (param: {
-    resume: boolean;
-    bpm: number;
-    duration: number;
-    isSeek: boolean;
-    music: (typeof musicList)[keyof typeof musicList];
-  }) => void;
-  onStop: (param: { pause: boolean; isSeek: boolean }) => void;
-  onSeek: ({ target }: { target: number }) => void;
-  music: keyof typeof musicList;
-  volume?: number;
-}
-
-export class Visualizer extends withInit<VisualizerInit>() {
+export class Visualizer {
   audioContext: AudioContext;
   analyser: AnalyserNode;
   source: AudioBufferSourceNode | null = null;
@@ -52,12 +35,39 @@ export class Visualizer extends withInit<VisualizerInit>() {
   lastBeat = -1;
   loop = true;
   debug = false;
-  volume = 0.1;
+
+  onEnergyUpdate;
+  onBeat;
+  onStart;
+  onStop;
+  onSeek;
+  music;
+  volume;
 
   signal;
 
-  constructor(init: VisualizerInit) {
-    super(init);
+  constructor(init: {
+    onEnergyUpdate: (energy: number) => void;
+    onBeat: () => void;
+    onStart: (param: {
+      resume: boolean;
+      bpm: number;
+      duration: number;
+      isSeek: boolean;
+      music: (typeof musicList)[keyof typeof musicList];
+    }) => void;
+    onStop: (param: { pause: boolean; isSeek: boolean }) => void;
+    onSeek: ({ target }: { target: number }) => void;
+    music: keyof typeof musicList;
+    volume?: number;
+  }) {
+    this.onEnergyUpdate = init.onEnergyUpdate;
+    this.onBeat = init.onBeat;
+    this.onStart = init.onStart;
+    this.onStop = init.onStop;
+    this.onSeek = init.onSeek;
+    this.music = init.music;
+    this.volume = init.volume ?? 0.1;
 
     this.signal = {
       elapsedTime: signalToObj(createSignal(0)),
