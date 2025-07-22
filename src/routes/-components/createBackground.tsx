@@ -127,26 +127,28 @@ export function createBackground() {
   });
 
   const progress = () => {
-    const dur = visualizer.duration();
-    return dur > 0 ? Math.floor((visualizer.elapsedTime() / dur) * 100) : 0;
+    const dur = visualizer.signal.duration.get();
+    return dur > 0
+      ? Math.floor((visualizer.signal.elapsedTime.get() / dur) * 100)
+      : 0;
   };
 
   const audioControl = (
     <AudioControl
-      timeElapsed={`${formatTime(visualizer.elapsedTime())}`}
-      maxDuration={`${formatTime(visualizer.duration())}`}
+      timeElapsed={`${formatTime(visualizer.signal.elapsedTime.get())}`}
+      maxDuration={`${formatTime(visualizer.signal.duration.get())}`}
       progress={progress()}
       playing={playing()}
-      volume={visualizer.volume_()}
+      volume={visualizer.signal.volume.get()}
       visualizerCanvas={visualizer.canvas}
-      music={visualizer.musicInfo()}
+      music={visualizer.signal.musicInfo.get()}
       onProgressChange={(progress) => {
         visualizer.seek(undefined, progress);
       }}
       onVolumeChange={(percentage) => {
         const actualVolume = (percentage / 100) * MAX_VOLUME;
         visualizer.setVolume(actualVolume);
-        visualizer.setVolume_(actualVolume);
+        visualizer.signal.volume.set(actualVolume);
       }}
       onPlayPause={() => {
         if (visualizer.playing) {

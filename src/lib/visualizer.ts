@@ -1,5 +1,7 @@
 import { createSignal } from "solid-js";
 
+import { signalToObj } from "./utils/signalToObj";
+
 const musicList = {
   doodle: {
     src: "/music/doodle.webm",
@@ -108,20 +110,7 @@ export class Visualizer implements VisualizerInit {
   onSeek;
   music;
 
-  elapsedTimeSignal = createSignal(0);
-  elapsedTime = this.elapsedTimeSignal[0];
-  setElapsedTime = this.elapsedTimeSignal[1];
-
-  durationSignal = createSignal(0);
-  duration = this.durationSignal[0];
-  setDuration = this.durationSignal[1];
-
-  musicInfo;
-  setMusicInfo;
-
-  volumeSignal = createSignal(0);
-  volume_ = this.volumeSignal[0];
-  setVolume_ = this.volumeSignal[1];
+  signal;
 
   constructor(init: VisualizerInit) {
     this.onEnergyUpdate = init.onEnergyUpdate;
@@ -132,14 +121,12 @@ export class Visualizer implements VisualizerInit {
     this.music = init.music;
     this.volume = init.volume ?? this.volume;
 
-    const musicInfoSignal = createSignal(musicList[this.music]);
-    this.musicInfo = musicInfoSignal[0];
-    this.setMusicInfo = musicInfoSignal[1];
-
-    this.setDuration(musicList[this.music].duration);
-    this.setMusicInfo(musicList[this.music]);
-
-    this.setVolume_(this.volume);
+    this.signal = {
+      elapsedTime: signalToObj(createSignal(0)),
+      duration: signalToObj(createSignal(musicList[this.music].duration)),
+      musicInfo: signalToObj(createSignal(musicList[this.music])),
+      volume: signalToObj(createSignal(this.volume)),
+    };
 
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();
@@ -180,7 +167,7 @@ export class Visualizer implements VisualizerInit {
     const max = musicList[this.music].duration;
     duration = duration ?? (percentage / 100) * max;
     const target = Math.max(0, Math.min(duration, max));
-    this.setElapsedTime(target);
+    this.signal.elapsedTime.set(target);
     this.pauseTime = target;
     this.onSeek({ target });
 
@@ -263,9 +250,9 @@ export class Visualizer implements VisualizerInit {
       this.startTime = this.audioContext.currentTime - offset;
       this.source.start(0, offset);
       this.playing = true;
-      this.setDuration(musicList[this.music].duration);
+      this.signal.duration.set(musicList[this.music].duration);
       if (!isSeek) {
-        this.setMusicInfo(musicList[this.music]);
+        this.signal.musicInfo.set(musicList[this.music]);
       }
       this.onStart({
         resume,
@@ -278,9 +265,9 @@ export class Visualizer implements VisualizerInit {
         this.stop({ loop: this.loop });
       };
 
-      this.setElapsedTime(this.getTime());
+      this.signal.elapsedTime.set(this.getTime());
       this.#elapsedIntervalId = window.setInterval(() => {
-        this.setElapsedTime(this.getTime());
+        this.signal.elapsedTime.set(this.getTime());
       }, 1000);
 
       this.listen();
