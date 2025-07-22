@@ -1,6 +1,7 @@
 import { createSignal } from "solid-js";
 
 import { signalToObj } from "./utils/signalToObj";
+import { withInit } from "./utils/withInit";
 
 const musicList = {
   doodle: {
@@ -71,7 +72,7 @@ interface VisualizerInit {
   volume?: number;
 }
 
-export class Visualizer implements VisualizerInit {
+export class Visualizer extends withInit<VisualizerInit>() {
   audioContext: AudioContext;
   analyser: AnalyserNode;
   source: AudioBufferSourceNode | null = null;
@@ -99,27 +100,14 @@ export class Visualizer implements VisualizerInit {
   startTime = 0;
   pauseTime = 0;
   lastBeat = -1;
-  volume = 0.1;
   loop = true;
   debug = false;
-
-  onEnergyUpdate;
-  onBeat;
-  onStart;
-  onStop;
-  onSeek;
-  music;
+  volume = 0.1;
 
   signal;
 
   constructor(init: VisualizerInit) {
-    this.onEnergyUpdate = init.onEnergyUpdate;
-    this.onBeat = init.onBeat;
-    this.onStart = init.onStart;
-    this.onStop = init.onStop;
-    this.onSeek = init.onSeek;
-    this.music = init.music;
-    this.volume = init.volume ?? this.volume;
+    super(init);
 
     this.signal = {
       elapsedTime: signalToObj(createSignal(0)),
