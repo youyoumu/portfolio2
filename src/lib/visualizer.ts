@@ -1,3 +1,5 @@
+import { createSignal } from "solid-js";
+
 const musicList = {
   doodle: {
     src: "/music/doodle.webm",
@@ -51,7 +53,7 @@ const musicList = {
 
 const audioBufferCache = new Map<string, AudioBuffer>();
 
-type VisualizerInit = {
+interface VisualizerInit {
   onEnergyUpdate: (energy: number) => void;
   onBeat: () => void;
   onStart: (param: {
@@ -62,13 +64,12 @@ type VisualizerInit = {
     music: (typeof musicList)[keyof typeof musicList];
   }) => void;
   onStop: (param: { pause: boolean; isSeek: boolean }) => void;
-  onElapsedTimeUpdate: (duration: number) => void;
   onSeek: ({ target }: { target: number }) => void;
   music: keyof typeof musicList;
   volume?: number;
-};
+}
 
-export class Visualizer {
+export class Visualizer implements VisualizerInit {
   audioContext: AudioContext;
   analyser: AnalyserNode;
   source: AudioBufferSourceNode | null = null;
@@ -100,23 +101,45 @@ export class Visualizer {
   loop = true;
   debug = false;
 
-  onEnergyUpdate: VisualizerInit["onEnergyUpdate"];
-  onBeat: VisualizerInit["onBeat"];
-  onStart: VisualizerInit["onStart"];
-  onStop: VisualizerInit["onStop"];
-  onElapsedTimeUpdate: VisualizerInit["onElapsedTimeUpdate"];
-  onSeek: VisualizerInit["onSeek"];
-  music: VisualizerInit["music"];
+  onEnergyUpdate;
+  onBeat;
+  onStart;
+  onStop;
+  onSeek;
+  music;
+
+  elapsedTimeSignal = createSignal(0);
+  elapsedTime = this.elapsedTimeSignal[0];
+  setElapsedTime = this.elapsedTimeSignal[1];
+
+  durationSignal = createSignal(0);
+  duration = this.durationSignal[0];
+  setDuration = this.durationSignal[1];
+
+  musicInfo;
+  setMusicInfo;
+
+  volumeSignal = createSignal(0);
+  volume_ = this.volumeSignal[0];
+  setVolume_ = this.volumeSignal[1];
 
   constructor(init: VisualizerInit) {
     this.onEnergyUpdate = init.onEnergyUpdate;
     this.onBeat = init.onBeat;
     this.onStart = init.onStart;
     this.onStop = init.onStop;
-    this.onElapsedTimeUpdate = init.onElapsedTimeUpdate;
     this.onSeek = init.onSeek;
     this.music = init.music;
     this.volume = init.volume ?? this.volume;
+
+    const musicInfoSignal = createSignal(musicList[this.music]);
+    this.musicInfo = musicInfoSignal[0];
+    this.setMusicInfo = musicInfoSignal[1];
+
+    this.setDuration(musicList[this.music].duration);
+    this.setMusicInfo(musicList[this.music]);
+
+    this.setVolume_(this.volume);
 
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();
@@ -157,7 +180,7 @@ export class Visualizer {
     const max = musicList[this.music].duration;
     duration = duration ?? (percentage / 100) * max;
     const target = Math.max(0, Math.min(duration, max));
-    this.onElapsedTimeUpdate(target);
+    this.setElapsedTime(target);
     this.pauseTime = target;
     this.onSeek({ target });
 
@@ -240,6 +263,10 @@ export class Visualizer {
       this.startTime = this.audioContext.currentTime - offset;
       this.source.start(0, offset);
       this.playing = true;
+      this.setDuration(musicList[this.music].duration);
+      if (!isSeek) {
+        this.setMusicInfo(musicList[this.music]);
+      }
       this.onStart({
         resume,
         bpm,
@@ -251,9 +278,9 @@ export class Visualizer {
         this.stop({ loop: this.loop });
       };
 
-      this.onElapsedTimeUpdate(this.getTime());
+      this.setElapsedTime(this.getTime());
       this.#elapsedIntervalId = window.setInterval(() => {
-        this.onElapsedTimeUpdate(this.getTime());
+        this.setElapsedTime(this.getTime());
       }, 1000);
 
       this.listen();

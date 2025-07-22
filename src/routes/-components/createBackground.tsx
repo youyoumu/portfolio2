@@ -24,20 +24,7 @@ import { ZagSlider } from "./ZagSlider";
 const MAX_VOLUME = 0.3;
 
 export function createBackground() {
-  const [elapsedTime, setElapsedTime] = createSignal(0);
-  const [duration, setDuration] = createSignal(0);
   const [playing, setPlaying] = createSignal(false);
-  const [music, setMusic] = createSignal<{
-    artist: string;
-    title: string;
-    link: string;
-  }>();
-  const [volume, setVolume] = createSignal(0);
-
-  const progress = () => {
-    const dur = duration();
-    return dur > 0 ? Math.floor((elapsedTime() / dur) * 100) : 0;
-  };
 
   function formatTime(seconds: number): string {
     return format(addSeconds(new Date(0), Math.floor(seconds)), "m:ss");
@@ -74,15 +61,7 @@ export function createBackground() {
     onBeat: () => {
       gameOfLife.next();
     },
-    onStart: ({ resume, bpm, duration, isSeek, music }) => {
-      if (!isSeek) {
-        setMusic({
-          artist: music.artist,
-          title: music.title,
-          link: music.link,
-        });
-      }
-      setDuration(duration);
+    onStart: ({ resume, bpm }) => {
       setPlaying(true);
       if (visualizer.music === "bad-apple-ft-sekai") {
         lyrics.startSync(() => visualizer.getTime());
@@ -128,9 +107,6 @@ export function createBackground() {
         if (!isSeek) gameOfLife.startMovingSlow();
       }
     },
-    onElapsedTimeUpdate(duration) {
-      setElapsedTime(duration);
-    },
     onSeek({ target }) {
       badApple.onSeek({ target });
       lyrics.removeLyrics();
@@ -140,14 +116,6 @@ export function createBackground() {
   });
 
   onMount(() => {
-    setDuration(visualizer.getDuration());
-    setMusic({
-      artist: visualizer.getMusic().artist,
-      title: visualizer.getMusic().title,
-      link: visualizer.getMusic().link,
-    });
-    setVolume(visualizer.volume);
-
     const resize = debounce(() => {
       const { cellSize, width, height } = getGameOfLifeSize();
       gameOfLife.resize(width, height, cellSize);
@@ -158,22 +126,27 @@ export function createBackground() {
     return () => window.removeEventListener("resize", resize);
   });
 
+  const progress = () => {
+    const dur = visualizer.duration();
+    return dur > 0 ? Math.floor((visualizer.elapsedTime() / dur) * 100) : 0;
+  };
+
   const audioControl = (
     <AudioControl
-      timeElapsed={`${formatTime(elapsedTime())}`}
-      maxDuration={`${formatTime(duration())}`}
+      timeElapsed={`${formatTime(visualizer.elapsedTime())}`}
+      maxDuration={`${formatTime(visualizer.duration())}`}
       progress={progress()}
       playing={playing()}
-      volume={volume()}
+      volume={visualizer.volume_()}
       visualizerCanvas={visualizer.canvas}
-      music={music()}
+      music={visualizer.musicInfo()}
       onProgressChange={(progress) => {
         visualizer.seek(undefined, progress);
       }}
       onVolumeChange={(percentage) => {
         const actualVolume = (percentage / 100) * MAX_VOLUME;
         visualizer.setVolume(actualVolume);
-        setVolume(actualVolume);
+        visualizer.setVolume_(actualVolume);
       }}
       onPlayPause={() => {
         if (visualizer.playing) {
