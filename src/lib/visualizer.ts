@@ -2,57 +2,7 @@ import { createSignal } from "solid-js";
 
 import { signalToObj } from "./utils/signalToObj";
 import { withInit } from "./utils/withInit";
-
-const musicList = {
-  doodle: {
-    src: "/music/doodle.webm",
-    artist: "Zachz Winner",
-    title: "doodle",
-    link: "https://youtu.be/-iM7KCEt5zs?si=HrqlfZiWwmGMJI7n",
-    bpm: 160,
-    startOffset: 0,
-    firstBeatOffset: 0.5,
-    lowFreqStart: 0,
-    lowFreqEnd: 64,
-    duration: 74,
-  },
-  discoupled: {
-    src: "/music/discopled.webm",
-    artist: "Zachz Winner",
-    title: "discopled",
-    link: "https://youtu.be/UWpUCmXokgM?si=dIlTlGougOkcY3bT",
-    bpm: 152,
-    startOffset: 0,
-    firstBeatOffset: 0,
-    lowFreqStart: 0,
-    lowFreqEnd: 64,
-    duration: 86,
-  },
-  "bad-apple-ft-sekai-off-vocal": {
-    src: "/music/bad-apple-ft-sekai-off-vocal.webm",
-    bpm: 138,
-    artist: "25-ji, Nightcord de",
-    title: "(off vocal) Bad Apple!! feat.SEKAI",
-    link: "https://youtu.be/h87WUOEPUCg?si=jTRAN3sUJ1XVZQBh",
-    startOffset: 0,
-    firstBeatOffset: 1,
-    lowFreqStart: 0,
-    lowFreqEnd: 64,
-    duration: 229,
-  },
-  "bad-apple-ft-sekai": {
-    src: "/music/bad-apple-ft-sekai.webm",
-    bpm: 138,
-    artist: "25-ji, Nightcord de",
-    title: "Bad Apple!! feat.SEKAI",
-    link: "https://youtu.be/v-fc1zv31zE?si=9NauF-kKzT6IqQsx",
-    startOffset: 1,
-    firstBeatOffset: 1,
-    lowFreqStart: 16,
-    lowFreqEnd: 18,
-    duration: 231,
-  },
-};
+import { musicList } from "./vars";
 
 const audioBufferCache = new Map<string, AudioBuffer>();
 
