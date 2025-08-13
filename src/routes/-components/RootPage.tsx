@@ -3,6 +3,7 @@ import { Show } from "solid-js";
 import { env } from "#/env";
 
 import { createBackground } from "./createBackground";
+import { Curtain } from "./Curtain";
 import { DebugPanel } from "./DebugPanel";
 
 export default function RootPage() {
@@ -20,6 +21,9 @@ export default function RootPage() {
       </Show>
       <div class="h-svh w-full"></div>
       {background.audioControl}
+      <div class="absolute top-0 left-0 overflow-hidden h-svh w-full">
+        <Curtain />
+      </div>
     </>
   );
 }

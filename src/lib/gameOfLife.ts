@@ -64,8 +64,8 @@ export class GameOfLife {
     this.updateCanvas();
   }
 
-  randomize() {
-    this.grid = this.grid.map(() => (Math.random() > 0.8 ? 1 : 0));
+  randomize(percentage: number = 0.2) {
+    this.grid = this.grid.map(() => (Math.random() > 1 - percentage ? 1 : 0));
   }
 
   static getGameOfLifeSize() {
@@ -240,7 +240,7 @@ export class GameOfLife {
   }
 
   /* eslint-disable prefer-const */
-  #density = 1;
+  density = 1;
   next() {
     this.nextGrid.fill(0);
     let aliveCount = 0;
@@ -278,14 +278,63 @@ export class GameOfLife {
         } else {
           this.nextGrid[i] =
             liveNeighbors === 3 ||
-            (this.#density < 0.1 ? liveNeighbors === 4 : false)
+            (this.density < 0.1 ? liveNeighbors === 4 : false)
               ? 1
               : 0;
         }
       }
     }
 
-    this.#density = aliveCount / this.grid.length;
+    this.density = aliveCount / this.grid.length;
+
+    [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
+  }
+  /* eslint-enable prefer-const */
+
+  /* eslint-disable prefer-const */
+  next2() {
+    this.nextGrid.fill(0);
+    let aliveCount = 0;
+
+    for (let y = 0; y < this.height; y++) {
+      let rowOffset = y * this.width,
+        topRow = (y - 1) * this.width,
+        midRow = y * this.width,
+        bottomRow = (y + 1) * this.width;
+      for (let x = 0; x < this.width; x++) {
+        let i = rowOffset + x,
+          liveNeighbors = 0;
+
+        if (y > 0) {
+          if (x > 0) liveNeighbors += this.grid[topRow + x - 1];
+          liveNeighbors += this.grid[topRow + x];
+          if (x + 1 < this.width) liveNeighbors += this.grid[topRow + x + 1];
+        }
+        if (x > 0) liveNeighbors += this.grid[midRow + x - 1];
+        if (x + 1 < this.width) liveNeighbors += this.grid[midRow + x + 1];
+        if (y + 1 < this.height) {
+          if (x > 0) liveNeighbors += this.grid[bottomRow + x - 1];
+          liveNeighbors += this.grid[bottomRow + x];
+          if (x + 1 < this.width) liveNeighbors += this.grid[bottomRow + x + 1];
+        }
+
+        if (this.grid[i] === 1) {
+          aliveCount++;
+          this.nextGrid[i] = 1;
+        } else {
+          if (this.density < 0.015) {
+            this.nextGrid[i] = Math.random() < 0.001 ? 1 : 0;
+          } else if (this.density < 0.9) {
+            this.nextGrid[i] =
+              liveNeighbors === 3 || liveNeighbors === 2 ? 1 : 0;
+          } else {
+            this.nextGrid[i] = Math.random() < 0.35 ? 1 : 0;
+          }
+        }
+      }
+    }
+
+    this.density = aliveCount / this.grid.length;
 
     [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
   }
