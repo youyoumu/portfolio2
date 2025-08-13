@@ -4,7 +4,7 @@ import { env } from "#/env";
 import { GameOfLife } from "#/lib/gameOfLife";
 
 export function Curtain() {
-  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize();
+  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(2.5);
   const [hide, setHide] = createSignal(false);
   const gameOfLife = new GameOfLife({
     width,
@@ -12,8 +12,10 @@ export function Curtain() {
     cellSize,
   });
   gameOfLife.grid.fill(0);
-  gameOfLife.randomize(0.01);
+  gameOfLife.randomize(0.005);
   gameOfLife.energy = 1;
+  gameOfLife.transparentCell = true;
+  gameOfLife.bgColor = gameOfLife.cellColor;
   gameOfLife.updateCanvas();
 
   let intervalId: ReturnType<typeof setInterval> | null = null;
@@ -24,7 +26,7 @@ export function Curtain() {
       }
       gameOfLife.next2();
       gameOfLife.updateCanvas();
-    }, 50);
+    }, 20);
   });
 
   createEffect(() => {

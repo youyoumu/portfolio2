@@ -13,6 +13,7 @@ export class GameOfLife {
   ctx: CanvasRenderingContext2D;
   bgColor: string;
   cellColor: string;
+  transparentCell = false;
   offsetX = 0;
   offsetY = 0;
 
@@ -68,9 +69,9 @@ export class GameOfLife {
     this.grid = this.grid.map(() => (Math.random() > 1 - percentage ? 1 : 0));
   }
 
-  static getGameOfLifeSize() {
+  static getGameOfLifeSize(multiplier = 1) {
     const isMobile = window.innerWidth < 640;
-    const cellSize = isMobile ? 10 : 20;
+    const cellSize = (isMobile ? 10 : 20) * multiplier;
     const width = Math.floor((window.innerWidth + cellSize) / cellSize);
     const height = Math.floor((window.innerHeight + cellSize) / cellSize);
     return { cellSize, width, height };
@@ -203,6 +204,10 @@ export class GameOfLife {
     const cellOffsetX = Math.floor(offsetX / cellSize);
     const cellOffsetY = Math.floor(offsetY / cellSize);
 
+    if (this.transparentCell) {
+      ctx.globalCompositeOperation = "destination-out";
+    }
+
     for (let y = 0; y < height; y++) {
       const gy = (cellOffsetY + y) % height;
       const cy = y * cellSize - pixelOffsetY + cellSize / 2;
@@ -219,6 +224,7 @@ export class GameOfLife {
         }
       }
     }
+    ctx.globalCompositeOperation = "source-over";
 
     return this.canvas;
   }
@@ -322,9 +328,9 @@ export class GameOfLife {
           aliveCount++;
           this.nextGrid[i] = 1;
         } else {
-          if (this.density < 0.015) {
-            this.nextGrid[i] = Math.random() < 0.001 ? 1 : 0;
-          } else if (this.density < 0.9) {
+          if (this.density < 0.03) {
+            this.nextGrid[i] = Math.random() < 0.0015 ? 1 : 0;
+          } else if (this.density < 0.8) {
             this.nextGrid[i] =
               liveNeighbors === 3 || liveNeighbors === 2 ? 1 : 0;
           } else {
