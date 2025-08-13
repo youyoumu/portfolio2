@@ -3,7 +3,7 @@ import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { env } from "#/env";
 import { GameOfLife } from "#/lib/gameOfLife";
 
-export function Curtain() {
+export function Curtain({ onHide }: { onHide?: () => void }) {
   const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(2.5);
   const [hide, setHide] = createSignal(false);
   const gameOfLife = new GameOfLife({
@@ -32,6 +32,7 @@ export function Curtain() {
   createEffect(() => {
     if (hide()) {
       clearInterval(intervalId!);
+      onHide?.();
     }
   });
 

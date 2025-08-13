@@ -1,4 +1,4 @@
-import { Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 
 import { env } from "#/env";
 
@@ -7,7 +7,9 @@ import { Curtain } from "./Curtain";
 import { DebugPanel } from "./DebugPanel";
 
 export default function RootPage() {
+  const [hide, setHide] = createSignal(false);
   const background = createBackground();
+
   return (
     <>
       <div class="absolute top-0 left-0 overflow-hidden h-svh w-full">
@@ -21,9 +23,11 @@ export default function RootPage() {
       </Show>
       <div class="h-svh w-full"></div>
       {background.audioControl}
-      <div class="absolute top-0 left-0 overflow-hidden h-svh w-full">
-        <Curtain />
-      </div>
+      <Show when={!hide()}>
+        <div class="absolute top-0 left-0 overflow-hidden h-svh w-full">
+          <Curtain onHide={() => setHide(true)} />
+        </div>
+      </Show>
     </>
   );
 }
