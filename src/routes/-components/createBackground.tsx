@@ -30,16 +30,8 @@ export function createBackground() {
     return format(addSeconds(new Date(0), Math.floor(seconds)), "m:ss");
   }
 
-  function getGameOfLifeSize() {
-    const isMobile = window.innerWidth < 640;
-    const cellSize = isMobile ? 10 : 20;
-    const width = Math.floor((window.innerWidth + cellSize) / cellSize);
-    const height = Math.floor((window.innerHeight + cellSize) / cellSize);
-    return { cellSize, width, height };
-  }
-
   const isMobile = window.innerWidth < 640;
-  const { cellSize, width, height } = getGameOfLifeSize();
+  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize();
   const gameOfLife = new GameOfLife({
     width,
     height,
@@ -117,7 +109,7 @@ export function createBackground() {
 
   onMount(() => {
     const resize = debounce(() => {
-      const { cellSize, width, height } = getGameOfLifeSize();
+      const { cellSize, width, height } = GameOfLife.getGameOfLifeSize();
       gameOfLife.resize(width, height, cellSize);
     }, 250);
 

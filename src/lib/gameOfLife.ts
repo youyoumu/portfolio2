@@ -68,6 +68,14 @@ export class GameOfLife {
     this.grid = this.grid.map(() => (Math.random() > 0.8 ? 1 : 0));
   }
 
+  static getGameOfLifeSize() {
+    const isMobile = window.innerWidth < 640;
+    const cellSize = isMobile ? 10 : 20;
+    const width = Math.floor((window.innerWidth + cellSize) / cellSize);
+    const height = Math.floor((window.innerHeight + cellSize) / cellSize);
+    return { cellSize, width, height };
+  }
+
   #movingId: ReturnType<typeof setInterval> | null = null;
   startMoving({ stop = false, bpm }: { stop?: boolean; bpm?: number } = {}) {
     if (this.#movingSlowId && this.#movingSlowRafId)
