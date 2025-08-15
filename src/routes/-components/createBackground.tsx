@@ -217,103 +217,105 @@ function AudioControl(props: {
   );
 
   return (
-    <div class="fixed bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2 bg-neutral py-4 px-8 rounded-xl sm:rounded-full flex flex-col gap-2 items-center w-[calc(100vw-16px)] sm:w-[600px]">
-      <div class="flex gap-4 items-center w-full justify-between flex-col sm:flex-row">
-        <div class="flex gap-4 items-center">
-          <div class="w-64 sm:w-40">
-            <ScrollingText
-              trenshold={14}
-              text={props.music?.artist ?? "a"}
-              classNames={{
-                container: "leading-none",
-                text: cn(
-                  "me-16 font-bitcount-single leading-none text-neutral-content",
-                  {
-                    invisible: !props.music?.artist?.length,
-                  },
-                ),
-              }}
+    <div class="fixed bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2 px-2  w-full sm:w-[600px]">
+      <div class="bg-neutral py-4 px-8 rounded-xl sm:rounded-full flex flex-col gap-2 items-center">
+        <div class="flex gap-4 items-center w-full justify-between flex-col sm:flex-row">
+          <div class="flex gap-4 items-center">
+            <div class="w-64 sm:w-40">
+              <ScrollingText
+                trenshold={14}
+                text={props.music?.artist ?? "a"}
+                classNames={{
+                  container: "leading-none",
+                  text: cn(
+                    "me-16 font-bitcount-single leading-none text-neutral-content",
+                    {
+                      invisible: !props.music?.artist?.length,
+                    },
+                  ),
+                }}
+              />
+              <ScrollingText
+                trenshold={21}
+                text={props.music?.title ?? "a"}
+                classNames={{
+                  container: "leading-none",
+                  text: cn(
+                    "text-base-300/50 text-xs me-16 font-bitcount-single font-light leading-none",
+                    {
+                      invisible: !props.music?.title?.length,
+                    },
+                  ),
+                }}
+              />
+            </div>
+
+            <a href={props.music?.link} target="_blank">
+              <IconExternalLink class="text-neutral-content cursor-pointer size-5" />
+            </a>
+          </div>
+          <Show when={isMobile()}>
+            <ProgressBar />
+          </Show>
+
+          <div class="flex gap-4 items-center justify-between">
+            <IconPlayerSkipBackFilled
+              onClick={props.onSkipBack}
+              class="text-neutral-content cursor-pointer size-5"
             />
-            <ScrollingText
-              trenshold={21}
-              text={props.music?.title ?? "a"}
-              classNames={{
-                container: "leading-none",
-                text: cn(
-                  "text-base-300/50 text-xs me-16 font-bitcount-single font-light leading-none",
-                  {
-                    invisible: !props.music?.title?.length,
-                  },
-                ),
-              }}
+            <div
+              class="rounded-full bg-neutral-content text-neutral cursor-pointer p-1 flex flex-col items-center justify-center"
+              onClick={props.onPlayPause}
+            >
+              {props.playing ? (
+                <IconPlayerPauseFilled class="size-8 sm:size-6" />
+              ) : (
+                <IconPlayerPlayFilled class="size-8 sm:size-6" />
+              )}
+            </div>
+            <IconPlayerSkipForwardFilled
+              onClick={props.onSkipForward}
+              class="text-neutral-content cursor-pointer size-5"
             />
           </div>
 
-          <a href={props.music?.link} target="_blank">
-            <IconExternalLink class="text-neutral-content cursor-pointer size-5" />
-          </a>
+          <div class="sm:flex items-center gap-4 hidden">
+            {props.visualizerCanvas}
+            <div class="flex items-center gap-4">
+              {percentage() === 0 ? (
+                <IconVolume3
+                  onClick={() => {
+                    props.onVolumeChange(previousPercentage());
+                  }}
+                  class="text-neutral-content cursor-pointer size-5"
+                />
+              ) : (
+                <IconVolume
+                  onClick={() => {
+                    setPreviousPercentage(percentage());
+                    props.onVolumeChange(0);
+                  }}
+                  class="text-neutral-content cursor-pointer size-5"
+                />
+              )}
+              <ZagSlider
+                value={percentage()}
+                debounceDuration={50}
+                onValueChange={props.onVolumeChange}
+                classNames={{
+                  root: "w-20",
+                  thumb: "bg-secondary",
+                  range: "bg-secondary",
+                }}
+              />
+            </div>
+          </div>
         </div>
-        <Show when={isMobile()}>
+
+        <Show when={!isMobile()}>
           <ProgressBar />
         </Show>
-
-        <div class="flex gap-4 items-center justify-between">
-          <IconPlayerSkipBackFilled
-            onClick={props.onSkipBack}
-            class="text-neutral-content cursor-pointer size-5"
-          />
-          <div
-            class="rounded-full bg-neutral-content text-neutral cursor-pointer p-1 flex flex-col items-center justify-center"
-            onClick={props.onPlayPause}
-          >
-            {props.playing ? (
-              <IconPlayerPauseFilled class="size-8 sm:size-6" />
-            ) : (
-              <IconPlayerPlayFilled class="size-8 sm:size-6" />
-            )}
-          </div>
-          <IconPlayerSkipForwardFilled
-            onClick={props.onSkipForward}
-            class="text-neutral-content cursor-pointer size-5"
-          />
-        </div>
-
-        <div class="sm:flex items-center gap-4 hidden">
-          {props.visualizerCanvas}
-          <div class="flex items-center gap-4">
-            {percentage() === 0 ? (
-              <IconVolume3
-                onClick={() => {
-                  props.onVolumeChange(previousPercentage());
-                }}
-                class="text-neutral-content cursor-pointer size-5"
-              />
-            ) : (
-              <IconVolume
-                onClick={() => {
-                  setPreviousPercentage(percentage());
-                  props.onVolumeChange(0);
-                }}
-                class="text-neutral-content cursor-pointer size-5"
-              />
-            )}
-            <ZagSlider
-              value={percentage()}
-              debounceDuration={50}
-              onValueChange={props.onVolumeChange}
-              classNames={{
-                root: "w-20",
-                thumb: "bg-secondary",
-                range: "bg-secondary",
-              }}
-            />
-          </div>
-        </div>
       </div>
-
-      <Show when={!isMobile()}>
-        <ProgressBar />
-      </Show>
     </div>
   );
 }

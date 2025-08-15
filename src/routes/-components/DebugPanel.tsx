@@ -6,7 +6,7 @@ export function DebugPanel({
   background: ReturnType<typeof createBackground>;
 }) {
   return (
-    <div class="fixed top-0 left-0 flex gap-1 flex-wrap p-1 ">
+    <>
       <button
         class="btn btn-primary"
         onClick={() => {
@@ -136,6 +136,6 @@ export function DebugPanel({
       >
         remove lyrics
       </button>
-    </div>
+    </>
   );
 }
