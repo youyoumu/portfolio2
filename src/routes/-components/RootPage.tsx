@@ -4,6 +4,7 @@ import { Portal } from "solid-js/web";
 import { env } from "#/env";
 import { hidePortalDiv } from "#/lib/utils/hidePortalDiv";
 
+import { Content } from "./Content";
 import { createBackground } from "./createBackground";
 import { Curtain } from "./Curtain";
 import { DebugPanel } from "./DebugPanel";
@@ -23,6 +24,11 @@ export default function RootPage() {
           <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div class="p-8">{background.lyrics.container}</div>
           </div>
+          <div class="absolute top-16 left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none">
+            <div class="text-3xl font-bold backdrop-blur-md px-2 py-0.5">
+              Press play. See what happens.
+            </div>
+          </div>
         </div>
       </Portal>
       {/* <Show when={env.DEV}> */}
@@ -30,8 +36,7 @@ export default function RootPage() {
       {/*     <DebugPanel background={background} /> */}
       {/*   </div> */}
       {/* </Show> */}
-      <div class="h-svh w-full"></div>
-      <div class="h-svh w-full">test</div>
+      <Content />
       <Portal
         mount={document.getElementById("audio-control") ?? undefined}
         ref={hidePortalDiv}
