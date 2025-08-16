@@ -8,6 +8,7 @@ import { Content } from "./Content";
 import { createBackground } from "./createBackground";
 import { Curtain } from "./Curtain";
 import { DebugPanel } from "./DebugPanel";
+import { RevealingText } from "./RevealingText";
 
 export default function RootPage() {
   const [hide, setHide] = createSignal(false);
@@ -25,17 +26,15 @@ export default function RootPage() {
             <div class="p-8">{background.lyrics.container}</div>
           </div>
           <div class="absolute top-16 left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none">
-            <div class="text-3xl font-bold backdrop-blur-md px-2 py-0.5">
-              Press play. See what happens.
-            </div>
+            <RevealingText />
           </div>
         </div>
       </Portal>
-      {/* <Show when={env.DEV}> */}
-      {/*   <div class="fixed top-0 left-0 flex gap-1 flex-wrap p-1 "> */}
-      {/*     <DebugPanel background={background} /> */}
-      {/*   </div> */}
-      {/* </Show> */}
+      <Show when={env.DEV && false}>
+        <div class="fixed top-0 left-0 flex gap-1 flex-wrap p-1 ">
+          <DebugPanel background={background} />
+        </div>
+      </Show>
       <Content />
       <Portal
         mount={document.getElementById("audio-control") ?? undefined}
