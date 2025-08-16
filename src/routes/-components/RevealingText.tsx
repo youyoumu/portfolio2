@@ -54,13 +54,22 @@ export function RevealingText() {
     }, 5000);
   });
 
+  const prompts = [
+    "Press play. See what happens.",
+    "Click play. Watch the magic.",
+    "Hit play. Enjoy the show.",
+    "Tap play. See the story.",
+  ];
+
+  const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+
   return (
     <div class="relative">
       <div
         ref={text}
         class="invisible text-3xl font-bold backdrop-blur-md px-2 py-0.5"
       >
-        Press play. See what happens.
+        {randomPrompt}
       </div>
       <div
         ref={wipe}
