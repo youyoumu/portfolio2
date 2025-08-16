@@ -15,11 +15,20 @@ export function RevealingText() {
       .add(() => {
         text.style.visibility = "visible";
       })
-      .to(wipe, { scaleX: 0, transformOrigin: "right center" });
+      .to(wipe, { scaleX: 0, transformOrigin: "right center" })
+      .add(() => {
+        if (store.musicPlayed) {
+          hide({ delay: 0 });
+        } else {
+          setTimeout(() => {
+            window.addEventListener("mousemove", () => hide(), { once: true });
+          }, 2000);
+        }
+      });
   }
 
   let hideTriggered = false;
-  function hide() {
+  function hide({ delay = 2000 } = {}) {
     if (hideTriggered) return;
     hideTriggered = true;
     const tl = gsap
@@ -35,16 +44,13 @@ export function RevealingText() {
 
     setTimeout(() => {
       tl.play();
-    }, 2000);
+    }, delay);
   }
 
   onMount(() => {
     setTimeout(() => {
       if (store.musicPlayed) return;
       show();
-      setTimeout(() => {
-        window.addEventListener("mousemove", hide, { once: true });
-      }, 2000);
     }, 5000);
   });
 
