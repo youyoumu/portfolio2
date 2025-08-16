@@ -1,5 +1,7 @@
 import { onMount } from "solid-js";
 
+import { store } from "#/lib/store";
+
 export function RevealingText() {
   let wipe!: HTMLDivElement;
   let text!: HTMLDivElement;
@@ -37,10 +39,13 @@ export function RevealingText() {
   }
 
   onMount(() => {
-    show();
     setTimeout(() => {
-      window.addEventListener("mousemove", hide, { once: true });
-    }, 2000);
+      if (store.musicPlayed) return;
+      show();
+      setTimeout(() => {
+        window.addEventListener("mousemove", hide, { once: true });
+      }, 2000);
+    }, 5000);
   });
 
   return (

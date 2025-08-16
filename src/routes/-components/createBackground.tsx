@@ -14,6 +14,7 @@ import { createMemo, createSignal, onMount, Show } from "solid-js";
 import { BadApple } from "#/lib/badApple";
 import { GameOfLife } from "#/lib/gameOfLife";
 import { Lyrics } from "#/lib/lyrics";
+import { setStore } from "#/lib/store";
 import { cn } from "#/lib/utils/cn";
 import { tailwindBreakpoints } from "#/lib/utils/tailwindBreakPoint";
 import { Visualizer } from "#/lib/visualizer";
@@ -143,6 +144,7 @@ export function createBackground() {
         visualizer.signal.volume.set(actualVolume);
       }}
       onPlayPause={() => {
+        setStore("musicPlayed", true);
         if (visualizer.playing) {
           visualizer.stop({ pause: true });
           setPlaying(false);
@@ -152,9 +154,11 @@ export function createBackground() {
         }
       }}
       onSkipBack={() => {
+        setStore("musicPlayed", true);
         visualizer.nextTract({ previous: true });
       }}
       onSkipForward={() => {
+        setStore("musicPlayed", true);
         visualizer.nextTract();
       }}
     />
