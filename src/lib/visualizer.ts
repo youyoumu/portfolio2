@@ -91,6 +91,8 @@ export class Visualizer {
       this.canvas.height = 32;
     }
     this.canvasContext = this.canvas.getContext("2d")!;
+
+    this.prefetchAudioBuffer(musicList[this.music].src);
   }
 
   nextTract({ previous = false } = {}) {
@@ -149,6 +151,15 @@ export class Visualizer {
 
   getMusic() {
     return musicList[this.music];
+  }
+
+  async prefetchAudioBuffer(src: string) {
+    let audioBuffer = audioBufferCache.get(src);
+    if (audioBuffer) return;
+    const response = await fetch(src);
+    const arrayBuffer = await response.arrayBuffer();
+    audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+    audioBufferCache.set(src, audioBuffer);
   }
 
   #playLock = false;
@@ -223,6 +234,14 @@ export class Visualizer {
       console.log("DEBUG[316]: e=", e);
     } finally {
       this.#playLock = false;
+
+      const index = this.playlist.indexOf(this.music);
+      const nextIndex = (index + 1) % this.playlist.length;
+      const prevIndex =
+        (index - 1 + this.playlist.length) % this.playlist.length;
+
+      this.prefetchAudioBuffer(musicList[this.playlist[nextIndex]].src);
+      this.prefetchAudioBuffer(musicList[this.playlist[prevIndex]].src);
     }
   }
 

@@ -12,6 +12,7 @@ export function Content() {
         snap: {
           snapTo: 1 / (sections.length - 1),
           duration: 1,
+          directional: false,
         },
         scrub: false,
       },
