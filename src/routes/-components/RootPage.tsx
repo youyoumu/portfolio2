@@ -4,6 +4,7 @@ import { Portal } from "solid-js/web";
 import { env } from "#/env";
 import { hidePortalDiv } from "#/lib/utils/hidePortalDiv";
 
+import { BlurOverlay } from "./BlurOverlay";
 import { Content } from "./Content";
 import { createBackground } from "./createBackground";
 import { Curtain } from "./Curtain";
@@ -27,6 +28,9 @@ export default function RootPage() {
           </div>
           <div class="absolute top-16 left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none">
             <RevealingText />
+          </div>
+          <div class="absolute top-0 left-0 h-svh w-full">
+            <BlurOverlay />
           </div>
         </div>
       </Portal>
