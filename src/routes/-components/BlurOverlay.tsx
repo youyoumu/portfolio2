@@ -17,7 +17,7 @@ export function BlurOverlay() {
     });
 
     gsap.to(overlay2, {
-      opacity: 0.8,
+      opacity: 0.5,
       ease: "none",
       scrollTrigger: {
         trigger: overlay,

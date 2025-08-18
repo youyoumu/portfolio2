@@ -23,8 +23,8 @@ export function Content() {
       <div ref={section1} class="h-svh w-full">
         test{" "}
       </div>
-      <div ref={section2} class="h-svh w-full bg-blue-500/50"></div>
-      <div ref={section3} class="h-svh w-full bg-red-500/50"></div>
+      <div ref={section2} class="h-svh w-full bg-black/10"></div>
+      <div ref={section3} class="h-svh w-full bg-black/20"></div>
     </>
   );
 }

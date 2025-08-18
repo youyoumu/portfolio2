@@ -21,15 +21,20 @@ export function RevealingText() {
           hide({ delay: 0 });
         } else {
           setTimeout(() => {
-            window.addEventListener("mousemove", () => hide(), { once: true });
+            window.addEventListener("mousemove", hide_);
           }, 2000);
         }
       });
   }
 
+  function hide_() {
+    hide();
+  }
+
   let hideTriggered = false;
   function hide({ delay = 2000 } = {}) {
     if (hideTriggered) return;
+    if (window.scrollY > 0 && !store.musicPlayed) return;
     hideTriggered = true;
     const tl = gsap
       .timeline({
@@ -45,6 +50,8 @@ export function RevealingText() {
     setTimeout(() => {
       tl.play();
     }, delay);
+
+    window.removeEventListener("mousemove", hide_);
   }
 
   onMount(() => {
