@@ -1,5 +1,7 @@
 import { onMount } from "solid-js";
 
+import TypescriptIcon from "./svgs/TypescriptIcon";
+
 export function Content() {
   let section1!: HTMLDivElement;
   let section2!: HTMLDivElement;
@@ -24,7 +26,16 @@ export function Content() {
       <div ref={section1} class="h-svh w-full">
         test{" "}
       </div>
-      <div ref={section2} class="h-svh w-full bg-black/10"></div>
+      <div ref={section2} class="h-svh w-full bg-black/10">
+        <TypescriptIcon
+          class="size-16"
+          path1Props={{
+            fill: getComputedStyle(document.documentElement)
+              .getPropertyValue("--color-neutral-content")
+              .trim(),
+          }}
+        />
+      </div>
       <div ref={section3} class="h-svh w-full bg-black/20"></div>
     </>
   );
