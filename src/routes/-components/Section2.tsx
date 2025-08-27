@@ -8,6 +8,7 @@ import TypescriptIcon from "./svgs/TypescriptIcon";
 
 export function Section2() {
   let rootEl: HTMLDivElement | undefined;
+  const iconsEl: HTMLDivElement[] = [];
 
   const iconColor = getComputedStyle(document.documentElement)
     .getPropertyValue("--color-neutral-content")
@@ -31,18 +32,14 @@ export function Section2() {
     Array.from({ length: iconNodes.length }, (_, i) => i),
   );
 
-  function shuffleIndices(prev: number[]) {
-    const a = prev.slice();
-    if (a.length <= 1) return a;
-    // Pick two distinct random positions
-    const i = Math.floor(Math.random() * a.length);
-    let j = Math.floor(Math.random() * a.length);
-    while (j === i) {
-      j = Math.floor(Math.random() * a.length);
-    }
-    // Swap them
-    [a[i], a[j]] = [a[j], a[i]];
-    return a;
+  function shuffle(prev: number[]) {
+    const next = prev.slice();
+    const randomIndex = () => Math.floor(Math.random() * next.length);
+    const i = randomIndex();
+    let j = randomIndex();
+    while (j === i) j = randomIndex();
+    [next[i], next[j]] = [next[j], next[i]];
+    return next;
   }
 
   let observer: IntersectionObserver | null = null;
@@ -64,7 +61,7 @@ export function Section2() {
       const elapsed = now - start;
 
       if (now - lastAt >= interval) {
-        setOrder((prev) => shuffleIndices(prev));
+        setOrder((prev) => shuffle(prev));
         lastAt = now;
         interval += intervalIncrement;
       }
@@ -72,7 +69,6 @@ export function Section2() {
       if (elapsed < totalDuration) {
         rafId = requestAnimationFrame(tick);
       } else {
-        // finished
         running = false;
         rafId = null;
       }
@@ -89,16 +85,31 @@ export function Section2() {
     running = false;
   }
 
+  function animateIconsOpacity() {
+    gsap.to(iconsEl, {
+      opacity: 1,
+      duration: 2,
+      stagger: {
+        amount: 1,
+        from: "random",
+      },
+    });
+  }
+
   onMount(() => {
     observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.some(
           (e) => e.isIntersecting && e.intersectionRatio > 0.2,
         );
-        if (visible) startShuffleCycle();
+        if (visible) {
+          animateIconsOpacity();
+          startShuffleCycle();
+        }
       },
-      { threshold: [0.5] },
+      { threshold: [0.2, 0.5] },
     );
+
     if (rootEl) observer.observe(rootEl);
   });
 
@@ -113,7 +124,13 @@ export function Section2() {
       class="h-svh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center"
     >
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
-        {order().map((i) => iconNodes[i])}
+        {iconNodes.map((_, i) => {
+          return (
+            <div ref={iconsEl[i]} class="opacity-0">
+              {iconNodes[order()[i]]}
+            </div>
+          );
+        })}
 
         <div class="size-20 overflow-visible leading-none">
           <div class="text-lg text-nowrap">youyoumu</div>
