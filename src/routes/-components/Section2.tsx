@@ -7,7 +7,6 @@ import ReactIcon from "./svgs/ReactIcon";
 import TypescriptIcon from "./svgs/TypescriptIcon";
 
 export function Section2() {
-  let rootEl: HTMLDivElement | undefined;
   const iconsEl: HTMLDivElement[] = [];
 
   const iconColor = getComputedStyle(document.documentElement)
@@ -42,35 +41,30 @@ export function Section2() {
     return next;
   }
 
-  let observer: IntersectionObserver | null = null;
   let running = false;
   let rafId: number | null = null;
-
   function startShuffleCycle() {
     if (running) return;
     running = true;
 
-    const totalDuration = 2.5 * 1000; // ms
+    const totalDuration = 3.5 * 1000; // ms
     let interval = 0.1 * 1000; // ms
-    const intervalIncrement = 0.05 * 1000; // ms
+    const intervalIncrement = 0.03 * 1000; // ms
 
     const start = performance.now();
     let lastAt = start;
 
     function tick(now: number) {
       const elapsed = now - start;
-
       if (now - lastAt >= interval) {
         setOrder((prev) => shuffle(prev));
         lastAt = now;
         interval += intervalIncrement;
       }
-
       if (elapsed < totalDuration) {
         rafId = requestAnimationFrame(tick);
       } else {
-        running = false;
-        rafId = null;
+        stopShuffleCycle();
       }
     }
 
@@ -85,44 +79,31 @@ export function Section2() {
     running = false;
   }
 
-  function animateIconsOpacity() {
+  onMount(() => {
     gsap.to(iconsEl, {
-      opacity: 1,
+      scrollTrigger: {
+        trigger: iconsEl,
+        toggleActions: "restart reset restart none",
+      },
+      delay: 0.5,
+      opacity: 5,
       duration: 2,
       stagger: {
         amount: 1,
         from: "random",
       },
-    });
-  }
-
-  onMount(() => {
-    observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.some(
-          (e) => e.isIntersecting && e.intersectionRatio > 0.2,
-        );
-        if (visible) {
-          animateIconsOpacity();
-          startShuffleCycle();
-        }
+      onStart() {
+        startShuffleCycle();
       },
-      { threshold: [0.2, 0.5] },
-    );
-
-    if (rootEl) observer.observe(rootEl);
+    });
   });
 
   onCleanup(() => {
     stopShuffleCycle();
-    observer?.disconnect();
   });
 
   return (
-    <div
-      ref={rootEl}
-      class="h-svh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center"
-    >
+    <div class="h-svh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center">
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
         {iconNodes.map((_, i) => {
           return (
