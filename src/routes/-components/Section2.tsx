@@ -7,7 +7,8 @@ import ReactIcon from "./svgs/ReactIcon";
 import TypescriptIcon from "./svgs/TypescriptIcon";
 
 export function Section2() {
-  const iconsEl: HTMLDivElement[] = [];
+  const iconsRef: HTMLDivElement[] = [];
+  const textsRef: HTMLDivElement[] = [];
 
   const iconColor = getComputedStyle(document.documentElement)
     .getPropertyValue("--color-neutral-content")
@@ -79,10 +80,17 @@ export function Section2() {
     running = false;
   }
 
+  const textsNodes = [
+    <div class="text-lg text-nowrap">youyoumu</div>,
+    <div class="text-nowrap">WEB DEVELOPER</div>,
+    <div class="text-nowrap">LINUX ENTHUSIAST</div>,
+    <div class="text-nowrap opacity-40">WEEB</div>,
+  ];
+
   onMount(() => {
-    gsap.to(iconsEl, {
+    gsap.to(iconsRef, {
       scrollTrigger: {
-        trigger: iconsEl,
+        trigger: iconsRef,
         toggleActions: "restart reset restart none",
       },
       delay: 0.5,
@@ -96,6 +104,33 @@ export function Section2() {
         startShuffleCycle();
       },
     });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: iconsRef,
+        toggleActions: "restart reset restart none",
+      },
+      delay: 0.5,
+    });
+    textsRef.forEach((ref) => {
+      tl.add(
+        gsap
+          .timeline()
+          .to(ref, {
+            opacity: 10,
+            duration: 0.1,
+          })
+          .to(ref, {
+            opacity: 0,
+            duration: 0.1,
+          })
+          .to(ref, {
+            opacity: 1,
+            duration: 0.1,
+          }),
+        "+=0.1",
+      );
+    });
   });
 
   onCleanup(() => {
@@ -107,17 +142,20 @@ export function Section2() {
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
         {iconNodes.map((_, i) => {
           return (
-            <div ref={iconsEl[i]} class="opacity-0">
+            <div ref={iconsRef[i]} class="opacity-0">
               {iconNodes[order()[i]]}
             </div>
           );
         })}
 
         <div class="size-20 overflow-visible leading-none">
-          <div class="text-lg text-nowrap">youyoumu</div>
-          <div class="text-nowrap">WEB DEVELOPER</div>
-          <div class="text-nowrap">LINUX ENTHUSIAST</div>
-          <div class="text-nowrap opacity-40">WEEB</div>
+          {textsNodes.map((_, i) => {
+            return (
+              <div ref={textsRef[i]} class="opacity-0">
+                {textsNodes[i]}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
