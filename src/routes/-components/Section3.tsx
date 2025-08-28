@@ -29,38 +29,78 @@ const projects = [
   },
 ];
 
+const clientProjects = [
+  {
+    title: "Sisva",
+    url: "https://app.sisva.id/",
+  },
+  {
+    title: "POTEHI",
+    url: "https://katalog-potehi-six.vercel.app/",
+  },
+  {
+    title: "Nongki",
+    url: "https://nongki.vercel.app",
+  },
+];
+
 export function Section3() {
-  const iconClass = "size-5 cursor-pointer";
+  const iconClass = "size-4.5 cursor-pointer opacity-75";
   return (
     <div class="h-svh w-full bg-black/20 flex flex-col justify-center items-center">
-      <div class="text-neutral-content">
-        <h2 class="text-2xl font-bold">Projects</h2>
-        <ul>
-          <For each={projects}>
-            {(item) => {
-              return (
-                <li class="flex items-center gap-2">
-                  <span>{item.title}</span>
-                  <div class="flex items-center">
-                    <a href={item.repo} target="_blank" class="opacity-75">
-                      <IconBrandGithub class={iconClass} />
-                    </a>
-                    {item.live && (
-                      <a href={item.live} target="_blank" class="opacity-75">
+      <div class="text-neutral-content flex flex-col">
+        <div>
+          <h2 class="text-2xl font-bold">Projects</h2>
+          <p class="mb-2 text-sm">Personal projects, open source.</p>
+          <ul>
+            <For each={projects}>
+              {(item) => {
+                return (
+                  <li class="flex items-center gap-2">
+                    <span>{item.title}</span>
+                    <div class="flex items-center">
+                      <a href={item.repo} target="_blank">
+                        <IconBrandGithub class={iconClass} />
+                      </a>
+                      {item.live && (
+                        <a href={item.live} target="_blank">
+                          <IconExternalLink class={iconClass} />
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                );
+              }}
+            </For>
+          </ul>
+          <div>
+            <a href="https://github.com/youyoumu" target="_blank" class="link">
+              see more
+            </a>
+          </div>
+        </div>
+
+        <div class="divider after:bg-neutral-content/25 before:bg-neutral-content/25"></div>
+
+        <div>
+          <h2 class="text-xl font-bold">Client Projects</h2>
+          <p class=" mb-2 text-sm">Industry projects, freelance work.</p>
+          <ul>
+            <For each={clientProjects}>
+              {(item) => {
+                return (
+                  <li class="flex items-center gap-2">
+                    <span>{item.title}</span>
+                    <div class="flex items-center">
+                      <a href={item.url} target="_blank">
                         <IconExternalLink class={iconClass} />
                       </a>
-                    )}
-                  </div>
-                </li>
-              );
-            }}
-          </For>
-        </ul>
-        <div>
-          more on my{" "}
-          <a href="https://github.com/youyoumu" target="_blank" class="link">
-            github
-          </a>
+                    </div>
+                  </li>
+                );
+              }}
+            </For>
+          </ul>
         </div>
       </div>
     </div>
