@@ -1,6 +1,7 @@
 import { onMount } from "solid-js";
 
 import { Section2 } from "./Section2";
+import { Section3 } from "./Section3";
 
 export function Content() {
   let section1!: HTMLDivElement;
@@ -27,7 +28,7 @@ export function Content() {
         test{" "}
       </div>
       <Section2 ref={section2} />
-      <div ref={section3} class="h-svh w-full bg-black/20"></div>
+      <Section3 ref={section3} />
     </>
   );
 }
