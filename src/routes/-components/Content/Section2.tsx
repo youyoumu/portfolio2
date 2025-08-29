@@ -1,10 +1,10 @@
 import { createSignal, onCleanup, onMount } from "solid-js";
 
-import DockerIcon from "./svgs/DockerIcon";
-import NeovimIcon from "./svgs/NeovimIcon";
-import NixIcon from "./svgs/NixIcon";
-import ReactIcon from "./svgs/ReactIcon";
-import TypescriptIcon from "./svgs/TypescriptIcon";
+import DockerIcon from "../svgs/DockerIcon";
+import NeovimIcon from "../svgs/NeovimIcon";
+import NixIcon from "../svgs/NixIcon";
+import ReactIcon from "../svgs/ReactIcon";
+import TypescriptIcon from "../svgs/TypescriptIcon";
 
 export function Section2() {
   const iconsRef: HTMLDivElement[] = [];

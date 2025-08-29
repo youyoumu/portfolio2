@@ -3,15 +3,17 @@ import { onMount } from "solid-js";
 import { Section2 } from "./Section2";
 import { Section3 } from "./Section3";
 import { Section4 } from "./Section4";
+import { Section5 } from "./Section5";
 
 export function Content() {
   let section1!: HTMLDivElement;
   let section2!: HTMLDivElement;
   let section3!: HTMLDivElement;
   let section4!: HTMLDivElement;
+  let section5!: HTMLDivElement;
 
   onMount(() => {
-    const sections = [section1, section2, section3, section4];
+    const sections = [section1, section2, section3, section4, section5];
     gsap.to(sections, {
       scrollTrigger: {
         snap: {
@@ -30,6 +32,7 @@ export function Content() {
       <Section2 ref={section2} />
       <Section3 ref={section3} />
       <Section4 ref={section4} />
+      <Section5 ref={section5} />
     </>
   );
 }
