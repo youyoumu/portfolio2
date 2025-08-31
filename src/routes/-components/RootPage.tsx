@@ -32,6 +32,7 @@ export default function RootPage() {
           <div class="absolute top-0 left-0 h-svh w-full">
             <BlurOverlay />
           </div>
+          <div class="bg-crt h-svh w-full absolute top-0 left-0"></div>
         </div>
       </Portal>
       <Show when={env.DEV && false}>
