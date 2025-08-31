@@ -107,7 +107,7 @@ export function Section4() {
   }
 
   return (
-    <div class="h-svh w-full bg-black/10 flex flex-col justify-center items-center p-4 md:pb-36 sm:p-8 relative">
+    <div class="h-lvh w-full bg-black/10 flex flex-col justify-center items-center p-4 md:pb-36 sm:p-8 relative">
       <div class="relative">
         <div
           class={cn(

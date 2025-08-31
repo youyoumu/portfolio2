@@ -133,7 +133,7 @@ export function Section2() {
   });
 
   return (
-    <div class="h-svh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center">
+    <div class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center">
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
         {iconNodes.map((_, i) => {
           return (

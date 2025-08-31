@@ -28,7 +28,7 @@ export function Content() {
 
   return (
     <>
-      <div ref={section1} class="h-svh w-full"></div>
+      <div ref={section1} class="h-lvh w-full"></div>
       <Section2 ref={section2} />
       <Section3 ref={section3} />
       <Section4 ref={section4} />

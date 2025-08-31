@@ -42,10 +42,10 @@ export function BlurOverlay() {
 
   return (
     <>
-      <div ref={overlay} class="h-svh w-full absolute top-0 left-0"></div>
+      <div ref={overlay} class="h-lvh w-full absolute top-0 left-0"></div>
       <div
         ref={overlay2}
-        class="h-svh w-full absolute top-0 left-0 bg-black opacity-0"
+        class="h-lvh w-full absolute top-0 left-0 bg-black opacity-0"
       ></div>
     </>
   );

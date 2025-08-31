@@ -47,7 +47,7 @@ const clientProjects = [
 export function Section3() {
   const iconClass = "size-4.5 cursor-pointer opacity-75";
   return (
-    <div class="h-svh w-full bg-black/20 flex flex-col justify-center items-center relative">
+    <div class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative">
       <div class="font-bebas-neue tracking-wide absolute top-10/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none">
         WORKS
       </div>
