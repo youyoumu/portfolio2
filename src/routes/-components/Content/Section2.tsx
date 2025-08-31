@@ -43,39 +43,34 @@ export function Section2() {
   }
 
   let running = false;
-  let rafId: number | null = null;
+  let intervalId: ReturnType<typeof setInterval> | null = null;
   function startShuffleCycle() {
     if (running) return;
     running = true;
 
     const totalDuration = 3.5 * 1000; // ms
-    let interval = 0.1 * 1000; // ms
-    const intervalIncrement = 0.03 * 1000; // ms
+    let interval = 100; // ms
+    const intervalIncrement = 30; // ms
 
-    const start = performance.now();
-    let lastAt = start;
-
-    function tick(now: number) {
-      const elapsed = now - start;
-      if (now - lastAt >= interval) {
-        setOrder((prev) => shuffle(prev));
-        lastAt = now;
-        interval += intervalIncrement;
-      }
-      if (elapsed < totalDuration) {
-        rafId = requestAnimationFrame(tick);
-      } else {
+    const start = Date.now();
+    function tick() {
+      const elapsed = Date.now() - start;
+      setOrder((prev) => shuffle(prev));
+      interval += intervalIncrement;
+      if (elapsed >= totalDuration) {
         stopShuffleCycle();
+      } else {
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(tick, interval);
       }
     }
-
-    rafId = requestAnimationFrame(tick);
+    intervalId = setInterval(tick, interval);
   }
 
   function stopShuffleCycle() {
-    if (rafId != null) {
-      cancelAnimationFrame(rafId);
-      rafId = null;
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
     }
     running = false;
   }
