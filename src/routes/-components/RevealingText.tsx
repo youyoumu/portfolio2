@@ -63,9 +63,9 @@ export function RevealingText() {
 
   const prompts = [
     "Press play. See what happens.",
-    "Click play. Watch the magic.",
-    "Hit play. Enjoy the show.",
-    "Tap play. See the story.",
+    // "Click play. Watch the magic.",
+    // "Hit play. Enjoy the show.",
+    // "Tap play. See the story.",
   ];
 
   const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
