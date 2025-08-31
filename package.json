@@ -24,6 +24,7 @@
     "@tanstack/solid-router": "^1.121.3",
     "@tanstack/solid-router-devtools": "^1.121.3",
     "@zag-js/slider": "^1.19.0",
+    "@zag-js/tooltip": "^1.19.0",
     "@zag-js/solid": "^1.19.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
