@@ -1,21 +1,32 @@
 import { onMount } from "solid-js";
 
+import { isMobile } from "#/lib/utils/isMobile";
+
 export function BlurOverlay() {
   let overlay!: HTMLDivElement;
   let overlay2!: HTMLDivElement;
-  let overlay3!: HTMLDivElement;
 
   onMount(() => {
-    gsap.to(overlay, {
-      backdropFilter: "blur(10px)",
-      ease: "none",
-      scrollTrigger: {
+    if (isMobile()) {
+      ScrollTrigger.create({
         trigger: overlay,
         start: "top top",
         end: "bottom top",
-        scrub: true,
-      },
-    });
+        onEnter: () => gsap.set(overlay, { backdropFilter: "blur(10px)" }),
+        onLeaveBack: () => gsap.set(overlay, { backdropFilter: "blur(0px)" }),
+      });
+    } else {
+      gsap.to(overlay, {
+        backdropFilter: "blur(10px)",
+        ease: "none",
+        scrollTrigger: {
+          trigger: overlay,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }
 
     gsap.to(overlay2, {
       opacity: 0.5,
@@ -27,17 +38,6 @@ export function BlurOverlay() {
         scrub: true,
       },
     });
-
-    // gsap.to(overlay3, {
-    //   opacity: 0.5,
-    //   ease: "none",
-    //   scrollTrigger: {
-    //     trigger: overlay,
-    //     start: "top top",
-    //     end: "bottom top",
-    //     scrub: true,
-    //   },
-    // });
   });
 
   return (

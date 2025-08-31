@@ -90,7 +90,7 @@ export class GameOfLife {
     }
     this.#movingId = setInterval(() => {
       this.moveCircle((bpm ?? 100) / 100);
-    }, 10);
+    }, 16);
   }
 
   #movingSlowId: ReturnType<typeof setInterval> | null = null;
@@ -109,7 +109,7 @@ export class GameOfLife {
     }
     this.#movingSlowId = setInterval(() => {
       this.moveCircle(0.2);
-    }, 10);
+    }, 16);
 
     const movingSlow = () => {
       this.updateCanvas();
