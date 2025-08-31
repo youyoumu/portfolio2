@@ -107,11 +107,11 @@ export function Section4() {
   }
 
   return (
-    <div class="h-svh w-full bg-black/10 flex flex-col justify-center items-center p-4 md:pb-36 sm:p-8">
+    <div class="h-svh w-full bg-black/10 flex flex-col justify-center items-center p-4 md:pb-36 sm:p-8 relative">
       <div class="relative">
         <div
           class={cn(
-            "absolute left-1/2 -top-8 sm:-left-4 sm:top-1/2 -translate-x-1/2 sm:-rotate-90 sm:origin-center text-2xl font-bold text-neutral-content opacity-75 z-20",
+            "absolute left-1/2 -top-8 sm:-left-4 sm:top-1/2 -translate-x-1/2 sm:-rotate-90 sm:origin-center text-2xl font-bold text-neutral-content opacity-75 z-20 text-nowrap",
           )}
         >
           29 August 2025
@@ -188,6 +188,9 @@ export function Section4() {
             ))}
           </div>
         </div>
+      </div>
+      <div class="font-bebas-neue tracking-wide absolute bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none">
+        SETUP
       </div>
     </div>
   );
