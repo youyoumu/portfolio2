@@ -12,52 +12,52 @@ const markers: Marker[] = [
   {
     x: 54,
     y: 47,
-    text: "I use Neovim as my primary code edior. I started using it since January 2025.",
+    text: "I use Neovim as my primary code editor. I’ve been using it since January 2025.",
   },
   {
     x: 52,
     y: 68,
-    text: "Pressplay APOLLO61 Lite, 60% Keyboard. I use this for gaming and opt out from my split keyboard.",
+    text: "Pressplay APOLLO61 Lite, a 60% keyboard. I still use this for gaming, but I switched to a split keyboard for everyday use.",
   },
   {
     x: 44,
     y: 78,
-    text: "A custom split keyboard with corne layout. I switch to this not long ago, and I'm getting used to it.",
+    text: "A custom split keyboard with a Corne layout. I switched to this recently and I’m still getting used to it.",
   },
   {
     x: 84,
     y: 81,
-    text: "Vertical mouse because using normal mouse for long period of time hurts my hand. Rexus Cliff.",
+    text: "Vertical mouse, because using a regular mouse for long periods hurts my hand. Model: Rexus Cliff.",
   },
   {
     x: 71,
     y: 74,
-    text: "Logitect G102",
+    text: "Logitech G102.",
   },
   {
     x: 19,
     y: 77,
-    text: "I do some gaming. Some games that I play in the recent years are: Minecraft, Factorio, Counter Strike 2, Zenless Zone Zero. Although currently I only use this controller for ZZZ and reviewing my Anki cards. Logitech F310.",
+    text: "I play some games. In recent years, I’ve played Minecraft, Factorio, Counter-Strike 2, and Zenless Zone Zero. Currently, I mostly use this controller for ZZZ and reviewing my Anki cards. Model: Logitech F310.",
   },
   {
     x: 83,
     y: 33,
-    text: "This is my main PC, I dual boot NixOS and Windows. I mainly use linux for everything that can be done in linux, and Windows for some games.",
+    text: "This is my main PC. I dual boot NixOS and Windows. I mainly use Linux for everything it supports, and Windows for some games.",
   },
   {
     x: 82,
     y: 51,
-    text: "I have a home server. This is my MiniPC, I ssh-ed into it. I use it to host some of my projects, game server (Minecraft and Factorio), and some apps with Docker.",
+    text: "I also have a home server (a MiniPC I SSH into). I use it to host some of my projects, game servers (Minecraft and Factorio), and apps with Docker.",
   },
   {
     x: 21,
     y: 28,
-    text: "Steelseries Arctis 5, since 2019.",
+    text: "SteelSeries Arctis 5, in use since 2019.",
   },
   {
     x: 93,
     y: 62,
-    text: "This is Anki, a flashcard program that I use to help me learn Japanese language. I started learning since November 2023, and my current level is probably around JLPT N3. I plan to get JLPT N2 test next year.",
+    text: "This is Anki, a flashcard program I use to learn Japanese. I started in November 2023, and my current level is around JLPT N3. I plan to take the JLPT N2 exam next year.",
   },
 ];
 
