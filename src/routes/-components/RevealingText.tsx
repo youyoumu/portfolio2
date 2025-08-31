@@ -74,7 +74,7 @@ export function RevealingText() {
     <div class="relative">
       <div
         ref={text}
-        class="invisible text-3xl font-bold backdrop-blur-md px-2 py-0.5"
+        class="invisible text-[5svw] sm:text-[3svw] font-bold backdrop-blur-md px-2 py-0.5 text-nowrap"
       >
         {randomPrompt}
       </div>
