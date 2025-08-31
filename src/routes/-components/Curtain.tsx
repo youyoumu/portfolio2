@@ -26,7 +26,7 @@ export function Curtain({ onHide }: { onHide?: () => void }) {
       }
       gameOfLife.next2();
       gameOfLife.updateCanvas();
-    }, 20);
+    }, 30);
   });
 
   createEffect(() => {

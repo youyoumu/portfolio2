@@ -46,11 +46,16 @@ export default function RootPage() {
       >
         {background.audioControl}
       </Portal>
-      <Show when={!hide()}>
-        <div class="absolute top-0 left-0 overflow-hidden h-svh w-full">
-          <Curtain onHide={() => setHide(true)} />
-        </div>
-      </Show>
+      <Portal
+        mount={document.getElementById("curtain") ?? undefined}
+        ref={hidePortalDiv}
+      >
+        <Show when={!hide()}>
+          <div class="fixed top-0 left-0 overflow-hidden h-svh w-full">
+            <Curtain onHide={() => setHide(true)} />
+          </div>
+        </Show>
+      </Portal>
     </div>
   );
 }
