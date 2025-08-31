@@ -108,76 +108,85 @@ export function Section4() {
 
   return (
     <div class="h-svh w-full bg-black/10 flex flex-col justify-center items-center p-4 md:pb-36 sm:p-8">
-      <div
-        ref={containerRef}
-        class={cn("relative overflow-hidden rounded-xl shadow-lg", {
-          "cursor-zoom-in": zoom() === 1,
-          "cursor-zoom-out": zoom() === 2,
-
-          "hover:[&>img]:scale-150": zoom() === 1,
-          "hover:[&>img]:scale-250": zoom() === 2,
-
-          "hover:[&>div]:scale-150": zoom() === 1,
-          "hover:[&>div]:scale-250": zoom() === 2,
-        })}
-        onMouseEnter={() => setShowMarker(true)}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        onClick={() => {
-          if (zoom() === 1) {
-            setZoom(2);
-          } else if (zoom() === 2) {
-            setZoom(1);
-          }
-        }}
-      >
-        <img
-          src="/img/setup/IMG_20250829_143627_847.jpg"
-          class={cn(
-            "max-h-[80vh] transition-transform duration-700 ease-in-out",
-          )}
-          style={{ "transform-origin": `${x()}% ${y()}%` }}
-        />
-
+      <div class="relative">
         <div
           class={cn(
-            "transition-transform duration-700 ease-in-out absolute top-0 left-0 size-full",
-            {
-              "opacity-0": !showMarker(),
-            },
+            "absolute left-1/2 -top-8 sm:-left-4 sm:top-1/2 -translate-x-1/2 sm:-rotate-90 sm:origin-center text-2xl font-bold text-neutral-content opacity-75 z-20",
           )}
-          style={{ "transform-origin": `${x()}% ${y()}%` }}
         >
-          {markers.map((m, i) => (
-            <div
-              class={cn("absolute", {
-                "z-10": hoveredMarker() === i,
-              })}
-              style={{
-                top: `${m.y}%`,
-                left: `${m.x}%`,
-                transform: "translate(-50%, -50%)",
-              }}
-              onMouseEnter={() => setHoveredMarker(i)}
-              onMouseLeave={() => setHoveredMarker(null)}
-            >
-              <div class="w-4 h-4 rounded-full bg-warning border-2 border-base-100 shadow-md hover:scale-125 transition-transform"></div>
+          29 August 2025
+        </div>
+        <div
+          ref={containerRef}
+          class={cn("relative overflow-hidden rounded-xl shadow-lg", {
+            "cursor-zoom-in": zoom() === 1,
+            "cursor-zoom-out": zoom() === 2,
 
-              {hoveredMarker() === i && (
-                <div
-                  class={cn(
-                    "scale-50 origin-bottom transition-transform duration-700 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 border-1 bg-neutral text-neutral-content text-sm px-2 py-1 rounded-lg shadow-lg w-64",
-                    {
-                      "-translate-x-6/10": m.x > 90,
-                      "-translate-x-8/12": m.x > 90 && zoom() === 2,
-                    },
-                  )}
-                >
-                  {m.text}
-                </div>
-              )}
-            </div>
-          ))}
+            "hover:[&>img]:scale-150": zoom() === 1,
+            "hover:[&>img]:scale-250": zoom() === 2,
+
+            "hover:[&>div]:scale-150": zoom() === 1,
+            "hover:[&>div]:scale-250": zoom() === 2,
+          })}
+          onMouseEnter={() => setShowMarker(true)}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          onClick={() => {
+            if (zoom() === 1) {
+              setZoom(2);
+            } else if (zoom() === 2) {
+              setZoom(1);
+            }
+          }}
+        >
+          <img
+            src="/img/setup/IMG_20250829_143627_847.jpg"
+            class={cn(
+              "max-h-[80vh] transition-transform duration-700 ease-in-out",
+            )}
+            style={{ "transform-origin": `${x()}% ${y()}%` }}
+          />
+
+          <div
+            class={cn(
+              "transition-transform duration-700 ease-in-out absolute top-0 left-0 size-full",
+              {
+                "opacity-0": !showMarker(),
+              },
+            )}
+            style={{ "transform-origin": `${x()}% ${y()}%` }}
+          >
+            {markers.map((m, i) => (
+              <div
+                class={cn("absolute", {
+                  "z-10": hoveredMarker() === i,
+                })}
+                style={{
+                  top: `${m.y}%`,
+                  left: `${m.x}%`,
+                  transform: "translate(-50%, -50%)",
+                }}
+                onMouseEnter={() => setHoveredMarker(i)}
+                onMouseLeave={() => setHoveredMarker(null)}
+              >
+                <div class="w-4 h-4 rounded-full bg-warning border-2 border-base-100 shadow-md hover:scale-125 transition-transform"></div>
+
+                {hoveredMarker() === i && (
+                  <div
+                    class={cn(
+                      "scale-50 origin-bottom transition-transform duration-700 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 border-1 bg-neutral text-neutral-content text-sm px-2 py-1 rounded-lg shadow-lg w-64",
+                      {
+                        "-translate-x-6/10": m.x > 90,
+                        "-translate-x-8/12": m.x > 90 && zoom() === 2,
+                      },
+                    )}
+                  >
+                    {m.text}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
