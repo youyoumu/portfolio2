@@ -1,10 +1,7 @@
-import {
-  IconBrandDiscord,
-  IconBrandGithub,
-  IconCopy,
-  IconMail,
-} from "@tabler/icons-solidjs";
+import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 
+import DiscordIcon from "../svgs/DiscordIcon";
+import GithubIcon from "../svgs/GithubIcon";
 import { ZagTooltip } from "../ZagTooltip";
 
 export function Section5() {
@@ -28,16 +25,14 @@ export function Section5() {
       </div>
       <p class="text-sm text-neutral-content/50">hire me pls</p>
       <div class="text-neutral-content flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-lg pt-8 pb-16">
-        <div class="flex items-center gap-1">
-          <IconBrandGithub />
-          <a
-            target="_blank"
-            class="underline cursor-pointer text-sm sm:text-base"
-            href="https://github.com/youyoumu"
-          >
-            GitHub
-          </a>
-        </div>
+        <a
+          target="_blank"
+          class="flex items-center gap-1 underline cursor-pointer text-sm sm:text-base"
+          href="https://github.com/youyoumu"
+        >
+          <GithubIcon class="size-6" />
+          youyoumu
+        </a>
         <ZagTooltip
           trigger={
             <div
@@ -46,7 +41,7 @@ export function Section5() {
                 navigator.clipboard.writeText("youyoumu2017");
               }}
             >
-              <IconBrandDiscord />
+              <DiscordIcon class="size-6" />
               <span class="underline text-sm sm:text-base">youyoumu2017</span>
               <IconCopy class="size-4 opacity-50 sm:hidden" />
             </div>
@@ -61,7 +56,7 @@ export function Section5() {
                 navigator.clipboard.writeText("youyoumu2024@proton.me");
               }}
             >
-              <IconMail />
+              <IconMail class="size-6" />
               <span class="underline text-sm sm:text-base">
                 youyoumu2024@proton.me
               </span>
