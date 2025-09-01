@@ -89,6 +89,18 @@ export function Section5() {
       >
         CONTACT
       </div>
+      <footer class="text-neutral-content text-sm absolute bottom-40 left-0 right-0 flex flex-col gap-1 items-center justify-center">
+        <span>
+          Cooked 🍙 using{" "}
+          <a
+            class="underline cursor-pointer"
+            href="https://www.solidjs.com/"
+            target="_blank"
+          >
+            SolidJS
+          </a>
+        </span>
+      </footer>
     </div>
   );
 }
