@@ -34,7 +34,7 @@ const markers: Marker[] = [
   {
     x: 71,
     y: 74,
-    text: "Logitech G102.",
+    text: "Logitech G102, which I mainly use for FPS games because it’s more precise for aiming compared to my vertical mouse.",
   },
   {
     x: 19,
