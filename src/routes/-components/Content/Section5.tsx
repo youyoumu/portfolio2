@@ -1,4 +1,5 @@
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
+import { getRouteApi } from "@tanstack/solid-router";
 import { onMount } from "solid-js";
 
 import DiscordIcon from "../svgs/DiscordIcon";
@@ -6,6 +7,12 @@ import GithubIcon from "../svgs/GithubIcon";
 import { ZagTooltip } from "../ZagTooltip";
 
 export function Section5() {
+  const routeApi = getRouteApi("/");
+  const { yym } = routeApi.useSearch()();
+  const realName = () => yym === 0;
+  const email = () =>
+    realName() ? "donnylaukimleng@outlook.com" : "youyoumu2017@proton.me";
+
   const tooltip = (
     <div class="text-sm opacity-50 hidden sm:block">click to copy</div>
   );
@@ -67,13 +74,11 @@ export function Section5() {
             <div
               class="flex items-center gap-1 cursor-pointer"
               onClick={() => {
-                navigator.clipboard.writeText("youyoumu2024@proton.me");
+                navigator.clipboard.writeText(email());
               }}
             >
               <IconMail class="size-5" />
-              <span class="underline text-sm sm:text-base">
-                youyoumu2024@proton.me
-              </span>
+              <span class="underline text-sm sm:text-base">{email()}</span>
               <IconCopy class="size-4 opacity-50 sm:hidden" />
             </div>
           }

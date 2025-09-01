@@ -1,3 +1,4 @@
+import { getRouteApi } from "@tanstack/solid-router";
 import { createSignal, onCleanup, onMount } from "solid-js";
 
 import { isMobile } from "#/lib/utils/isMobile";
@@ -11,6 +12,9 @@ import TypescriptIcon from "../svgs/TypescriptIcon";
 export function Section2() {
   const iconsRef: HTMLDivElement[] = [];
   const textsRef: HTMLDivElement[] = [];
+  const routeApi = getRouteApi("/");
+  const { yym } = routeApi.useSearch()();
+  const realName = () => yym === 0;
 
   const iconColor = getComputedStyle(document.documentElement)
     .getPropertyValue("--color-neutral-content")
@@ -78,7 +82,9 @@ export function Section2() {
   }
 
   const textsNodes = [
-    <div class="text-lg text-nowrap">youyoumu</div>,
+    <div class="text-lg text-nowrap font-medium">
+      {realName() ? "DONNY LAU KIM LENG" : "youyoumu"}
+    </div>,
     <div class="text-nowrap">WEB DEVELOPER</div>,
     <div class="text-nowrap">LINUX ENTHUSIAST</div>,
     <div class="text-nowrap opacity-40">WEEB</div>,
