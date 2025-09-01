@@ -12,6 +12,8 @@ export function Content() {
   let section4!: HTMLDivElement;
   let section5!: HTMLDivElement;
 
+  const tweenRestarts: Array<() => void> = [];
+
   onMount(() => {
     const sections = [section1, section2, section3, section4, section5];
     gsap.to(sections, {
@@ -22,6 +24,9 @@ export function Content() {
           directional: false,
         },
         scrub: false,
+        onSnapComplete() {
+          tweenRestarts.forEach((f) => f());
+        },
       },
     });
   });
@@ -30,7 +35,12 @@ export function Content() {
     <>
       <div ref={section1} class="h-lvh w-full"></div>
       <Section2 ref={section2} />
-      <Section3 ref={section3} />
+      <Section3
+        ref={section3}
+        onMount={({ tweenRestart }) => {
+          tweenRestarts.push(tweenRestart);
+        }}
+      />
       <Section4 ref={section4} />
       <Section5 ref={section5} />
     </>

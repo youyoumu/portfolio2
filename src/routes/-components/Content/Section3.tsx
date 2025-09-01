@@ -44,12 +44,16 @@ const clientProjects = [
   },
 ];
 
-export function Section3() {
-  let heading!: HTMLDivElement;
+export function Section3(props: {
+  onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
+}) {
+  let heading1!: HTMLDivElement;
+  let heading2!: HTMLDivElement;
   const iconClass = "size-4.5 cursor-pointer opacity-75";
 
   onMount(() => {
     // Parallax effect on heading
+    const heading = [heading1, heading2];
     gsap.to(heading, {
       yPercent: 200, // moves downward as you scroll
       ease: "none", // keeps motion linear
@@ -60,19 +64,79 @@ export function Section3() {
         scrub: true, // link animation progress with scroll
       },
     });
+
+    let tween1: gsap.core.Tween;
+    let tween2: gsap.core.Tween;
+    SplitText.create(heading1, {
+      type: "chars,words,lines",
+      autoSplit: true,
+      mask: "lines",
+      onSplit: (self) => {
+        tween1 = gsap.fromTo(
+          self.chars,
+          {
+            yPercent: 0,
+          },
+          {
+            duration: 1,
+            yPercent: -100,
+            stagger: 0.03,
+            ease: "expo.inOut",
+            paused: true,
+          },
+        );
+      },
+    });
+
+    SplitText.create(heading2, {
+      type: "chars,words,lines",
+      autoSplit: true,
+      mask: "lines",
+      onSplit: (self) => {
+        tween2 = gsap.fromTo(
+          self.chars,
+          {
+            yPercent: 100,
+          },
+          {
+            duration: 1,
+            yPercent: 0,
+            stagger: 0.03,
+            ease: "expo.inOut",
+            paused: true,
+          },
+        );
+      },
+    });
+
+    function tweenRestart() {
+      tween1.restart();
+      tween2.restart();
+    }
+
+    props.onMount?.({
+      tweenRestart,
+    });
   });
 
-  return (
-    <div class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative">
+  function Heading(props: { ref: HTMLDivElement }) {
+    return (
       <div
-        ref={heading}
-        class="font-bebas-neue tracking-wide absolute top-10/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
+        ref={props.ref}
+        class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute top-10/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
         style={{
           transform: "translateY(-100%)",
         }}
       >
         WORKS
       </div>
+    );
+  }
+
+  return (
+    <div class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative">
+      <Heading ref={heading1} />
+      <Heading ref={heading2} />
       <div class="text-neutral-content flex flex-col">
         <div>
           <h2 class="text-2xl font-bold">Projects</h2>

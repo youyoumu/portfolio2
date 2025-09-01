@@ -1,9 +1,6 @@
 import { debounce } from "@solid-primitives/scheduled";
-import { gsap } from "gsap";
-import { SplitText } from "gsap/SplitText";
 
 import { badAppleLyrics } from "./vars";
-gsap.registerPlugin(SplitText);
 
 const offset = -0.9;
 
