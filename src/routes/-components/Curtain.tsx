@@ -2,9 +2,12 @@ import { createEffect, createSignal, onMount, Show } from "solid-js";
 
 import { env } from "#/env";
 import { GameOfLife } from "#/lib/gameOfLife";
+import { isMobile } from "#/lib/utils/isMobile";
 
 export function Curtain({ onHide }: { onHide?: () => void }) {
-  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(2.5);
+  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(
+    isMobile() ? 2 : 2.5,
+  );
   const [hide, setHide] = createSignal(false);
   const gameOfLife = new GameOfLife({
     width,
