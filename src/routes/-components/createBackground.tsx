@@ -240,8 +240,8 @@ function AudioControl(props: {
 
   return (
     <div class="fixed bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2 px-2  w-full sm:w-[600px]">
-      <div class="bg-neutral py-4 px-8 rounded-xl sm:rounded-full flex flex-col gap-2 items-center">
-        <div class="flex gap-4 items-center w-full justify-between flex-col sm:flex-row">
+      <div class="bg-neutral py-3 sm:py-4 px-4 sm:px-8 rounded-xl sm:rounded-full flex flex-col gap-2 items-center">
+        <div class="flex gap-1 sm:gap-4 items-center w-full justify-between flex-col sm:flex-row">
           <div class="flex gap-4 items-center">
             <div class="w-64 sm:w-40">
               <ScrollingText
