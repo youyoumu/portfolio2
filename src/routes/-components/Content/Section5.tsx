@@ -2,11 +2,15 @@ import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { getRouteApi } from "@tanstack/solid-router";
 import { onMount } from "solid-js";
 
+import { scrollingChars } from "#/lib/gsap/scrollingChars";
+
 import DiscordIcon from "../svgs/DiscordIcon";
 import GithubIcon from "../svgs/GithubIcon";
 import { ZagTooltip } from "../ZagTooltip";
 
-export function Section5() {
+export function Section5(props: {
+  onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
+}) {
   const routeApi = getRouteApi("/");
   const { yym } = routeApi.useSearch()();
   const realName = () => yym === 0;
@@ -17,9 +21,11 @@ export function Section5() {
     <div class="text-sm opacity-50 hidden sm:block">click to copy</div>
   );
 
-  let heading!: HTMLDivElement;
+  let heading1!: HTMLDivElement;
+  let heading2!: HTMLDivElement;
   onMount(() => {
     // Parallax effect on heading
+    const heading = [heading1, heading2];
     gsap.to(heading, {
       yPercent: 200, // moves downward as you scroll
       ease: "none", // keeps motion linear
@@ -30,7 +36,26 @@ export function Section5() {
         scrub: true, // link animation progress with scroll
       },
     });
+
+    const { tweenRestart } = scrollingChars({ heading1, heading2 });
+    props.onMount?.({
+      tweenRestart,
+    });
   });
+
+  function Heading(props: { ref: HTMLDivElement }) {
+    return (
+      <div
+        ref={props.ref}
+        class="font-bebas-neue tracking-wide absolute top-9/100 text-[15svw] lg:text-[10svw] text-neutral-content right-10/100 opacity-50 pointer-events-none"
+        style={{
+          transform: "translateY(-110%)",
+        }}
+      >
+        CONTACT
+      </div>
+    );
+  }
 
   return (
     <div class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative">
@@ -85,15 +110,9 @@ export function Section5() {
           tooltop={tooltip}
         />
       </div>
-      <div
-        class="font-bebas-neue tracking-wide absolute top-9/100 text-[15svw] lg:text-[10svw] text-neutral-content right-10/100 opacity-50 pointer-events-none"
-        ref={heading}
-        style={{
-          transform: "translateY(-110%)",
-        }}
-      >
-        CONTACT
-      </div>
+
+      <Heading ref={heading1} />
+      <Heading ref={heading2} />
       <footer class="text-neutral-content text-sm absolute bottom-40 left-0 right-0 flex flex-col gap-1 items-center justify-center">
         <span>
           Cooked 🍙 using{" "}

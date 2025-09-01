@@ -34,15 +34,30 @@ export function Content() {
   return (
     <>
       <div ref={section1} class="h-lvh w-full"></div>
-      <Section2 ref={section2} />
+      <Section2
+        ref={section2}
+        onMount={({ tweenRestart }) => {
+          tweenRestarts.push(tweenRestart);
+        }}
+      />
       <Section3
         ref={section3}
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);
         }}
       />
-      <Section4 ref={section4} />
-      <Section5 ref={section5} />
+      <Section4
+        ref={section4}
+        onMount={({ tweenRestart }) => {
+          tweenRestarts.push(tweenRestart);
+        }}
+      />
+      <Section5
+        ref={section5}
+        onMount={({ tweenRestart }) => {
+          tweenRestarts.push(tweenRestart);
+        }}
+      />
     </>
   );
 }

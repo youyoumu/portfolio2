@@ -1,6 +1,7 @@
 import { IconZoom } from "@tabler/icons-solidjs";
 import { createSignal, type JSX, onMount } from "solid-js";
 
+import { scrollingChars } from "#/lib/gsap/scrollingChars";
 import { cn } from "#/lib/utils/cn";
 import { isMobile } from "#/lib/utils/isMobile";
 
@@ -63,7 +64,9 @@ const markers: Marker[] = [
   },
 ];
 
-export function Section4() {
+export function Section4(props: {
+  onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
+}) {
   let containerRef: HTMLDivElement | undefined;
   const [x, setX] = createSignal(50);
   const [y, setY] = createSignal(50);
@@ -143,9 +146,12 @@ export function Section4() {
     setShowMarker(false);
   }
 
-  let heading!: HTMLDivElement;
+  let heading1!: HTMLDivElement;
+  let heading2!: HTMLDivElement;
+
   onMount(() => {
     // Parallax effect on heading
+    const heading = [heading1, heading2];
     gsap.to(heading, {
       yPercent: 200, // moves downward as you scroll
       ease: "none", // keeps motion linear
@@ -156,7 +162,26 @@ export function Section4() {
         scrub: true, // link animation progress with scroll
       },
     });
+
+    const { tweenRestart } = scrollingChars({ heading1, heading2 });
+    props.onMount?.({
+      tweenRestart,
+    });
   });
+
+  function Heading(props: { ref: HTMLDivElement }) {
+    return (
+      <div
+        ref={props.ref}
+        class="font-bebas-neue tracking-wide absolute bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
+        style={{
+          transform: "translateY(-110%)",
+        }}
+      >
+        ENVIRONMENT
+      </div>
+    );
+  }
 
   return (
     <div class="h-lvh w-full bg-black/10 flex flex-col justify-center items-center p-2 md:pb-36 sm:p-8 relative">
@@ -284,15 +309,9 @@ export function Section4() {
           </div>
         </div>
       </div>
-      <div
-        ref={heading}
-        class="font-bebas-neue tracking-wide absolute bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
-        style={{
-          transform: "translateY(-110%)",
-        }}
-      >
-        ENVIRONMENT
-      </div>
+
+      <Heading ref={heading1} />
+      <Heading ref={heading2} />
     </div>
   );
 }

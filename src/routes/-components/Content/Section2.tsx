@@ -1,6 +1,7 @@
 import { getRouteApi } from "@tanstack/solid-router";
 import { createSignal, onCleanup, onMount } from "solid-js";
 
+import { scrollingChars } from "#/lib/gsap/scrollingChars";
 import { isMobile } from "#/lib/utils/isMobile";
 
 import DockerIcon from "../svgs/DockerIcon";
@@ -9,7 +10,9 @@ import NixIcon from "../svgs/NixIcon";
 import ReactIcon from "../svgs/ReactIcon";
 import TypescriptIcon from "../svgs/TypescriptIcon";
 
-export function Section2() {
+export function Section2(props: {
+  onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
+}) {
   const iconsRef: HTMLDivElement[] = [];
   const textsRef: HTMLDivElement[] = [];
   const routeApi = getRouteApi("/");
@@ -90,7 +93,8 @@ export function Section2() {
     <div class="text-nowrap opacity-40">WEEB</div>,
   ];
 
-  let heading!: HTMLDivElement;
+  let heading1!: HTMLDivElement;
+  let heading2!: HTMLDivElement;
   onMount(() => {
     const toggleActions = isMobile()
       ? "play none none none"
@@ -140,6 +144,7 @@ export function Section2() {
     });
 
     // Parallax effect on heading
+    const heading = [heading1, heading2];
     gsap.to(heading, {
       yPercent: 200, // moves downward as you scroll
       ease: "none", // keeps motion linear
@@ -150,11 +155,30 @@ export function Section2() {
         scrub: true, // link animation progress with scroll
       },
     });
+
+    const { tweenRestart } = scrollingChars({ heading1, heading2 });
+    props.onMount?.({
+      tweenRestart,
+    });
   });
 
   onCleanup(() => {
     stopShuffleCycle();
   });
+
+  function Heading(props: { ref: HTMLDivElement }) {
+    return (
+      <div
+        ref={props.ref}
+        class="font-bebas-neue tracking-wide absolute bottom-10/100 text-[15svw] lg:text-[10svw] text-neutral-content right-10/100 opacity-50 pointer-events-none"
+        style={{
+          transform: "translateY(-100%)",
+        }}
+      >
+        ESSENCE
+      </div>
+    );
+  }
 
   return (
     <div class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative">
@@ -182,15 +206,9 @@ export function Section2() {
           })}
         </div>
       </div>
-      <div
-        ref={heading}
-        class="font-bebas-neue tracking-wide absolute bottom-10/100 text-[15svw] lg:text-[10svw] text-neutral-content right-10/100 opacity-50 pointer-events-none"
-        style={{
-          transform: "translateY(-100%)",
-        }}
-      >
-        ESSENCE
-      </div>
+
+      <Heading ref={heading1} />
+      <Heading ref={heading2} />
     </div>
   );
 }
