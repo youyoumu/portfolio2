@@ -197,7 +197,10 @@ export function Section4() {
               "[&>div]:scale-250": zoom() === 2 && touching(),
             },
           )}
-          onMouseEnter={() => setShowMarker(true)}
+          onMouseEnter={(e) => {
+            setShowMarker(true);
+            handleMouseMove(e);
+          }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           onTouchStart={(e) => {
