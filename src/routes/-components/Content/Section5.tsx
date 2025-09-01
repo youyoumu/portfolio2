@@ -11,7 +11,7 @@ export function Section5() {
   const { yym } = routeApi.useSearch()();
   const realName = () => yym === 0;
   const email = () =>
-    realName() ? "donnylaukimleng@outlook.com" : "youyoumu2017@proton.me";
+    realName() ? "donnylaukimleng@outlook.com" : "youyoumu2024@proton.me";
 
   const tooltip = (
     <div class="text-sm opacity-50 hidden sm:block">click to copy</div>
