@@ -1,5 +1,5 @@
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-solidjs";
-import { For } from "solid-js";
+import { For, onMount } from "solid-js";
 
 const projects = [
   {
@@ -45,10 +45,32 @@ const clientProjects = [
 ];
 
 export function Section3() {
+  let heading!: HTMLDivElement;
   const iconClass = "size-4.5 cursor-pointer opacity-75";
+
+  onMount(() => {
+    // Parallax effect on heading
+    gsap.to(heading, {
+      yPercent: 200, // moves downward as you scroll
+      ease: "none", // keeps motion linear
+      scrollTrigger: {
+        trigger: heading, // or the whole section
+        start: "top bottom", // when section enters viewport
+        end: "bottom top", // when section leaves
+        scrub: true, // link animation progress with scroll
+      },
+    });
+  });
+
   return (
     <div class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative">
-      <div class="font-bebas-neue tracking-wide absolute top-10/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none">
+      <div
+        ref={heading}
+        class="font-bebas-neue tracking-wide absolute top-10/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
+        style={{
+          transform: "translateY(-100%)",
+        }}
+      >
         WORKS
       </div>
       <div class="text-neutral-content flex flex-col">

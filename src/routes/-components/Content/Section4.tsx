@@ -1,5 +1,5 @@
 import { IconZoom } from "@tabler/icons-solidjs";
-import { createSignal, type JSX } from "solid-js";
+import { createSignal, type JSX, onMount } from "solid-js";
 
 import { cn } from "#/lib/utils/cn";
 import { isMobile } from "#/lib/utils/isMobile";
@@ -143,6 +143,21 @@ export function Section4() {
     setShowMarker(false);
   }
 
+  let heading!: HTMLDivElement;
+  onMount(() => {
+    // Parallax effect on heading
+    gsap.to(heading, {
+      yPercent: 200, // moves downward as you scroll
+      ease: "none", // keeps motion linear
+      scrollTrigger: {
+        trigger: heading, // or the whole section
+        start: "top bottom", // when section enters viewport
+        end: "bottom top", // when section leaves
+        scrub: true, // link animation progress with scroll
+      },
+    });
+  });
+
   return (
     <div class="h-lvh w-full bg-black/10 flex flex-col justify-center items-center p-2 md:pb-36 sm:p-8 relative">
       <div class="relative">
@@ -266,8 +281,14 @@ export function Section4() {
           </div>
         </div>
       </div>
-      <div class="font-bebas-neue tracking-wide absolute bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none">
-        SETUP
+      <div
+        ref={heading}
+        class="font-bebas-neue tracking-wide absolute bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
+        style={{
+          transform: "translateY(-110%)",
+        }}
+      >
+        ENVIRONMENT
       </div>
     </div>
   );
