@@ -84,6 +84,7 @@ export function Section2() {
     <div class="text-nowrap opacity-40">WEEB</div>,
   ];
 
+  let heading!: HTMLDivElement;
   onMount(() => {
     const toggleActions = isMobile()
       ? "play none none none"
@@ -131,6 +132,18 @@ export function Section2() {
         "+=0.1",
       );
     });
+
+    // Parallax effect on heading
+    gsap.to(heading, {
+      yPercent: 200, // moves downward as you scroll
+      ease: "none", // keeps motion linear
+      scrollTrigger: {
+        trigger: heading, // or the whole section
+        start: "top bottom", // when section enters viewport
+        end: "bottom top", // when section leaves
+        scrub: true, // link animation progress with scroll
+      },
+    });
   });
 
   onCleanup(() => {
@@ -138,7 +151,7 @@ export function Section2() {
   });
 
   return (
-    <div class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center">
+    <div class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative">
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
         {iconNodes.map((_, i) => {
           return (
@@ -162,6 +175,15 @@ export function Section2() {
             );
           })}
         </div>
+      </div>
+      <div
+        ref={heading}
+        class="font-bebas-neue tracking-wide absolute bottom-10/100 text-[15svw] lg:text-[10svw] text-neutral-content right-10/100 opacity-50 pointer-events-none"
+        style={{
+          transform: "translateY(-100%)",
+        }}
+      >
+        ESSENCE
       </div>
     </div>
   );
