@@ -16,6 +16,7 @@ import { GameOfLife } from "#/lib/gameOfLife";
 import { Lyrics } from "#/lib/lyrics";
 import { setStore } from "#/lib/store";
 import { cn } from "#/lib/utils/cn";
+import { getDynamicViewportDelta } from "#/lib/utils/dynamicViewport";
 import { isMobile } from "#/lib/utils/isMobile";
 import { tailwindBreakpoints } from "#/lib/utils/tailwindBreakPoint";
 import { Visualizer } from "#/lib/visualizer";
@@ -118,10 +119,9 @@ export function createBackground() {
       let shouldResize = true;
 
       if (isMobile()) {
-        // On mobile, ignore small height-only changes (< 100px)
         const widthChanged = newWidth !== lastWidth;
         const heightDelta = Math.abs(newHeight - lastHeight);
-        shouldResize = widthChanged || heightDelta > 100;
+        shouldResize = widthChanged || heightDelta > getDynamicViewportDelta();
       }
 
       if (shouldResize) {

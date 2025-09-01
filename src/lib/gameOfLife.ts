@@ -1,3 +1,4 @@
+import { getDynamicViewportDelta } from "./utils/dynamicViewport";
 import { isMobile } from "./utils/isMobile";
 
 export class GameOfLife {
@@ -74,7 +75,9 @@ export class GameOfLife {
   static getGameOfLifeSize(multiplier = 1) {
     const cellSize = (isMobile() ? 10 : 20) * multiplier;
     const width = Math.floor((window.innerWidth + cellSize) / cellSize);
-    const height = Math.floor((window.innerHeight + cellSize + 100) / cellSize);
+    const height = Math.floor(
+      (window.innerHeight + cellSize + getDynamicViewportDelta()) / cellSize,
+    );
     return { cellSize, width, height };
   }
 
