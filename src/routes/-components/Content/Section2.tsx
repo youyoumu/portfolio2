@@ -1,5 +1,7 @@
 import { createSignal, onCleanup, onMount } from "solid-js";
 
+import { isMobile } from "#/lib/utils/isMobile";
+
 import DockerIcon from "../svgs/DockerIcon";
 import NeovimIcon from "../svgs/NeovimIcon";
 import NixIcon from "../svgs/NixIcon";
@@ -83,10 +85,13 @@ export function Section2() {
   ];
 
   onMount(() => {
+    const toggleActions = isMobile()
+      ? "play none none none"
+      : "restart none none none";
     gsap.to(iconsRef, {
       scrollTrigger: {
         trigger: iconsRef,
-        toggleActions: "restart reset restart none",
+        toggleActions: toggleActions,
       },
       delay: 0.5,
       opacity: 5,
@@ -103,7 +108,7 @@ export function Section2() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: iconsRef,
-        toggleActions: "restart reset restart none",
+        toggleActions: toggleActions,
       },
       delay: 0.5,
     });
@@ -137,7 +142,12 @@ export function Section2() {
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
         {iconNodes.map((_, i) => {
           return (
-            <div ref={iconsRef[i]} class="opacity-0">
+            <div
+              ref={iconsRef[i]}
+              style={{
+                opacity: 0,
+              }}
+            >
               {iconNodes[order()[i]]}
             </div>
           );
