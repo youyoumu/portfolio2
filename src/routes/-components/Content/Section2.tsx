@@ -170,7 +170,7 @@ export function Section2(props: {
     return (
       <div
         ref={props.ref}
-        class="font-bebas-neue tracking-wide absolute bottom-10/100 text-[15svw] lg:text-[10svw] text-neutral-content right-10/100 opacity-50 pointer-events-none"
+        class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute bottom-10/100 text-[15svw] lg:text-[10svw] text-neutral-content right-10/100 opacity-50 pointer-events-none"
         style={{
           transform: "translateY(-100%)",
         }}
