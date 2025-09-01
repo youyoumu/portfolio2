@@ -1,6 +1,7 @@
 import {
   IconBrandDiscord,
   IconBrandGithub,
+  IconCopy,
   IconMail,
 } from "@tabler/icons-solidjs";
 
@@ -26,12 +27,12 @@ export function Section5() {
         ></video>
       </div>
       <p class="text-sm text-neutral-content/50">hire me pls</p>
-      <div class="text-neutral-content flex flex-col sm:flex-row sm:items-center sm:gap-4 text-lg pt-8 pb-16">
+      <div class="text-neutral-content flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-lg pt-8 pb-16">
         <div class="flex items-center gap-1">
           <IconBrandGithub />
           <a
             target="_blank"
-            class="underline cursor-pointer"
+            class="underline cursor-pointer text-sm sm:text-base"
             href="https://github.com/youyoumu"
           >
             GitHub
@@ -45,7 +46,9 @@ export function Section5() {
                 navigator.clipboard.writeText("youyoumu2017");
               }}
             >
-              <IconBrandDiscord /> <span class="underline">youyoumu2017</span>
+              <IconBrandDiscord />
+              <span class="underline text-sm sm:text-base">youyoumu2017</span>
+              <IconCopy class="size-4 opacity-50 sm:hidden" />
             </div>
           }
           tooltop={tooltip}
@@ -58,7 +61,11 @@ export function Section5() {
                 navigator.clipboard.writeText("youyoumu2024@proton.me");
               }}
             >
-              <IconMail /> <span class="underline">youyoumu2024@proton.me</span>
+              <IconMail />
+              <span class="underline text-sm sm:text-base">
+                youyoumu2024@proton.me
+              </span>
+              <IconCopy class="size-4 opacity-50 sm:hidden" />
             </div>
           }
           tooltop={tooltip}
