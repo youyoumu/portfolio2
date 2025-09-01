@@ -16,6 +16,7 @@ import { GameOfLife } from "#/lib/gameOfLife";
 import { Lyrics } from "#/lib/lyrics";
 import { setStore } from "#/lib/store";
 import { cn } from "#/lib/utils/cn";
+import { isMobile } from "#/lib/utils/isMobile";
 import { tailwindBreakpoints } from "#/lib/utils/tailwindBreakPoint";
 import { Visualizer } from "#/lib/visualizer";
 
@@ -31,7 +32,6 @@ export function createBackground() {
     return format(addSeconds(new Date(0), Math.floor(seconds)), "m:ss");
   }
 
-  const isMobile = window.innerWidth < 640;
   const { cellSize, width, height } = GameOfLife.getGameOfLifeSize();
   const gameOfLife = new GameOfLife({
     width,
@@ -105,13 +105,31 @@ export function createBackground() {
       lyrics.removeLyrics();
     },
     music: "bad-apple-ft-sekai-off-vocal",
-    volume: isMobile ? MAX_VOLUME : 0.1,
+    volume: isMobile() ? MAX_VOLUME : 0.1,
   });
 
   onMount(() => {
+    let lastWidth = window.innerWidth;
+    let lastHeight = window.innerHeight;
+
     const resize = debounce(() => {
-      const { cellSize, width, height } = GameOfLife.getGameOfLifeSize();
-      gameOfLife.resize(width, height, cellSize);
+      const newWidth = window.innerWidth;
+      const newHeight = window.innerHeight;
+      let shouldResize = true;
+
+      if (isMobile()) {
+        // On mobile, ignore small height-only changes (< 100px)
+        const widthChanged = newWidth !== lastWidth;
+        const heightDelta = Math.abs(newHeight - lastHeight);
+        shouldResize = widthChanged || heightDelta > 100;
+      }
+
+      if (shouldResize) {
+        lastWidth = newWidth;
+        lastHeight = newHeight;
+        const { cellSize, width, height } = GameOfLife.getGameOfLifeSize();
+        gameOfLife.resize(width, height, cellSize);
+      }
     }, 250);
 
     resize();

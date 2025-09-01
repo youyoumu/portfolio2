@@ -111,7 +111,7 @@ export function Section4() {
       <div class="relative">
         <div
           class={cn(
-            "absolute left-1/2 -top-8 sm:-left-4 sm:top-1/2 -translate-x-1/2 sm:-rotate-90 sm:origin-center text-2xl font-bold text-neutral-content opacity-75 z-20 text-nowrap",
+            "absolute left-1/2 -top-8 sm:-left-4 sm:top-1/2 -translate-x-1/2 sm:-rotate-90 sm:origin-center sm:text-2xl text-base font-bold text-neutral-content opacity-75 z-20 text-nowrap",
           )}
         >
           29 August 2025

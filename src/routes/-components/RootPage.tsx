@@ -41,12 +41,12 @@ export default function RootPage() {
         </div>
       </Show>
       <Content />
-      {/* <Portal */}
-      {/*   mount={document.getElementById("audio-control") ?? undefined} */}
-      {/*   ref={hidePortalDiv} */}
-      {/* > */}
-      {/*   {background.audioControl} */}
-      {/* </Portal> */}
+      <Portal
+        mount={document.getElementById("audio-control") ?? undefined}
+        ref={hidePortalDiv}
+      >
+        {background.audioControl}
+      </Portal>
       <Portal
         mount={document.getElementById("curtain") ?? undefined}
         ref={hidePortalDiv}
