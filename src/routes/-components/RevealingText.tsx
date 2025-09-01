@@ -21,6 +21,7 @@ export function RevealingText() {
           hide({ delay: 0 });
         } else {
           setTimeout(() => {
+            window.addEventListener("touchmove", hide_);
             window.addEventListener("mousemove", hide_);
           }, 2000);
         }
@@ -51,6 +52,7 @@ export function RevealingText() {
       tl.play();
     }, delay);
 
+    window.removeEventListener("touchmove", hide_);
     window.removeEventListener("mousemove", hide_);
   }
 
