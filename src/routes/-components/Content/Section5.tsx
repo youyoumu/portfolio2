@@ -3,6 +3,7 @@ import { getRouteApi } from "@tanstack/solid-router";
 import { onMount } from "solid-js";
 
 import { scrollingChars } from "#/lib/gsap/scrollingChars";
+import { isMobile } from "#/lib/utils/isMobile";
 
 import DiscordIcon from "../svgs/DiscordIcon";
 import GithubIcon from "../svgs/GithubIcon";
@@ -21,8 +22,28 @@ export function Section5(props: {
     <div class="text-sm opacity-50 hidden sm:block">click to copy</div>
   );
 
+  function attachScramble(el: HTMLElement) {
+    const original = el.textContent || "";
+
+    el.addEventListener("mouseenter", () => {
+      gsap.to(el, {
+        duration: 0.25,
+        scrambleText: {
+          text: original,
+          chars: "10",
+          revealDelay: 0.1,
+          speed: 4,
+        },
+        overwrite: true,
+      });
+    });
+  }
+
   let heading1!: HTMLDivElement;
   let heading2!: HTMLDivElement;
+  let githubRef!: HTMLSpanElement;
+  let discordRef!: HTMLSpanElement;
+  let emailRef!: HTMLSpanElement;
   onMount(() => {
     // Parallax effect on heading
     const heading = [heading1, heading2];
@@ -41,6 +62,10 @@ export function Section5(props: {
     props.onMount?.({
       tweenRestart,
     });
+
+    if (!isMobile()) {
+      [githubRef, discordRef, emailRef].forEach(attachScramble);
+    }
   });
 
   function Heading(props: { ref: HTMLDivElement }) {
@@ -77,7 +102,7 @@ export function Section5(props: {
           href="https://github.com/youyoumu"
         >
           <GithubIcon class="size-5" />
-          youyoumu
+          <span ref={githubRef}>youyoumu</span>
         </a>
         <ZagTooltip
           trigger={
@@ -88,7 +113,9 @@ export function Section5(props: {
               }}
             >
               <DiscordIcon class="size-5" />
-              <span class="underline text-sm sm:text-base">youyoumu2017</span>
+              <span ref={discordRef} class="underline text-sm sm:text-base">
+                youyoumu2017
+              </span>
               <IconCopy class="size-4 opacity-50 sm:hidden" />
             </div>
           }
@@ -103,7 +130,9 @@ export function Section5(props: {
               }}
             >
               <IconMail class="size-5" />
-              <span class="underline text-sm sm:text-base">{email()}</span>
+              <span ref={emailRef} class="underline text-sm sm:text-base">
+                {email()}
+              </span>
               <IconCopy class="size-4 opacity-50 sm:hidden" />
             </div>
           }
