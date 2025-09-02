@@ -51,6 +51,8 @@ export function Section3(props: {
 }) {
   let heading1!: HTMLDivElement;
   let heading2!: HTMLDivElement;
+  const showUpElements: HTMLElement[] = [];
+  const slideSideElements: HTMLElement[] = [];
   const iconClass = "size-4.5 cursor-pointer opacity-75";
 
   onMount(() => {
@@ -71,6 +73,47 @@ export function Section3(props: {
     props.onMount?.({
       tweenRestart,
     });
+
+    SplitText.create(showUpElements, {
+      type: "words,lines",
+      autoSplit: true,
+      mask: "lines",
+      onSplit: (self) => {
+        gsap.fromTo(
+          self.words,
+          {
+            yPercent: 100,
+          },
+          {
+            scrollTrigger: {
+              trigger: self.words,
+              toggleActions: "restart none none none",
+            },
+            duration: 1.5,
+            yPercent: 0,
+            stagger: 0.2,
+            ease: "expo.out",
+          },
+        );
+      },
+    });
+
+    gsap.fromTo(
+      slideSideElements,
+      {
+        xPercent: -100,
+      },
+      {
+        scrollTrigger: {
+          trigger: slideSideElements,
+          toggleActions: "restart none none none",
+        },
+        duration: 1.5,
+        xPercent: 0,
+        stagger: 0.2,
+        ease: "expo.out",
+      },
+    );
   });
 
   function Heading(props: { ref: HTMLDivElement }) {
@@ -93,13 +136,26 @@ export function Section3(props: {
       <Heading ref={heading2} />
       <div class="text-neutral-content flex flex-col">
         <div>
-          <h2 class="text-2xl font-bold">Projects</h2>
-          <p class="mb-2 text-sm">Personal projects, open source.</p>
-          <ul>
+          <h2
+            ref={showUpElements[0] as HTMLHeadingElement}
+            class="text-2xl font-bold"
+          >
+            Projects
+          </h2>
+          <p
+            ref={showUpElements[1] as HTMLParagraphElement}
+            class="mb-2 text-sm"
+          >
+            Personal projects, open source.
+          </p>
+          <ul class="overflow-hidden">
             <For each={projects}>
-              {(item) => {
+              {(item, i) => {
                 return (
-                  <li class="flex items-center gap-2">
+                  <li
+                    ref={slideSideElements[i()] as HTMLLIElement}
+                    class="flex items-center gap-2"
+                  >
                     <span>{item.title}</span>
                     <div class="flex items-center">
                       <a href={item.repo} target="_blank">
@@ -116,23 +172,50 @@ export function Section3(props: {
               }}
             </For>
           </ul>
-          <div>
-            <a href="https://github.com/youyoumu" target="_blank" class="link">
+          <div class="overflow-hidden">
+            <a
+              ref={slideSideElements[projects.length] as HTMLAnchorElement}
+              href="https://github.com/youyoumu"
+              target="_blank"
+              class="link block"
+            >
               see more
             </a>
           </div>
         </div>
 
-        <div class="divider after:bg-neutral-content/25 before:bg-neutral-content/25"></div>
+        <div class="overflow-hidden">
+          <div
+            ref={slideSideElements[projects.length + 1] as HTMLDivElement}
+            class="divider after:bg-neutral-content/25 before:bg-neutral-content/25"
+          ></div>
+        </div>
 
         <div>
-          <h2 class="text-xl font-bold">Client Projects</h2>
-          <p class=" mb-2 text-sm">Industry projects, freelance work.</p>
-          <ul>
+          <h2
+            ref={showUpElements[2] as HTMLHeadingElement}
+            class="text-xl font-bold"
+          >
+            Client Projects
+          </h2>
+          <p
+            ref={showUpElements[3] as HTMLParagraphElement}
+            class="mb-2 text-sm"
+          >
+            Industry projects, freelance work.
+          </p>
+          <ul class="overflow-hidden">
             <For each={clientProjects}>
-              {(item) => {
+              {(item, i) => {
                 return (
-                  <li class="flex items-center gap-2">
+                  <li
+                    ref={
+                      slideSideElements[
+                        2 + i() + projects.length
+                      ] as HTMLLIElement
+                    }
+                    class="flex items-center gap-2"
+                  >
                     <span>{item.title}</span>
                     <div class="flex items-center">
                       <a href={item.url} target="_blank">
