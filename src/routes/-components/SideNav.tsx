@@ -1,6 +1,7 @@
 import { createEffect, createSignal, onMount } from "solid-js";
 
 import { cn } from "#/lib/utils/cn";
+import { isMobile } from "#/lib/utils/isMobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,6 +32,7 @@ export function SideNav(props: { sections: HTMLDivElement[] | undefined }) {
       });
     });
 
+    if (isMobile()) return;
     headingRefs.forEach((ref, i) => {
       SplitText.create(ref, {
         type: "words,lines",
@@ -55,6 +57,7 @@ export function SideNav(props: { sections: HTMLDivElement[] | undefined }) {
   });
 
   createEffect(() => {
+    if (isMobile()) return;
     const index = hoveredIndex();
     headingTweens.forEach((tween, i) => {
       if (i === index) {
@@ -72,7 +75,10 @@ export function SideNav(props: { sections: HTMLDivElement[] | undefined }) {
       class={cn(
         "fixed right-8 top-1/2 flex flex-col gap-4 -translate-y-1/2 duration-200 items-center",
         {
-          "opacity-0": activeIndex() === 0,
+          "opacity-0 xl:opacity-100": activeIndex() === 3,
+          "opacity-0":
+            activeIndex() === 0 || (activeIndex() === 3 && isMobile()),
+          "right-4": isMobile(),
         },
       )}
     >
@@ -91,7 +97,8 @@ export function SideNav(props: { sections: HTMLDivElement[] | undefined }) {
         >
           <div
             class={cn("h-[1px] w-8 bg-neutral-content duration-100", {
-              "h-1": activeIndex() === i || hoveredIndex() === i,
+              "h-1":
+                activeIndex() === i || (hoveredIndex() === i && !isMobile()),
             })}
           ></div>
           <div
