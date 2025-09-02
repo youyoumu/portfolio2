@@ -10,10 +10,12 @@ import { createBackground } from "./createBackground";
 import { Curtain } from "./Curtain";
 import { DebugPanel } from "./DebugPanel";
 import { RevealingText } from "./RevealingText";
+import { SideNav } from "./SideNav";
 
 export default function RootPage() {
   const [hide, setHide] = createSignal(false);
   const background = createBackground();
+  const [sections, setSections] = createSignal<HTMLDivElement[]>();
 
   return (
     <div class="relative">
@@ -40,12 +42,17 @@ export default function RootPage() {
           <DebugPanel background={background} />
         </div>
       </Show>
-      <Content />
+      <Content
+        onMount={({ sections: s }) => {
+          setSections(s);
+        }}
+      />
       <Portal
         mount={document.getElementById("audio-control") ?? undefined}
         ref={hidePortalDiv}
       >
         {background.audioControl}
+        <SideNav sections={sections()!} />
       </Portal>
       <Portal
         mount={document.getElementById("curtain") ?? undefined}

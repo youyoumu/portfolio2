@@ -11,6 +11,7 @@ import ReactIcon from "../svgs/ReactIcon";
 import TypescriptIcon from "../svgs/TypescriptIcon";
 
 export function Section2(props: {
+  ref: HTMLDivElement;
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
   const iconsRef: HTMLDivElement[] = [];
@@ -181,7 +182,10 @@ export function Section2(props: {
   }
 
   return (
-    <div class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative">
+    <div
+      ref={props.ref}
+      class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative"
+    >
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
         {iconNodes.map((_, i) => {
           return (

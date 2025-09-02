@@ -65,6 +65,7 @@ const markers: Marker[] = [
 ];
 
 export function Section4(props: {
+  ref: HTMLDivElement;
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
   let containerRef: HTMLDivElement | undefined;
@@ -184,7 +185,10 @@ export function Section4(props: {
   }
 
   return (
-    <div class="h-lvh w-full bg-black/10 flex flex-col justify-center items-center p-2 md:pb-36 sm:p-8 relative">
+    <div
+      ref={props.ref}
+      class="h-lvh w-full bg-black/10 flex flex-col justify-center items-center p-2 md:pb-36 sm:p-8 relative"
+    >
       <div class="relative">
         <div
           class={cn(

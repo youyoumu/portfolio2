@@ -47,6 +47,7 @@ const clientProjects = [
 ];
 
 export function Section3(props: {
+  ref: HTMLDivElement;
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
   let heading1!: HTMLDivElement;
@@ -131,7 +132,10 @@ export function Section3(props: {
   }
 
   return (
-    <div class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative">
+    <div
+      ref={props.ref}
+      class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
+    >
       <Heading ref={heading1} />
       <Heading ref={heading2} />
       <div class="text-neutral-content flex flex-col">

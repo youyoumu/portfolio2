@@ -10,6 +10,7 @@ import GithubIcon from "../svgs/GithubIcon";
 import { ZagTooltip } from "../ZagTooltip";
 
 export function Section5(props: {
+  ref: HTMLDivElement;
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
   const routeApi = getRouteApi("/");
@@ -83,7 +84,10 @@ export function Section5(props: {
   }
 
   return (
-    <div class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative">
+    <div
+      ref={props.ref}
+      class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
+    >
       <div class="h-[35svh] sm:h-[40svh] rounded-sm overflow-hidden relative">
         <video
           src="/video/aochi2.mp4"

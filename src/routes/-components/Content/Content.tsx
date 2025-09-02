@@ -5,17 +5,13 @@ import { Section3 } from "./Section3";
 import { Section4 } from "./Section4";
 import { Section5 } from "./Section5";
 
-export function Content() {
-  let section1!: HTMLDivElement;
-  let section2!: HTMLDivElement;
-  let section3!: HTMLDivElement;
-  let section4!: HTMLDivElement;
-  let section5!: HTMLDivElement;
-
+export function Content(props: {
+  onMount?: ({ sections }: { sections: HTMLDivElement[] }) => void;
+}) {
+  const sections: HTMLDivElement[] = [];
   const tweenRestarts: Array<() => void> = [];
 
   onMount(() => {
-    const sections = [section1, section2, section3, section4, section5];
     gsap.to(sections, {
       scrollTrigger: {
         snap: {
@@ -29,31 +25,35 @@ export function Content() {
         },
       },
     });
+
+    props.onMount?.({
+      sections,
+    });
   });
 
   return (
     <>
-      <div ref={section1} class="h-lvh w-full"></div>
+      <div ref={sections[0]} class="h-lvh w-full"></div>
       <Section2
-        ref={section2}
+        ref={sections[1]}
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);
         }}
       />
       <Section3
-        ref={section3}
+        ref={sections[2]}
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);
         }}
       />
       <Section4
-        ref={section4}
+        ref={sections[3]}
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);
         }}
       />
       <Section5
-        ref={section5}
+        ref={sections[4]}
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);
         }}
