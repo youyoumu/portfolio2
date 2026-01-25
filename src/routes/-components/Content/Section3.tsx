@@ -17,18 +17,6 @@ const projects = [
 			"🔴 Make TypeScript errors prettier and human-readable in Neovim 🎀",
 	},
 	{
-		title: "clipmoji",
-		repo: "https://github.com/youyoumu/clipmoji",
-		description:
-			"A lightweight offline clipboard for Discord emojis, favorite GIFs, and custom image links",
-		live: "https://clipmoji.youyoumu.my.id/",
-	},
-	{
-		title: "mahiru",
-		repo: "https://github.com/youyoumu/mahiru",
-		description: "Discord bot with random fun feature",
-	},
-	{
 		title: "discord-clone",
 		repo: "https://github.com/youyoumu/discord-clone",
 		live: "https://corddis.youyoumu.my.id/",
