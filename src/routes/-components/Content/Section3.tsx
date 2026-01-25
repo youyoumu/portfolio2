@@ -25,9 +25,8 @@ const projects = [
 	},
 	{
 		title: "mahiru",
-		repo: "https://github.com/youyoumu/clipmoji",
-		description:
-			"A lightweight offline clipboard for Discord emojis, favorite GIFs, and custom image links",
+		repo: "https://github.com/youyoumu/mahiru",
+		description: "Discord bot with random fun feature",
 	},
 	{
 		title: "discord-clone",
