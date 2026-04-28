@@ -20,15 +20,7 @@ export class GameOfLife {
   offsetX = 0;
   offsetY = 0;
 
-  constructor({
-    width,
-    height,
-    cellSize,
-  }: {
-    width: number;
-    height: number;
-    cellSize: number;
-  }) {
+  constructor({ width, height, cellSize }: { width: number; height: number; cellSize: number }) {
     this.width = width;
     this.height = height;
     this.cellSize = cellSize;
@@ -49,14 +41,7 @@ export class GameOfLife {
     this.canvas.style.width = `${width * this.cellSize}px`;
     this.canvas.style.height = `${height * this.cellSize}px`;
     this.ctx = this.canvas.getContext("2d")!;
-    this.ctx.setTransform(
-      this.devicePixelRatio,
-      0,
-      0,
-      this.devicePixelRatio,
-      0,
-      0,
-    );
+    this.ctx.setTransform(this.devicePixelRatio, 0, 0, this.devicePixelRatio, 0, 0);
     this.bgColor = getComputedStyle(document.documentElement)
       .getPropertyValue("--color-neutral-content")
       .trim();
@@ -83,8 +68,7 @@ export class GameOfLife {
 
   #movingId: ReturnType<typeof setInterval> | null = null;
   startMoving({ stop = false, bpm }: { stop?: boolean; bpm?: number } = {}) {
-    if (this.#movingSlowId && this.#movingSlowRafId)
-      this.startMovingSlow({ stop: true });
+    if (this.#movingSlowId && this.#movingSlowRafId) this.startMovingSlow({ stop: true });
     if (stop) {
       if (this.#movingId) {
         clearInterval(this.#movingId);
@@ -156,14 +140,8 @@ export class GameOfLife {
     const centerX = this.canvas.width / 2;
     const centerY = this.canvas.height / 2;
 
-    this.offsetX = wrap(
-      centerX + radius * Math.cos(this.#tickTime),
-      this.canvas.width,
-    );
-    this.offsetY = wrap(
-      centerY + radius * Math.sin(this.#tickTime),
-      this.canvas.height,
-    );
+    this.offsetX = wrap(centerX + radius * Math.cos(this.#tickTime), this.canvas.width);
+    this.offsetY = wrap(centerY + radius * Math.sin(this.#tickTime), this.canvas.height);
   }
 
   moveDiagonal() {
@@ -173,23 +151,12 @@ export class GameOfLife {
 
   energy = 0;
   updateCanvas(pulse = false): HTMLCanvasElement {
-    const {
-      ctx,
-      cellSize,
-      width,
-      height,
-      pulseDuration,
-      pulseStart,
-      pulseSize,
-      offsetX,
-      offsetY,
-    } = this;
+    const { ctx, cellSize, width, height, pulseDuration, pulseStart, pulseSize, offsetX, offsetY } =
+      this;
 
     const easeScale = pulse
       ? 1 +
-        easeOutQuartMirror(
-          Math.min((performance.now() - pulseStart) / pulseDuration, 1),
-        ) *
+        easeOutQuartMirror(Math.min((performance.now() - pulseStart) / pulseDuration, 1)) *
           pulseSize
       : 1;
 
@@ -287,10 +254,7 @@ export class GameOfLife {
           this.nextGrid[i] = liveNeighbors === 2 || liveNeighbors === 3 ? 1 : 0;
         } else {
           this.nextGrid[i] =
-            liveNeighbors === 3 ||
-            (this.density < 0.1 ? liveNeighbors === 4 : false)
-              ? 1
-              : 0;
+            liveNeighbors === 3 || (this.density < 0.1 ? liveNeighbors === 4 : false) ? 1 : 0;
         }
       }
     }
@@ -335,8 +299,7 @@ export class GameOfLife {
           if (this.density < 0.03) {
             this.nextGrid[i] = Math.random() < 0.0015 ? 1 : 0;
           } else if (this.density < 0.8) {
-            this.nextGrid[i] =
-              liveNeighbors === 3 || liveNeighbors === 2 ? 1 : 0;
+            this.nextGrid[i] = liveNeighbors === 3 || liveNeighbors === 2 ? 1 : 0;
           } else {
             this.nextGrid[i] = Math.random() < 0.35 ? 1 : 0;
           }
@@ -359,14 +322,7 @@ export class GameOfLife {
     this.canvas.height = height * this.cellSize * this.devicePixelRatio;
     this.canvas.style.width = `${width * this.cellSize}px`;
     this.canvas.style.height = `${height * this.cellSize}px`;
-    this.ctx.setTransform(
-      this.devicePixelRatio,
-      0,
-      0,
-      this.devicePixelRatio,
-      0,
-      0,
-    );
+    this.ctx.setTransform(this.devicePixelRatio, 0, 0, this.devicePixelRatio, 0, 0);
 
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);

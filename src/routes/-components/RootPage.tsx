@@ -1,8 +1,7 @@
-import { createSignal, Show } from "solid-js";
-import { Portal } from "solid-js/web";
-
 import { env } from "#/env";
 import { hidePortalDiv } from "#/lib/utils/hidePortalDiv";
+import { createSignal, Show } from "solid-js";
+import { Portal } from "solid-js/web";
 
 import { BlurOverlay } from "./BlurOverlay";
 import { Content } from "./Content";
@@ -19,10 +18,7 @@ export default function RootPage() {
 
   return (
     <div class="relative">
-      <Portal
-        mount={document.getElementById("background") ?? undefined}
-        ref={hidePortalDiv}
-      >
+      <Portal mount={document.getElementById("background") ?? undefined} ref={hidePortalDiv}>
         <div class="fixed z-[-10] top-0 left-0 overflow-hidden h-lvh w-full">
           {background.gameOfLife.canvas}
           <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -47,17 +43,11 @@ export default function RootPage() {
           setSections(s);
         }}
       />
-      <Portal
-        mount={document.getElementById("audio-control") ?? undefined}
-        ref={hidePortalDiv}
-      >
+      <Portal mount={document.getElementById("audio-control") ?? undefined} ref={hidePortalDiv}>
         {background.audioControl}
         <SideNav sections={sections()!} />
       </Portal>
-      <Portal
-        mount={document.getElementById("curtain") ?? undefined}
-        ref={hidePortalDiv}
-      >
+      <Portal mount={document.getElementById("curtain") ?? undefined} ref={hidePortalDiv}>
         <Show when={!hide()}>
           <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full">
             <Curtain onHide={() => setHide(true)} />

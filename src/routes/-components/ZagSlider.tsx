@@ -1,15 +1,8 @@
+import { cn } from "#/lib/utils/cn";
 import { debounce } from "@solid-primitives/scheduled";
 import * as slider from "@zag-js/slider";
 import { normalizeProps, useMachine } from "@zag-js/solid";
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  createUniqueId,
-  For,
-} from "solid-js";
-
-import { cn } from "#/lib/utils/cn";
+import { createEffect, createMemo, createSignal, createUniqueId, For } from "solid-js";
 
 export function ZagSlider(props: {
   value?: number;
@@ -74,10 +67,7 @@ export function ZagSlider(props: {
         <output {...api().getValueTextProps()}>{api().value.at(0)}</output>
       </div>
       <div
-        class={cn(
-          "h-2 bg-neutral-content rounded-full cursor-pointer",
-          props.classNames?.control,
-        )}
+        class={cn("h-2 bg-neutral-content rounded-full cursor-pointer", props.classNames?.control)}
         {...api().getControlProps()}
       >
         <div {...api().getTrackProps()}>

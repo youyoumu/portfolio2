@@ -1,9 +1,8 @@
-import { IconZoom } from "@tabler/icons-solidjs";
-import { createSignal, type JSX, onMount } from "solid-js";
-
 import { scrollingChars } from "#/lib/gsap/scrollingChars";
 import { cn } from "#/lib/utils/cn";
 import { isMobile } from "#/lib/utils/isMobile";
+import { IconZoom } from "@tabler/icons-solidjs";
+import { createSignal, type JSX, onMount } from "solid-js";
 
 type Marker = {
   x: number; // % position
@@ -209,23 +208,20 @@ export function Section4(props: {
         </div>
         <div
           ref={containerRef}
-          class={cn(
-            "relative overflow-hidden rounded-xl shadow-lg touch-none",
-            {
-              "cursor-zoom-in": zoom() === 1,
-              "cursor-zoom-out": zoom() === 2,
+          class={cn("relative overflow-hidden rounded-xl shadow-lg touch-none", {
+            "cursor-zoom-in": zoom() === 1,
+            "cursor-zoom-out": zoom() === 2,
 
-              "hover:[&>img]:scale-150": zoom() === 1,
-              "[&>img]:scale-150": zoom() === 1 && touching(),
-              "hover:[&>img]:scale-250": zoom() === 2,
-              "[&>img]:scale-250": zoom() === 2 && touching(),
+            "hover:[&>img]:scale-150": zoom() === 1,
+            "[&>img]:scale-150": zoom() === 1 && touching(),
+            "hover:[&>img]:scale-250": zoom() === 2,
+            "[&>img]:scale-250": zoom() === 2 && touching(),
 
-              "hover:[&>div]:scale-150": zoom() === 1,
-              "[&>div]:scale-150": zoom() === 1 && touching(),
-              "hover:[&>div]:scale-250": zoom() === 2,
-              "[&>div]:scale-250": zoom() === 2 && touching(),
-            },
-          )}
+            "hover:[&>div]:scale-150": zoom() === 1,
+            "[&>div]:scale-150": zoom() === 1 && touching(),
+            "hover:[&>div]:scale-250": zoom() === 2,
+            "[&>div]:scale-250": zoom() === 2 && touching(),
+          })}
           onMouseEnter={(e) => {
             setShowMarker(true);
             handleMouseMove(e);
@@ -256,9 +252,7 @@ export function Section4(props: {
         >
           <img
             src="/img/setup/IMG_20250829_143627_847.jpg"
-            class={cn(
-              "max-h-[80vh] transition-transform duration-700 ease-in-out touch-none",
-            )}
+            class={cn("max-h-[80vh] transition-transform duration-700 ease-in-out touch-none")}
             style={{ "transform-origin": `${x()}% ${y()}%` }}
           />
 

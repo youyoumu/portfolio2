@@ -29,10 +29,7 @@ export class Lyrics {
 
   render(currentTime: number) {
     const line = this.lyrics[this.currentIndex];
-    const endTime =
-      line?.endTime ??
-      this.lyrics[this.currentIndex + 1]?.startTime ??
-      Infinity;
+    const endTime = line?.endTime ?? this.lyrics[this.currentIndex + 1]?.startTime ?? Infinity;
 
     // If current line has ended, remove it
     if (this.currentIndex !== -1 && currentTime >= endTime) {

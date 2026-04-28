@@ -1,10 +1,6 @@
 import type { createBackground } from "./createBackground";
 
-export function DebugPanel({
-  background,
-}: {
-  background: ReturnType<typeof createBackground>;
-}) {
+export function DebugPanel({ background }: { background: ReturnType<typeof createBackground> }) {
   return (
     <>
       <button

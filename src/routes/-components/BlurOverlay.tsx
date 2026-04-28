@@ -1,6 +1,5 @@
-import { onMount } from "solid-js";
-
 import { isMobile } from "#/lib/utils/isMobile";
+import { onMount } from "solid-js";
 
 export function BlurOverlay() {
   let overlay!: HTMLDivElement;
@@ -43,10 +42,7 @@ export function BlurOverlay() {
   return (
     <>
       <div ref={overlay} class="h-lvh w-full absolute top-0 left-0"></div>
-      <div
-        ref={overlay2}
-        class="h-lvh w-full absolute top-0 left-0 bg-black opacity-0"
-      ></div>
+      <div ref={overlay2} class="h-lvh w-full absolute top-0 left-0 bg-black opacity-0"></div>
     </>
   );
 }

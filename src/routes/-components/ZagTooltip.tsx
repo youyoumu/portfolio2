@@ -1,8 +1,7 @@
+import { cn } from "#/lib/utils/cn";
 import { normalizeProps, useMachine } from "@zag-js/solid";
 import * as tooltip from "@zag-js/tooltip";
 import { createMemo, createUniqueId, type JSX, Show } from "solid-js";
-
-import { cn } from "#/lib/utils/cn";
 
 export function ZagTooltip(props: {
   trigger: JSX.Element;

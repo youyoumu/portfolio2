@@ -163,11 +163,7 @@ export class Visualizer {
   }
 
   #playLock = false;
-  play({
-    resume = false,
-    fadeDuration = undefined as undefined | number,
-    isSeek = false,
-  } = {}) {
+  play({ resume = false, fadeDuration = undefined as undefined | number, isSeek = false } = {}) {
     if (this.playing || this.#playLock) return;
     this.#playLock = true;
     this._play({ resume, fadeDuration, isSeek });
@@ -237,8 +233,7 @@ export class Visualizer {
 
       const index = this.playlist.indexOf(this.music);
       const nextIndex = (index + 1) % this.playlist.length;
-      const prevIndex =
-        (index - 1 + this.playlist.length) % this.playlist.length;
+      const prevIndex = (index - 1 + this.playlist.length) % this.playlist.length;
 
       this.prefetchAudioBuffer(musicList[this.playlist[nextIndex]].src);
       this.prefetchAudioBuffer(musicList[this.playlist[prevIndex]].src);
@@ -258,10 +253,7 @@ export class Visualizer {
     const now = this.audioContext.currentTime;
     this.gainNode.gain.cancelScheduledValues(now);
     this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
-    this.gainNode.gain.linearRampToValueAtTime(
-      0,
-      now + (fadeDuration ?? this.fadeDuration),
-    );
+    this.gainNode.gain.linearRampToValueAtTime(0, now + (fadeDuration ?? this.fadeDuration));
     if (this.#elapsedIntervalId !== null) {
       clearInterval(this.#elapsedIntervalId);
       this.#elapsedIntervalId = null;
@@ -299,8 +291,7 @@ export class Visualizer {
 
   #listenRafId: number = 0;
   private listen = () => {
-    const { bpm, firstBeatOffset, lowFreqStart, lowFreqEnd } =
-      musicList[this.music];
+    const { bpm, firstBeatOffset, lowFreqStart, lowFreqEnd } = musicList[this.music];
     const { width, height } = this.canvas;
     const lowFreqWidth = lowFreqEnd - lowFreqStart;
     const currentTime = this.audioContext.currentTime - this.startTime;
@@ -329,12 +320,7 @@ export class Visualizer {
         const barHeight = (value / 255) * height;
         const x = (i - lowFreqStart) * barWidth;
         this.canvasContext.fillStyle = this.colors[i];
-        this.canvasContext.fillRect(
-          x,
-          height - barHeight,
-          barWidth - 2,
-          barHeight,
-        );
+        this.canvasContext.fillRect(x, height - barHeight, barWidth - 2, barHeight);
       }
     } else {
       const lowFreqStart = 100;
@@ -347,12 +333,7 @@ export class Visualizer {
         const value = this.freqData[i];
         const barHeight = (value / 255) * height;
         const x = (i - lowFreqStart) * barWidth;
-        this.canvasContext.fillRect(
-          x,
-          height - barHeight,
-          barWidth - 0.5,
-          barHeight,
-        );
+        this.canvasContext.fillRect(x, height - barHeight, barWidth - 0.5, barHeight);
       }
     }
 

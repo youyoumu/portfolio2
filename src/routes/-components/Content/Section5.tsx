@@ -1,9 +1,8 @@
+import { scrollingChars } from "#/lib/gsap/scrollingChars";
+import { isMobile } from "#/lib/utils/isMobile";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { getRouteApi } from "@tanstack/solid-router";
 import { onMount } from "solid-js";
-
-import { scrollingChars } from "#/lib/gsap/scrollingChars";
-import { isMobile } from "#/lib/utils/isMobile";
 
 import DiscordIcon from "../svgs/DiscordIcon";
 import GithubIcon from "../svgs/GithubIcon";
@@ -16,12 +15,9 @@ export function Section5(props: {
   const routeApi = getRouteApi("/");
   const { yym } = routeApi.useSearch()();
   const realName = () => yym === 0;
-  const email = () =>
-    realName() ? "donnylaukimleng@outlook.com" : "youyoumu2024@proton.me";
+  const email = () => (realName() ? "donnylaukimleng@outlook.com" : "youyoumu2024@proton.me");
 
-  const tooltip = (
-    <div class="text-sm opacity-50 hidden sm:block">click to copy</div>
-  );
+  const tooltip = <div class="text-sm opacity-50 hidden sm:block">click to copy</div>;
 
   function attachScramble(el: HTMLElement) {
     const original = el.textContent || "";
@@ -149,11 +145,7 @@ export function Section5(props: {
       <footer class="text-neutral-content text-sm absolute bottom-40 left-0 right-0 flex flex-col gap-1 items-center justify-center">
         <span>
           Cooked 🍙 using{" "}
-          <a
-            class="underline cursor-pointer"
-            href="https://www.solidjs.com/"
-            target="_blank"
-          >
+          <a class="underline cursor-pointer" href="https://www.solidjs.com/" target="_blank">
             SolidJS
           </a>
         </span>

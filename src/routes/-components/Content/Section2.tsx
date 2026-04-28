@@ -1,8 +1,7 @@
-import { getRouteApi } from "@tanstack/solid-router";
-import { createSignal, onCleanup, onMount } from "solid-js";
-
 import { scrollingChars } from "#/lib/gsap/scrollingChars";
 import { isMobile } from "#/lib/utils/isMobile";
+import { getRouteApi } from "@tanstack/solid-router";
+import { createSignal, onCleanup, onMount } from "solid-js";
 
 import DockerIcon from "../svgs/DockerIcon";
 import NeovimIcon from "../svgs/NeovimIcon";
@@ -29,11 +28,7 @@ export function Section2(props: {
   const iconNodes = [
     <TypescriptIcon class={iconClass} path1Props={{ fill: iconColor }} />,
     <DockerIcon class={iconClass} path1Props={{ fill: iconColor }} />,
-    <NixIcon
-      class={iconClass}
-      path1Props={{ fill: iconColor }}
-      path2Props={{ fill: iconColor }}
-    />,
+    <NixIcon class={iconClass} path1Props={{ fill: iconColor }} path2Props={{ fill: iconColor }} />,
     <ReactIcon class={iconClass} g1Props={{ fill: iconColor }} />,
     <NeovimIcon class={iconClass} path1Props={{ fill: iconColor }} />,
   ] as const;
@@ -97,9 +92,7 @@ export function Section2(props: {
   let heading1!: HTMLDivElement;
   let heading2!: HTMLDivElement;
   onMount(() => {
-    const toggleActions = isMobile()
-      ? "play none none none"
-      : "restart none none none";
+    const toggleActions = isMobile() ? "play none none none" : "restart none none none";
     gsap.to(iconsRef, {
       scrollTrigger: {
         trigger: iconsRef,

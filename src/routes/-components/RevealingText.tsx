@@ -1,6 +1,5 @@
-import { onMount } from "solid-js";
-
 import { store } from "#/lib/store";
+import { onMount } from "solid-js";
 
 export function RevealingText() {
   let wipe!: HTMLDivElement;
@@ -80,10 +79,7 @@ export function RevealingText() {
       >
         {randomPrompt}
       </div>
-      <div
-        ref={wipe}
-        class="bg-neutral absolute top-0 left-0 size-full scale-x-0"
-      ></div>
+      <div ref={wipe} class="bg-neutral absolute top-0 left-0 size-full scale-x-0"></div>
     </div>
   );
 }

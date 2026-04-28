@@ -1,3 +1,12 @@
+import { BadApple } from "#/lib/badApple";
+import { GameOfLife } from "#/lib/gameOfLife";
+import { Lyrics } from "#/lib/lyrics";
+import { setStore } from "#/lib/store";
+import { cn } from "#/lib/utils/cn";
+import { getDynamicViewportDelta } from "#/lib/utils/dynamicViewport";
+import { isMobile } from "#/lib/utils/isMobile";
+import { tailwindBreakpoints } from "#/lib/utils/tailwindBreakPoint";
+import { Visualizer } from "#/lib/visualizer";
 import { debounce } from "@solid-primitives/scheduled";
 import {
   IconExternalLink,
@@ -10,16 +19,6 @@ import {
 } from "@tabler/icons-solidjs";
 import { addSeconds, format } from "date-fns";
 import { createMemo, createSignal, onMount, Show } from "solid-js";
-
-import { BadApple } from "#/lib/badApple";
-import { GameOfLife } from "#/lib/gameOfLife";
-import { Lyrics } from "#/lib/lyrics";
-import { setStore } from "#/lib/store";
-import { cn } from "#/lib/utils/cn";
-import { getDynamicViewportDelta } from "#/lib/utils/dynamicViewport";
-import { isMobile } from "#/lib/utils/isMobile";
-import { tailwindBreakpoints } from "#/lib/utils/tailwindBreakPoint";
-import { Visualizer } from "#/lib/visualizer";
 
 import { ScrollingText } from "./ScrollingText";
 import { ZagSlider } from "./ZagSlider";
@@ -139,9 +138,7 @@ export function createBackground() {
 
   const progress = () => {
     const dur = visualizer.signal.duration.get();
-    return dur > 0
-      ? Math.floor((visualizer.signal.elapsedTime.get() / dur) * 100)
-      : 0;
+    return dur > 0 ? Math.floor((visualizer.signal.elapsedTime.get() / dur) * 100) : 0;
   };
 
   const audioControl = (
@@ -249,12 +246,9 @@ function AudioControl(props: {
                 text={props.music?.artist ?? "a"}
                 classNames={{
                   container: "leading-none",
-                  text: cn(
-                    "me-16 font-bitcount-single leading-none text-neutral-content",
-                    {
-                      invisible: !props.music?.artist?.length,
-                    },
-                  ),
+                  text: cn("me-16 font-bitcount-single leading-none text-neutral-content", {
+                    invisible: !props.music?.artist?.length,
+                  }),
                 }}
               />
               <ScrollingText

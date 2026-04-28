@@ -1,7 +1,6 @@
-import { createEffect } from "solid-js";
-
 import { horizontalLoop } from "#/lib/gsap/horizontalLoop";
 import { cn } from "#/lib/utils/cn";
+import { createEffect } from "solid-js";
 
 export function ScrollingText(props: {
   text: string;
@@ -62,10 +61,7 @@ export function ScrollingText(props: {
       )}
     >
       {new Array(isScrolling() ? 5 : 1).fill(0).map((_, i) => (
-        <div
-          ref={clones[i]}
-          class={cn("inline-block pe-2", props?.classNames?.text)}
-        >
+        <div ref={clones[i]} class={cn("inline-block pe-2", props?.classNames?.text)}>
           {props.text}
         </div>
       ))}
