@@ -6,3 +6,6 @@ dist-ssr
 .env
 .nitro
 .tanstack
+
+.lazy.lua
+.TODO.md

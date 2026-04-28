@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn"],
+  "categories": {},
+  "rules": {
+    "typescript/no-explicit-any": "warn",
+    "typescript/no-non-null-assertion": "warn",
+    "unicorn/prefer-node-protocol": "warn",
+    "unicorn/no-nested-ternary": "warn"
+  },
+  "settings": {},
+  "globals": {},
+  "options": {
+    "typeAware": true
+  }
+}
