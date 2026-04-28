@@ -33,7 +33,9 @@ export class Lyrics {
 
     // If current line has ended, remove it
     if (this.currentIndex !== -1 && currentTime >= endTime) {
-      this.removeLyrics(); // with animation
+      this.removeLyrics().catch((e) => {
+        console.error(e);
+      }); // with animation
       this.currentIndex = -1;
     }
 
@@ -87,7 +89,9 @@ export class Lyrics {
   }
 
   #debounceAnimate = debounce((text: string) => {
-    this.#animate_(text);
+    this.#animate_(text).catch((e) => {
+      console.error(e);
+    });
   }, 500);
 
   async #animate_(text: string) {

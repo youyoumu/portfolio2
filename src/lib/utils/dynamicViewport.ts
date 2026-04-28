@@ -9,5 +9,5 @@ window.addEventListener("resize", () => {
 export function getDynamicViewportDelta() {
   return 60;
   //NOTE: this doesn't work, so i just hardcoded it
-  return maxVH - minVH;
+  // return maxVH - minVH;
 }

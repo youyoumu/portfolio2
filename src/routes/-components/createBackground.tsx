@@ -86,7 +86,9 @@ export function createBackground() {
       if (visualizer.music === "bad-apple-ft-sekai") {
         lyrics.stopSync();
         if (!pause) {
-          lyrics.removeLyrics();
+          lyrics.removeLyrics().catch((e) => {
+            console.error(e);
+          });
         }
       }
       if (
@@ -102,7 +104,9 @@ export function createBackground() {
     },
     onSeek({ target }) {
       badApple.onSeek({ target });
-      lyrics.removeLyrics();
+      lyrics.removeLyrics().catch((e) => {
+        console.error(e);
+      });
     },
     music: "bad-apple-ft-sekai-off-vocal",
     volume: isMobile() ? MAX_VOLUME : 0.1,

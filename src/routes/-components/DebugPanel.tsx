@@ -127,7 +127,9 @@ export function DebugPanel({ background }: { background: ReturnType<typeof creat
       <button
         class="btn btn-primary"
         onClick={() => {
-          background.lyrics.removeLyrics();
+          background.lyrics.removeLyrics().catch((e) => {
+            console.error(e);
+          });
         }}
       >
         remove lyrics

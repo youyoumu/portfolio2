@@ -27,7 +27,9 @@ export class BadApple {
   constructor({ game }: { game: GameOfLife }) {
     this.src = src;
     this.game = game;
-    this.load();
+    this.load().catch((e) => {
+      console.error(e);
+    });
   }
 
   async load(): Promise<void> {
@@ -51,7 +53,9 @@ export class BadApple {
 
   injectFrameIntoGame(_frameIndex?: number) {
     if (!this.data.length) {
-      this.load();
+      this.load().catch((e) => {
+        console.error(e);
+      });
       return;
     }
     const frameIndex = _frameIndex ?? this.frameIndex;

@@ -73,7 +73,7 @@ export function Section5(props: {
     }
   });
 
-function Heading(props: { ref: (el: HTMLDivElement) => void }) {
+  function Heading(props: { ref: (el: HTMLDivElement) => void }) {
     return (
       <div
         ref={props.ref}
@@ -116,8 +116,8 @@ function Heading(props: { ref: (el: HTMLDivElement) => void }) {
           trigger={
             <div
               class="flex items-center gap-1 cursor-pointer"
-              onClick={() => {
-                navigator.clipboard.writeText("youyoumu2017");
+              onClick={async () => {
+                await navigator.clipboard.writeText("youyoumu2017");
               }}
             >
               <DiscordIcon class="size-5" />
@@ -133,8 +133,8 @@ function Heading(props: { ref: (el: HTMLDivElement) => void }) {
           trigger={
             <div
               class="flex items-center gap-1 cursor-pointer"
-              onClick={() => {
-                navigator.clipboard.writeText(email());
+              onClick={async () => {
+                await navigator.clipboard.writeText(email());
               }}
             >
               <IconMail class="size-5" />

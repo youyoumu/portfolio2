@@ -155,20 +155,27 @@ export class Visualizer {
     return musicList[this.music];
   }
 
-  async prefetchAudioBuffer(src: string) {
-    let audioBuffer = audioBufferCache.get(src);
-    if (audioBuffer) return;
-    const response = await fetch(src);
-    const arrayBuffer = await response.arrayBuffer();
-    audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-    audioBufferCache.set(src, audioBuffer);
+  prefetchAudioBuffer(src: string) {
+    const prefetch = async () => {
+      let audioBuffer = audioBufferCache.get(src);
+      if (audioBuffer) return;
+      const response = await fetch(src);
+      const arrayBuffer = await response.arrayBuffer();
+      audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+      audioBufferCache.set(src, audioBuffer);
+    };
+    prefetch().catch((e) => {
+      console.error(e);
+    });
   }
 
   #playLock = false;
   play({ resume = false, fadeDuration = undefined as undefined | number, isSeek = false } = {}) {
     if (this.playing || this.#playLock) return;
     this.#playLock = true;
-    this._play({ resume, fadeDuration, isSeek });
+    this._play({ resume, fadeDuration, isSeek }).catch((e) => {
+      console.error(e);
+    });
   }
 
   #elapsedIntervalId: number | null = null;
