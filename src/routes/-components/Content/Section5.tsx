@@ -2,7 +2,7 @@ import { scrollingChars } from "#/lib/gsap/scrollingChars";
 import { isMobile } from "#/lib/utils/isMobile";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { getRouteApi } from "@tanstack/solid-router";
-import { onMount } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 
 import DiscordIcon from "../svgs/DiscordIcon";
 import GithubIcon from "../svgs/GithubIcon";
@@ -36,14 +36,21 @@ export function Section5(props: {
     });
   }
 
-  let heading1!: HTMLDivElement;
-  let heading2!: HTMLDivElement;
-  let githubRef!: HTMLSpanElement;
-  let discordRef!: HTMLSpanElement;
-  let emailRef!: HTMLSpanElement;
+  const [heading1, setHeading1] = createSignal<HTMLDivElement>();
+  const [heading2, setHeading2] = createSignal<HTMLDivElement>();
+  const [githubRef, setGithubRef] = createSignal<HTMLSpanElement>();
+  const [discordRef, setDiscordRef] = createSignal<HTMLSpanElement>();
+  const [emailRef, setEmailRef] = createSignal<HTMLSpanElement>();
   onMount(() => {
+    const h1 = heading1();
+    const h2 = heading2();
+    const gh = githubRef();
+    const dc = discordRef();
+    const em = emailRef();
+    if (!h1 || !h2) return;
+
     // Parallax effect on heading
-    const heading = [heading1, heading2];
+    const heading = [h1, h2];
     gsap.to(heading, {
       yPercent: 200, // moves downward as you scroll
       ease: "none", // keeps motion linear
@@ -55,17 +62,18 @@ export function Section5(props: {
       },
     });
 
-    const { tweenRestart } = scrollingChars({ heading1, heading2 });
+    const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
     props.onMount?.({
       tweenRestart,
     });
 
     if (!isMobile()) {
-      [githubRef, discordRef, emailRef].forEach(attachScramble);
+      const refs = [gh, dc, em].filter((r): r is HTMLSpanElement => !!r);
+      refs.forEach(attachScramble);
     }
   });
 
-  function Heading(props: { ref: HTMLDivElement }) {
+function Heading(props: { ref: (el: HTMLDivElement) => void }) {
     return (
       <div
         ref={props.ref}
@@ -102,7 +110,7 @@ export function Section5(props: {
           href="https://github.com/youyoumu"
         >
           <GithubIcon class="size-5" />
-          <span ref={githubRef}>youyoumu</span>
+          <span ref={setGithubRef}>youyoumu</span>
         </a>
         <ZagTooltip
           trigger={
@@ -113,7 +121,7 @@ export function Section5(props: {
               }}
             >
               <DiscordIcon class="size-5" />
-              <span ref={discordRef} class="underline text-sm sm:text-base">
+              <span ref={setDiscordRef} class="underline text-sm sm:text-base">
                 youyoumu2017
               </span>
               <IconCopy class="size-4 opacity-50 sm:hidden" />
@@ -130,7 +138,7 @@ export function Section5(props: {
               }}
             >
               <IconMail class="size-5" />
-              <span ref={emailRef} class="underline text-sm sm:text-base">
+              <span ref={setEmailRef} class="underline text-sm sm:text-base">
                 {email()}
               </span>
               <IconCopy class="size-4 opacity-50 sm:hidden" />
@@ -140,8 +148,8 @@ export function Section5(props: {
         />
       </div>
 
-      <Heading ref={heading1} />
-      <Heading ref={heading2} />
+      <Heading ref={setHeading1} />
+      <Heading ref={setHeading2} />
       <footer class="text-neutral-content text-sm absolute bottom-40 left-0 right-0 flex flex-col gap-1 items-center justify-center">
         <span>
           Cooked 🍙 using{" "}

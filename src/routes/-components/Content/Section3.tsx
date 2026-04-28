@@ -1,6 +1,6 @@
 import { scrollingChars } from "#/lib/gsap/scrollingChars";
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-solidjs";
-import { For, onMount } from "solid-js";
+import { createSignal, For, onMount } from "solid-js";
 
 const projects = [
   {
@@ -41,15 +41,19 @@ export function Section3(props: {
   ref: HTMLDivElement;
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
-  let heading1!: HTMLDivElement;
-  let heading2!: HTMLDivElement;
+  const [heading1, setHeading1] = createSignal<HTMLDivElement>();
+  const [heading2, setHeading2] = createSignal<HTMLDivElement>();
   const showUpElements: HTMLElement[] = [];
   const slideSideElements: HTMLElement[] = [];
   const iconClass = "size-4.5 cursor-pointer opacity-75";
 
   onMount(() => {
+    const h1 = heading1();
+    const h2 = heading2();
+    if (!h1 || !h2) return;
+
     // Parallax effect on heading
-    const heading = [heading1, heading2];
+    const heading = [h1, h2];
     gsap.to(heading, {
       yPercent: 200, // moves downward as you scroll
       ease: "none", // keeps motion linear
@@ -61,7 +65,7 @@ export function Section3(props: {
       },
     });
 
-    const { tweenRestart } = scrollingChars({ heading1, heading2 });
+    const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
     props.onMount?.({
       tweenRestart,
     });
@@ -108,7 +112,7 @@ export function Section3(props: {
     );
   });
 
-  function Heading(props: { ref: HTMLDivElement }) {
+  function Heading(props: { ref: (el: HTMLDivElement) => void }) {
     return (
       <div
         ref={props.ref}
@@ -127,8 +131,8 @@ export function Section3(props: {
       ref={props.ref}
       class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
     >
-      <Heading ref={heading1} />
-      <Heading ref={heading2} />
+      <Heading ref={setHeading1} />
+      <Heading ref={setHeading2} />
       <div class="text-neutral-content flex flex-col">
         <div>
           <h2 ref={showUpElements[0] as HTMLHeadingElement} class="text-2xl font-bold">

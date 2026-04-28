@@ -67,7 +67,7 @@ export function Section4(props: {
   ref: HTMLDivElement;
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
-  let containerRef: HTMLDivElement | undefined;
+  const [containerRef, setContainerRef] = createSignal<HTMLDivElement>();
   const [x, setX] = createSignal(50);
   const [y, setY] = createSignal(50);
   const [zoom, setZoom] = createSignal(1);
@@ -84,10 +84,11 @@ export function Section4(props: {
   }
 
   function handleMouseMove(e: MouseEvent) {
-    if (!containerRef) return;
+    const el = containerRef();
+    if (!el) return;
     if (rafId) cancelAnimationFrame(rafId);
 
-    const { left, top, width, height } = containerRef.getBoundingClientRect();
+    const { left, top, width, height } = el.getBoundingClientRect();
     const newX = ((e.clientX - left) / width) * 100;
     const newY = ((e.clientY - top) / height) * 100;
     setX(newX);
@@ -95,9 +96,10 @@ export function Section4(props: {
   }
 
   function handleTouchMove(e: TouchEvent) {
-    if (!containerRef) return;
+    const el = containerRef();
+    if (!el) return;
     const touch = e.touches[0];
-    const { left, top, width, height } = containerRef.getBoundingClientRect();
+    const { left, top, width, height } = el.getBoundingClientRect();
     let newX = ((touch.clientX - left) / width) * 100;
     let newY = ((touch.clientY - top) / height) * 100;
 
@@ -146,12 +148,16 @@ export function Section4(props: {
     setShowMarker(false);
   }
 
-  let heading1!: HTMLDivElement;
-  let heading2!: HTMLDivElement;
+  const [heading1, setHeading1] = createSignal<HTMLDivElement>();
+  const [heading2, setHeading2] = createSignal<HTMLDivElement>();
 
   onMount(() => {
+    const h1 = heading1();
+    const h2 = heading2();
+    if (!h1 || !h2) return;
+
     // Parallax effect on heading
-    const heading = [heading1, heading2];
+    const heading = [h1, h2];
     gsap.to(heading, {
       yPercent: 200, // moves downward as you scroll
       ease: "none", // keeps motion linear
@@ -163,13 +169,13 @@ export function Section4(props: {
       },
     });
 
-    const { tweenRestart } = scrollingChars({ heading1, heading2 });
+    const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
     props.onMount?.({
       tweenRestart,
     });
   });
 
-  function Heading(props: { ref: HTMLDivElement }) {
+  function Heading(props: { ref: (el: HTMLDivElement) => void }) {
     return (
       <div
         ref={props.ref}
@@ -207,7 +213,7 @@ export function Section4(props: {
           29 August 2025
         </div>
         <div
-          ref={containerRef}
+          ref={setContainerRef}
           class={cn("relative overflow-hidden rounded-xl shadow-lg touch-none", {
             "cursor-zoom-in": zoom() === 1,
             "cursor-zoom-out": zoom() === 2,
@@ -308,8 +314,8 @@ export function Section4(props: {
         </div>
       </div>
 
-      <Heading ref={heading1} />
-      <Heading ref={heading2} />
+      <Heading ref={setHeading1} />
+      <Heading ref={setHeading2} />
     </div>
   );
 }

@@ -90,7 +90,9 @@ export class Visualizer {
       this.canvas.width = 48;
       this.canvas.height = 32;
     }
-    this.canvasContext = this.canvas.getContext("2d")!;
+    const canvasContext = this.canvas.getContext("2d");
+    if (!canvasContext) throw new Error("Canvas context is not available");
+    this.canvasContext = canvasContext;
 
     this.prefetchAudioBuffer(musicList[this.music].src);
   }

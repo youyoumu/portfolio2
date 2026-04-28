@@ -1,25 +1,29 @@
 import { isMobile } from "#/lib/utils/isMobile";
-import { onMount } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 
 export function BlurOverlay() {
-  let overlay!: HTMLDivElement;
-  let overlay2!: HTMLDivElement;
+  const [overlay, setOverlay] = createSignal<HTMLDivElement>();
+  const [overlay2, setOverlay2] = createSignal<HTMLDivElement>();
 
   onMount(() => {
+    const el = overlay();
+    const el2 = overlay2();
+    if (!el || !el2) return;
+
     if (isMobile()) {
       ScrollTrigger.create({
-        trigger: overlay,
+        trigger: el,
         start: "top top",
         end: "bottom top",
-        onEnter: () => gsap.set(overlay, { backdropFilter: "blur(10px)" }),
-        onLeaveBack: () => gsap.set(overlay, { backdropFilter: "blur(0px)" }),
+        onEnter: () => gsap.set(el, { backdropFilter: "blur(10px)" }),
+        onLeaveBack: () => gsap.set(el, { backdropFilter: "blur(0px)" }),
       });
     } else {
-      gsap.to(overlay, {
+      gsap.to(el, {
         backdropFilter: "blur(10px)",
         ease: "none",
         scrollTrigger: {
-          trigger: overlay,
+          trigger: el,
           start: "top top",
           end: "bottom top",
           scrub: true,
@@ -27,11 +31,11 @@ export function BlurOverlay() {
       });
     }
 
-    gsap.to(overlay2, {
+    gsap.to(el2, {
       opacity: 0.5,
       ease: "none",
       scrollTrigger: {
-        trigger: overlay,
+        trigger: el,
         start: "top top",
         end: "bottom top",
         scrub: true,
@@ -41,8 +45,8 @@ export function BlurOverlay() {
 
   return (
     <>
-      <div ref={overlay} class="h-lvh w-full absolute top-0 left-0"></div>
-      <div ref={overlay2} class="h-lvh w-full absolute top-0 left-0 bg-black opacity-0"></div>
+      <div ref={setOverlay} class="h-lvh w-full absolute top-0 left-0"></div>
+      <div ref={setOverlay2} class="h-lvh w-full absolute top-0 left-0 bg-black opacity-0"></div>
     </>
   );
 }

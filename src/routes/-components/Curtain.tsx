@@ -18,7 +18,7 @@ export function Curtain({ onHide }: { onHide?: () => void }) {
   gameOfLife.bgColor = gameOfLife.cellColor;
   gameOfLife.updateCanvas();
 
-  let intervalId: ReturnType<typeof setInterval> | null = null;
+  let intervalId: ReturnType<typeof setInterval> | undefined;
   onMount(() => {
     intervalId = setInterval(() => {
       if (gameOfLife.density === 1) {
@@ -31,7 +31,7 @@ export function Curtain({ onHide }: { onHide?: () => void }) {
 
   createEffect(() => {
     if (hide()) {
-      clearInterval(intervalId!);
+      clearInterval(intervalId);
       onHide?.();
     }
   });

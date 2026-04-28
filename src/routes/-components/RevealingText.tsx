@@ -1,20 +1,24 @@
 import { store } from "#/lib/store";
-import { onMount } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 
 export function RevealingText() {
-  let wipe!: HTMLDivElement;
-  let text!: HTMLDivElement;
+  const [wipe, setWipe] = createSignal<HTMLDivElement>();
+  const [text, setText] = createSignal<HTMLDivElement>();
 
   function show() {
+    const wipeEl = wipe();
+    const textEl = text();
+    if (!wipeEl || !textEl) return;
+
     gsap
       .timeline({
         defaults: { duration: 0.6, ease: "power2.inOut" },
       })
-      .to(wipe, { scaleX: 1, transformOrigin: "left center" })
+      .to(wipeEl, { scaleX: 1, transformOrigin: "left center" })
       .add(() => {
-        text.style.visibility = "visible";
+        textEl.style.visibility = "visible";
       })
-      .to(wipe, { scaleX: 0, transformOrigin: "right center" })
+      .to(wipeEl, { scaleX: 0, transformOrigin: "right center" })
       .add(() => {
         if (store.musicPlayed) {
           hide({ delay: 0 });
@@ -36,16 +40,21 @@ export function RevealingText() {
     if (hideTriggered) return;
     if (window.scrollY > 0 && !store.musicPlayed) return;
     hideTriggered = true;
+
+    const wipeEl = wipe();
+    const textEl = text();
+    if (!wipeEl || !textEl) return;
+
     const tl = gsap
       .timeline({
         paused: true,
         defaults: { duration: 0.6, ease: "power2.inOut" },
       })
-      .to(wipe, { scaleX: 1, transformOrigin: "left center" })
+      .to(wipeEl, { scaleX: 1, transformOrigin: "left center" })
       .add(() => {
-        text.style.visibility = "hidden";
+        textEl.style.visibility = "hidden";
       })
-      .to(wipe, { scaleX: 0, transformOrigin: "right center" });
+      .to(wipeEl, { scaleX: 0, transformOrigin: "right center" });
 
     setTimeout(() => {
       tl.play();
@@ -74,12 +83,12 @@ export function RevealingText() {
   return (
     <div class="relative">
       <div
-        ref={text}
+        ref={setText}
         class="invisible text-[5svw] sm:text-[3svw] font-bold backdrop-blur-md px-2 py-0.5 text-nowrap"
       >
         {randomPrompt}
       </div>
-      <div ref={wipe} class="bg-neutral absolute top-0 left-0 size-full scale-x-0"></div>
+      <div ref={setWipe} class="bg-neutral absolute top-0 left-0 size-full scale-x-0"></div>
     </div>
   );
 }

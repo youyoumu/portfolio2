@@ -89,9 +89,13 @@ export function Section2(props: {
     <div class="text-nowrap opacity-40">WEEB</div>,
   ];
 
-  let heading1!: HTMLDivElement;
-  let heading2!: HTMLDivElement;
+  const [heading1, setHeading1] = createSignal<HTMLDivElement>();
+  const [heading2, setHeading2] = createSignal<HTMLDivElement>();
   onMount(() => {
+    const h1 = heading1();
+    const h2 = heading2();
+    if (!h1 || !h2) return;
+
     const toggleActions = isMobile() ? "play none none none" : "restart none none none";
     gsap.to(iconsRef, {
       scrollTrigger: {
@@ -138,7 +142,7 @@ export function Section2(props: {
     });
 
     // Parallax effect on heading
-    const heading = [heading1, heading2];
+    const heading = [h1, h2];
     gsap.to(heading, {
       yPercent: 200, // moves downward as you scroll
       ease: "none", // keeps motion linear
@@ -150,7 +154,7 @@ export function Section2(props: {
       },
     });
 
-    const { tweenRestart } = scrollingChars({ heading1, heading2 });
+    const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
     props.onMount?.({
       tweenRestart,
     });
@@ -160,7 +164,7 @@ export function Section2(props: {
     stopShuffleCycle();
   });
 
-  function Heading(props: { ref: HTMLDivElement }) {
+  function Heading(props: { ref: (el: HTMLDivElement) => void }) {
     return (
       <div
         ref={props.ref}
@@ -204,8 +208,8 @@ export function Section2(props: {
         </div>
       </div>
 
-      <Heading ref={heading1} />
-      <Heading ref={heading2} />
+      <Heading ref={setHeading1} />
+      <Heading ref={setHeading2} />
     </div>
   );
 }

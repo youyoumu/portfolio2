@@ -45,7 +45,7 @@ export default function RootPage() {
       />
       <Portal mount={document.getElementById("audio-control") ?? undefined} ref={hidePortalDiv}>
         {background.audioControl}
-        <SideNav sections={sections()!} />
+        <SideNav sections={sections()} />
       </Portal>
       <Portal mount={document.getElementById("curtain") ?? undefined} ref={hidePortalDiv}>
         <Show when={!hide()}>

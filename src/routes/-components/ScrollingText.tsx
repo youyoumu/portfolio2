@@ -1,6 +1,6 @@
 import { horizontalLoop } from "#/lib/gsap/horizontalLoop";
 import { cn } from "#/lib/utils/cn";
-import { createEffect } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 
 export function ScrollingText(props: {
   text: string;
@@ -10,7 +10,7 @@ export function ScrollingText(props: {
     text: string;
   };
 }) {
-  let containerRef!: HTMLDivElement;
+  const [containerRef, setContainerRef] = createSignal<HTMLDivElement>();
   let tl: ReturnType<typeof horizontalLoop>;
   const clones: HTMLDivElement[] = [];
   const isScrolling = () => props.text.length > props.trenshold;
@@ -24,6 +24,9 @@ export function ScrollingText(props: {
       removeScrolling();
       return;
     }
+
+    const el = containerRef();
+    if (!el) return;
 
     setTimeout(() => {
       tl = horizontalLoop(clones, {
@@ -54,13 +57,13 @@ export function ScrollingText(props: {
 
   return (
     <div
-      ref={containerRef}
+      ref={setContainerRef}
       class={cn(
         "relative overflow-hidden whitespace-nowrap max-w-full w-full",
         props.classNames?.container,
       )}
     >
-      {new Array(isScrolling() ? 5 : 1).fill(0).map((_, i) => (
+      {Array.from({ length: isScrolling() ? 5 : 1 }).map((_, i) => (
         <div ref={clones[i]} class={cn("inline-block pe-2", props?.classNames?.text)}>
           {props.text}
         </div>

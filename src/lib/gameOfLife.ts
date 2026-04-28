@@ -40,7 +40,9 @@ export class GameOfLife {
     this.canvas.height = height * this.cellSize * this.devicePixelRatio;
     this.canvas.style.width = `${width * this.cellSize}px`;
     this.canvas.style.height = `${height * this.cellSize}px`;
-    this.ctx = this.canvas.getContext("2d")!;
+    const ctx = this.canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas context is not available");
+    this.ctx = ctx;
     this.ctx.setTransform(this.devicePixelRatio, 0, 0, this.devicePixelRatio, 0, 0);
     this.bgColor = getComputedStyle(document.documentElement)
       .getPropertyValue("--color-neutral-content")
