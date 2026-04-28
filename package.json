@@ -16,36 +16,40 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@solid-primitives/media": "^2.3.3",
-    "@solid-primitives/scheduled": "^1.5.2",
-    "@t3-oss/env-core": "^0.13.8",
-    "@tabler/icons-solidjs": "^3.34.0",
-    "@tailwindcss/vite": "^4.0.6",
-    "@tanstack/router-plugin": "^1.121.3",
-    "@tanstack/solid-router": "^1.121.3",
-    "@tanstack/solid-router-devtools": "^1.121.3",
-    "@tanstack/zod-adapter": "^1.131.31",
-    "@zag-js/slider": "^1.19.0",
-    "@zag-js/solid": "^1.19.0",
-    "@zag-js/tooltip": "^1.19.0",
+    "@solid-primitives/media": "^2.3.5",
+    "@solid-primitives/scheduled": "^1.5.3",
+    "@t3-oss/env-core": "^0.13.11",
+    "@tabler/icons-solidjs": "^3.41.1",
+    "@tailwindcss/vite": "0.0.0-insiders.f3fdda2",
+    "@tanstack/router-plugin": "^1.167.28",
+    "@tanstack/solid-router": "^1.168.25",
+    "@tanstack/solid-router-devtools": "^1.166.13",
+    "@tanstack/zod-adapter": "^1.166.9",
+    "@zag-js/slider": "^1.40.0",
+    "@zag-js/solid": "^1.40.0",
+    "@zag-js/tooltip": "^1.40.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "gsap": "^3.13.0",
-    "solid-js": "^1.9.4",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.0.6",
-    "zod": "^4.0.5"
+    "gsap": "^3.15.0",
+    "solid-js": "^1.9.12",
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/node": "^24.0.13",
-    "daisyui": "^5.0.46",
-    "globals": "^16.3.0",
+    "@types/node": "^25.6.0",
+    "daisyui": "^5.5.19",
+    "globals": "^17.5.0",
     "oxfmt": "^0.47.0",
     "oxlint": "^1.62.0",
     "oxlint-tsgolint": "^0.22.1",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.11",
-    "vite-plugin-solid": "^2.11.2",
-    "vite-plugin-webfont-dl": "^3.11.1"
-  }
+    "tailwindcss": "^4.2.4",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10",
+    "vite-plugin-solid": "^2.11.12",
+    "vite-plugin-webfont-dl": "^3.12.0"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8"
 }

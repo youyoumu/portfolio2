@@ -10,19 +10,17 @@ export function ZagTooltip(props: {
     root?: string;
   };
 }) {
-  //@ts-expect-error idk, i follow docs
   const service = useMachine(tooltip.machine, {
     id: createUniqueId(),
     openDelay: 0,
     closeDelay: 0,
     positioning: {
-      placement: "top-center",
+      placement: "top",
       offset: {
         mainAxis: 0,
       },
     },
   });
-  //@ts-expect-error idk, i follow docs
   const api = createMemo(() => tooltip.connect(service, normalizeProps));
 
   return (

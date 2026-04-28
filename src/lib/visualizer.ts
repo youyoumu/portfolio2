@@ -9,7 +9,7 @@ export class Visualizer {
   audioContext: AudioContext;
   analyser: AnalyserNode;
   source: AudioBufferSourceNode | null = null;
-  freqData: Uint8Array;
+  freqData: Uint8Array<ArrayBuffer>;
   gainNode: GainNode;
   lowFreqBins = 64;
   fadeDuration = 0.5;
