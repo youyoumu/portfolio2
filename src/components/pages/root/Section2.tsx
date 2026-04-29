@@ -9,7 +9,7 @@ import {
   NixIcon,
   ReactIcon,
   TypescriptIcon,
-} from "../svgs";
+} from "../../svgs";
 
 export function Section2(props: {
   ref: HTMLDivElement;

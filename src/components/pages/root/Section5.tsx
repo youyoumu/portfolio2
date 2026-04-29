@@ -4,8 +4,8 @@ import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { getRouteApi } from "@tanstack/solid-router";
 import { createSignal, onMount } from "solid-js";
 
-import { DiscordIcon, GithubIcon } from "../svgs";
-import { ZagTooltip } from "../ZagTooltip";
+import { DiscordIcon, GithubIcon } from "../../svgs";
+import { ZagTooltip } from "../../ZagTooltip";
 
 export function Section5(props: {
   ref: HTMLDivElement;

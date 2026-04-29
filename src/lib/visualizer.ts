@@ -3,9 +3,8 @@ import { createSignal } from "solid-js";
 import { signalToObj } from "./utils";
 import { musicList } from "./vars";
 
-const audioBufferCache = new Map<string, AudioBuffer>();
-
 export class Visualizer {
+  audioBufferCache = new Map<string, AudioBuffer>();
   audioContext: AudioContext;
   analyser: AnalyserNode;
   source: AudioBufferSourceNode | null = null;
@@ -157,12 +156,12 @@ export class Visualizer {
 
   prefetchAudioBuffer(src: string) {
     const prefetch = async () => {
-      let audioBuffer = audioBufferCache.get(src);
+      let audioBuffer = this.audioBufferCache.get(src);
       if (audioBuffer) return;
       const response = await fetch(src);
       const arrayBuffer = await response.arrayBuffer();
       audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-      audioBufferCache.set(src, audioBuffer);
+      this.audioBufferCache.set(src, audioBuffer);
     };
     prefetch().catch((e) => {
       console.error(e);
@@ -190,12 +189,12 @@ export class Visualizer {
   }) {
     try {
       const { src, bpm, startOffset, duration } = musicList[this.music];
-      let audioBuffer = audioBufferCache.get(src);
+      let audioBuffer = this.audioBufferCache.get(src);
       if (!audioBuffer) {
         const response = await fetch(src);
         const arrayBuffer = await response.arrayBuffer();
         audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-        audioBufferCache.set(src, audioBuffer);
+        this.audioBufferCache.set(src, audioBuffer);
       }
 
       this.source = this.audioContext.createBufferSource();

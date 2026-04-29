@@ -3,13 +3,13 @@ import { hidePortalDiv } from "#/lib/utils";
 import { createSignal, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 
-import { BlurOverlay } from "./BlurOverlay";
+import { BlurOverlay } from "../../BlurOverlay";
 import { Content } from "./Content";
-import { createBackground } from "./create-background";
-import { Curtain } from "./Curtain";
-import { DebugPanel } from "./DebugPanel";
-import { RevealingText } from "./RevealingText";
-import { SideNav } from "./SideNav";
+import { createBackground } from "../../create-background";
+import { Curtain } from "../../Curtain";
+import { DebugPanel } from "../../DebugPanel";
+import { RevealingText } from "../../RevealingText";
+import { SideNav } from "../../SideNav";
 
 export default function RootPage() {
   const [hide, setHide] = createSignal(false);
