@@ -12,4 +12,4 @@ const DockerIcon = (props: Props) => (
     />
   </svg>
 );
-export default DockerIcon;
+export { DockerIcon };

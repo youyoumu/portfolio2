@@ -22,4 +22,4 @@ const NixIcon = (props: Props) => (
     />
   </svg>
 );
-export default NixIcon;
+export { NixIcon };

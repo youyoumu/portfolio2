@@ -14,4 +14,4 @@ const GithubIcon = (props: Props) => (
     />
   </svg>
 );
-export default GithubIcon;
+export { GithubIcon };

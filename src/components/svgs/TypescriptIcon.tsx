@@ -12,4 +12,4 @@ const TypescriptIcon = (props: Props) => (
     />
   </svg>
 );
-export default TypescriptIcon;
+export { TypescriptIcon };

@@ -14,4 +14,4 @@ const DiscordIcon = (props: Props) => (
     />
   </svg>
 );
-export default DiscordIcon;
+export { DiscordIcon };

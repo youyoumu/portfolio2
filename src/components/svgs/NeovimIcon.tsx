@@ -11,4 +11,4 @@ const NeovimIcon = (props: Props) => (
     />
   </svg>
 );
-export default NeovimIcon;
+export { NeovimIcon };

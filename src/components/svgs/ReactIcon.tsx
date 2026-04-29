@@ -11,4 +11,4 @@ const ReactIcon = (props: Props) => (
     </g>
   </svg>
 );
-export default ReactIcon;
+export { ReactIcon };
