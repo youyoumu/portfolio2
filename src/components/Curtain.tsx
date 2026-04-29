@@ -1,6 +1,6 @@
 import { env } from "#/env";
-import { GameOfLife } from "#/lib/gameOfLife";
-import { isMobile } from "#/lib/utils/isMobile";
+import { GameOfLife } from "#/lib/game-of-life";
+import { isMobile } from "#/lib/utils/is-mobile";
 import { createEffect, createSignal, onMount, Show } from "solid-js";
 
 export function Curtain({ onHide }: { onHide?: () => void }) {

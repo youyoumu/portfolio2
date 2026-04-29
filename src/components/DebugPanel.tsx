@@ -1,4 +1,4 @@
-import type { createBackground } from "./createBackground";
+import type { createBackground } from "./create-background";
 
 export function DebugPanel({ background }: { background: ReturnType<typeof createBackground> }) {
   return (

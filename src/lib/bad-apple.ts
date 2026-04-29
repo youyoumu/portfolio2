@@ -1,4 +1,4 @@
-import type { GameOfLife } from "./gameOfLife";
+import type { GameOfLife } from "./game-of-life";
 
 const src = "/bad-apple-pixel-frame.bin.gz";
 const binMetadata = {

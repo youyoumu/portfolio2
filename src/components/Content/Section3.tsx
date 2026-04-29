@@ -1,4 +1,4 @@
-import { scrollingChars } from "#/lib/gsap/scrollingChars";
+import { scrollingChars } from "#/lib/gsap/scrolling-chars";
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-solidjs";
 import { createSignal, For, onMount } from "solid-js";
 

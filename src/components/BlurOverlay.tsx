@@ -1,4 +1,4 @@
-import { isMobile } from "#/lib/utils/isMobile";
+import { isMobile } from "#/lib/utils/is-mobile";
 import { createSignal, onMount } from "solid-js";
 
 export function BlurOverlay() {

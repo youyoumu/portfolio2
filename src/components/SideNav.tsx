@@ -1,5 +1,5 @@
 import { cn } from "#/lib/utils/cn";
-import { isMobile } from "#/lib/utils/isMobile";
+import { isMobile } from "#/lib/utils/is-mobile";
 import { createEffect, createSignal, onMount } from "solid-js";
 
 gsap.registerPlugin(ScrollTrigger);

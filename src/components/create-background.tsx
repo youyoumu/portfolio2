@@ -1,11 +1,11 @@
-import { BadApple } from "#/lib/badApple";
-import { GameOfLife } from "#/lib/gameOfLife";
+import { BadApple } from "#/lib/bad-apple";
+import { GameOfLife } from "#/lib/game-of-life";
 import { Lyrics } from "#/lib/lyrics";
 import { setStore } from "#/lib/store";
 import { cn } from "#/lib/utils/cn";
-import { getDynamicViewportDelta } from "#/lib/utils/dynamicViewport";
-import { isMobile } from "#/lib/utils/isMobile";
-import { tailwindBreakpoints } from "#/lib/utils/tailwindBreakPoint";
+import { getDynamicViewportDelta } from "#/lib/utils/dynamic-viewport";
+import { isMobile } from "#/lib/utils/is-mobile";
+import { tailwindBreakpoints } from "#/lib/utils/tailwind-breakpoint";
 import { Visualizer } from "#/lib/visualizer";
 import { debounce } from "@solid-primitives/scheduled";
 import {

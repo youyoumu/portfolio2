@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 
-import { signalToObj } from "./utils/signalToObj";
+import { signalToObj } from "./utils/signal-to-obj";
 import { musicList } from "./vars";
 
 const audioBufferCache = new Map<string, AudioBuffer>();

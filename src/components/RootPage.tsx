@@ -1,11 +1,11 @@
 import { env } from "#/env";
-import { hidePortalDiv } from "#/lib/utils/hidePortalDiv";
+import { hidePortalDiv } from "#/lib/utils/hide-portal-div";
 import { createSignal, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 
 import { BlurOverlay } from "./BlurOverlay";
 import { Content } from "./Content";
-import { createBackground } from "./createBackground";
+import { createBackground } from "./create-background";
 import { Curtain } from "./Curtain";
 import { DebugPanel } from "./DebugPanel";
 import { RevealingText } from "./RevealingText";

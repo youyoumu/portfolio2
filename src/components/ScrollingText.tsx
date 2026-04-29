@@ -1,4 +1,4 @@
-import { horizontalLoop } from "#/lib/gsap/horizontalLoop";
+import { horizontalLoop } from "#/lib/gsap/horizontal-loop";
 import { cn } from "#/lib/utils/cn";
 import { createEffect, createSignal } from "solid-js";
 
