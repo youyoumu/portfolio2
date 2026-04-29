@@ -1,5 +1,5 @@
-import { horizontalLoop } from "#/lib/gsap/horizontal-loop";
-import { cn } from "#/lib/utils/cn";
+import { horizontalLoop } from "#/lib/gsap";
+import { cn } from "#/lib/utils";
 import { createEffect, createSignal } from "solid-js";
 
 export function ScrollingText(props: {

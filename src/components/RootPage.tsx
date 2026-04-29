@@ -1,5 +1,5 @@
 import { env } from "#/env";
-import { hidePortalDiv } from "#/lib/utils/hide-portal-div";
+import { hidePortalDiv } from "#/lib/utils";
 import { createSignal, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 

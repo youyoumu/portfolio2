@@ -1,5 +1,5 @@
-import { scrollingChars } from "#/lib/gsap/scrolling-chars";
-import { isMobile } from "#/lib/utils/is-mobile";
+import { scrollingChars } from "#/lib/gsap";
+import { isMobile } from "#/lib/utils";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { getRouteApi } from "@tanstack/solid-router";
 import { createSignal, onMount } from "solid-js";

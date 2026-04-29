@@ -6,7 +6,7 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
-export default function gsapInit() {
+export function gsapInit() {
   gsap.registerPlugin(Observer);
   gsap.registerPlugin(ScrollSmoother);
   gsap.registerPlugin(ScrollTrigger);

@@ -1,5 +1,4 @@
-import { getDynamicViewportDelta } from "./utils/dynamic-viewport";
-import { isMobile } from "./utils/is-mobile";
+import { getDynamicViewportDelta, isMobile } from "./utils";
 
 export class GameOfLife {
   width: number;

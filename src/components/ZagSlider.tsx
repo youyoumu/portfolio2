@@ -1,4 +1,4 @@
-import { cn } from "#/lib/utils/cn";
+import { cn } from "#/lib/utils";
 import { debounce } from "@solid-primitives/scheduled";
 import * as slider from "@zag-js/slider";
 import { normalizeProps, useMachine } from "@zag-js/solid";

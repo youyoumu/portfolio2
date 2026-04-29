@@ -1,4 +1,4 @@
-import { cn } from "#/lib/utils/cn";
+import { cn } from "#/lib/utils";
 import { normalizeProps, useMachine } from "@zag-js/solid";
 import * as tooltip from "@zag-js/tooltip";
 import { createMemo, createUniqueId, type JSX, Show } from "solid-js";

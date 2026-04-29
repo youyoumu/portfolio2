@@ -2,8 +2,8 @@ import "./styles.css";
 import { createRouter, RouterProvider } from "@tanstack/solid-router";
 import { render } from "solid-js/web";
 
-import gsapInit from "./lib/gsap/gsap-init";
-import { isMobile } from "./lib/utils/is-mobile";
+import { gsapInit } from "./lib/gsap";
+import { isMobile } from "./lib/utils";
 import { routeTree } from "./routeTree.gen";
 
 gsapInit();

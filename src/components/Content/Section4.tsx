@@ -1,6 +1,5 @@
-import { scrollingChars } from "#/lib/gsap/scrolling-chars";
-import { cn } from "#/lib/utils/cn";
-import { isMobile } from "#/lib/utils/is-mobile";
+import { scrollingChars } from "#/lib/gsap";
+import { cn, isMobile } from "#/lib/utils";
 import { IconZoom } from "@tabler/icons-solidjs";
 import { createSignal, type JSX, onMount } from "solid-js";
 
