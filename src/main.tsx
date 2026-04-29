@@ -2,11 +2,11 @@ import "./styles.css";
 import { createRouter, RouterProvider } from "@tanstack/solid-router";
 import { render } from "solid-js/web";
 
-import { gsapInit } from "./lib/gsap";
+import { init } from "./lib/gsap";
 import { isMobile } from "./lib/utils";
 import { routeTree } from "./routeTree.gen";
 
-gsapInit();
+init();
 
 const router = createRouter({
   routeTree,
