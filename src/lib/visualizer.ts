@@ -1,20 +1,24 @@
+import { clamp } from "es-toolkit";
+
 import { createObjSignal } from "./utils";
 import { musicList } from "./vars";
 
+const DEBUG = false;
+const DEFAULT_FADE_DURATION = 500;
+const LOW_FREQ_BINS = 64;
+
 export class Visualizer {
-  audioBufferCache = new Map<string, AudioBuffer>();
+  static audioBufferCache = new Map<string, AudioBuffer>();
   audioContext: AudioContext;
   analyser: AnalyserNode;
   source: AudioBufferSourceNode | null = null;
   freqData: Uint8Array<ArrayBuffer>;
   gainNode: GainNode;
-  lowFreqBins = 64;
-  fadeDuration = 0.5;
   canvas: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
   colors = Array.from(
-    { length: this.lowFreqBins },
-    (_, i) => `hsl(${(i / this.lowFreqBins) * 360}, 100%, 50%)`,
+    { length: LOW_FREQ_BINS },
+    (_, i) => `hsl(${(i / LOW_FREQ_BINS) * 360}, 100%, 50%)`,
   );
   barColor = getComputedStyle(document.documentElement)
     .getPropertyValue("--color-neutral-content")
@@ -31,7 +35,6 @@ export class Visualizer {
   pauseTime = 0;
   lastBeat = -1;
   loop = true;
-  debug = false;
 
   onEnergyUpdate;
   onBeat;
@@ -80,13 +83,8 @@ export class Visualizer {
     this.gainNode = this.audioContext.createGain();
 
     this.canvas = document.createElement("canvas");
-    if (this.debug) {
-      this.canvas.width = 1000;
-      this.canvas.height = 300;
-    } else {
-      this.canvas.width = 48;
-      this.canvas.height = 32;
-    }
+    this.canvas.width = 48;
+    this.canvas.height = 32;
     const canvasContext = this.canvas.getContext("2d");
     if (!canvasContext) throw new Error("Canvas context is not available");
     this.canvasContext = canvasContext;
@@ -94,17 +92,18 @@ export class Visualizer {
     this.prefetchAudioBuffer(musicList[this.music].src);
   }
 
-  nextTract({ previous = false } = {}) {
+  skip(direction: 1 | -1 = 1) {
     const index = this.playlist.indexOf(this.music);
-    const nextIndex = previous
-      ? (index - 1 + this.playlist.length) % this.playlist.length
-      : (index + 1) % this.playlist.length;
-    this.changeMusic(this.playlist[nextIndex]);
+    const nextIndex =
+      direction === -1
+        ? (index - 1 + this.playlist.length) % this.playlist.length
+        : (index + 1) % this.playlist.length;
+    this.switch(this.playlist[nextIndex]);
   }
 
-  changeMusic(music: keyof typeof musicList) {
+  switch(music: keyof typeof musicList) {
     this.stop({
-      afterStop: () => {
+      onStop: () => {
         this.music = music;
         this.play();
       },
@@ -126,7 +125,7 @@ export class Visualizer {
       pause: true,
       fadeDuration: 0,
       isSeek: true,
-      afterStop: () => {
+      onStop: () => {
         this.pauseTime = target;
         this.play({ resume: true, fadeDuration: 0, isSeek: true }); // resume from the new time
       },
@@ -134,8 +133,7 @@ export class Visualizer {
   }
 
   setVolume(volume: number) {
-    // Clamp volume between 0 and 1
-    this.volume = Math.max(0, Math.min(volume, 1));
+    this.volume = clamp(volume, 0, 1);
     this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
   }
 
@@ -154,31 +152,30 @@ export class Visualizer {
 
   prefetchAudioBuffer(src: string) {
     const prefetch = async () => {
-      let audioBuffer = this.audioBufferCache.get(src);
-      if (audioBuffer) return;
+      if (Visualizer.audioBufferCache.has(src)) return;
       const response = await fetch(src);
       const arrayBuffer = await response.arrayBuffer();
-      audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-      this.audioBufferCache.set(src, audioBuffer);
+      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+      Visualizer.audioBufferCache.set(src, audioBuffer);
     };
     prefetch().catch((e) => {
       console.error(e);
     });
   }
 
+  #elapsedIntervalId: number | null = null;
   #playLock = false;
   play({ resume = false, fadeDuration = undefined as undefined | number, isSeek = false } = {}) {
     if (this.playing || this.#playLock) return;
     this.#playLock = true;
-    this._play({ resume, fadeDuration, isSeek }).catch((e) => {
+    this.#play({ resume, fadeDuration, isSeek }).catch((e) => {
       console.error(e);
     });
   }
 
-  #elapsedIntervalId: number | null = null;
-  async _play({
+  async #play({
     resume,
-    fadeDuration,
+    fadeDuration = DEFAULT_FADE_DURATION,
     isSeek,
   }: {
     resume: boolean;
@@ -187,12 +184,12 @@ export class Visualizer {
   }) {
     try {
       const { src, bpm, startOffset, duration } = musicList[this.music];
-      let audioBuffer = this.audioBufferCache.get(src);
+      let audioBuffer = Visualizer.audioBufferCache.get(src);
       if (!audioBuffer) {
         const response = await fetch(src);
         const arrayBuffer = await response.arrayBuffer();
         audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-        this.audioBufferCache.set(src, audioBuffer);
+        Visualizer.audioBufferCache.set(src, audioBuffer);
       }
 
       this.source = this.audioContext.createBufferSource();
@@ -204,7 +201,7 @@ export class Visualizer {
       this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
       this.gainNode.gain.linearRampToValueAtTime(
         this.volume,
-        this.audioContext.currentTime + (fadeDuration ?? this.fadeDuration),
+        this.audioContext.currentTime + fadeDuration / 1000,
       );
 
       const offset = resume ? this.pauseTime : startOffset;
@@ -233,7 +230,7 @@ export class Visualizer {
 
       this.listen();
     } catch (e) {
-      console.log("DEBUG[316]: e=", e);
+      console.error(e);
     } finally {
       this.#playLock = false;
 
@@ -250,8 +247,8 @@ export class Visualizer {
   stop({
     pause = false,
     loop = false,
-    afterStop = () => {},
-    fadeDuration = undefined as undefined | number,
+    onStop = () => {},
+    fadeDuration = DEFAULT_FADE_DURATION,
     isSeek = false,
   } = {}) {
     if (this.#stopLock) return;
@@ -259,40 +256,37 @@ export class Visualizer {
     const now = this.audioContext.currentTime;
     this.gainNode.gain.cancelScheduledValues(now);
     this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
-    this.gainNode.gain.linearRampToValueAtTime(0, now + (fadeDuration ?? this.fadeDuration));
+    this.gainNode.gain.linearRampToValueAtTime(0, now + fadeDuration / 1000);
     if (this.#elapsedIntervalId !== null) {
       clearInterval(this.#elapsedIntervalId);
       this.#elapsedIntervalId = null;
     }
 
-    setTimeout(
-      () => {
-        if (this.source) {
-          this.source.onended = null;
-          this.source.stop();
-          this.source.disconnect();
-          this.source = null;
-        }
+    setTimeout(() => {
+      if (this.source) {
+        this.source.onended = null;
+        this.source.stop();
+        this.source.disconnect();
+        this.source = null;
+      }
 
-        if (pause) {
-          this.pauseTime = this.audioContext.currentTime - this.startTime;
-        } else {
-          this.pauseTime = 0;
-          this.lastBeat = -1;
-        }
+      if (pause) {
+        this.pauseTime = this.audioContext.currentTime - this.startTime;
+      } else {
+        this.pauseTime = 0;
+        this.lastBeat = -1;
+      }
 
-        cancelAnimationFrame(this.#listenRafId);
-        this.playing = false;
-        this.onStop({ pause, isSeek });
-        this.#stopLock = false;
-        if (loop) {
-          this.play();
-        } else {
-          afterStop();
-        }
-      },
-      (fadeDuration ?? this.fadeDuration) * 1000,
-    );
+      cancelAnimationFrame(this.#listenRafId);
+      this.playing = false;
+      this.onStop({ pause, isSeek });
+      this.#stopLock = false;
+      if (loop) {
+        this.play();
+      } else {
+        onStop();
+      }
+    }, fadeDuration);
   }
 
   #listenRafId: number = 0;
@@ -319,7 +313,7 @@ export class Visualizer {
     energy = energy / lowFreqWidth / 255;
     this.onEnergyUpdate(energy);
 
-    if (this.debug) {
+    if (DEBUG) {
       const barWidth = width / lowFreqWidth;
       for (let i = lowFreqStart; i < lowFreqEnd; i++) {
         const value = this.freqData[i];

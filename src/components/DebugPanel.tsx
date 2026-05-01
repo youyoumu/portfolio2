@@ -97,7 +97,7 @@ export function DebugPanel({ background }: { background: ReturnType<typeof creat
       <button
         class="btn btn-primary"
         onClick={() => {
-          background.visualizer.nextTract();
+          background.visualizer.skip();
         }}
       >
         next track
@@ -106,7 +106,7 @@ export function DebugPanel({ background }: { background: ReturnType<typeof creat
       <button
         class="btn btn-primary"
         onClick={() => {
-          background.visualizer.nextTract({ previous: true });
+          background.visualizer.skip(-1);
         }}
       >
         prev track

@@ -1,13 +1,9 @@
+import { useGeneralContext } from "#/context/GeneralContext";
+import { useTailwindBreakpoints } from "#/hooks";
 import { BadApple } from "#/lib/bad-apple";
 import { GameOfLife } from "#/lib/game-of-life";
 import { Lyrics } from "#/lib/lyrics";
-import { useGeneralContext } from "#/context/GeneralContext";
-import {
-  cn,
-  getDynamicViewportDelta,
-  isMobile,
-} from "#/lib/utils";
-import { useTailwindBreakpoints } from "#/hooks";
+import { cn, getDynamicViewportDelta, isMobile } from "#/lib/utils";
 import { Visualizer } from "#/lib/visualizer";
 import { debounce } from "@solid-primitives/scheduled";
 import {
@@ -177,11 +173,11 @@ export function createBackground() {
       }}
       onSkipBack={() => {
         setStore("musicPlayed", true);
-        visualizer.nextTract({ previous: true });
+        visualizer.skip(-1);
       }}
       onSkipForward={() => {
         setStore("musicPlayed", true);
-        visualizer.nextTract();
+        visualizer.skip();
       }}
     />
   );
