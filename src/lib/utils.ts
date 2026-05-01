@@ -1,4 +1,4 @@
-import type { Signal } from "solid-js";
+import { createSignal } from "solid-js";
 
 import { createBreakpoints } from "@solid-primitives/media";
 import { type ClassValue, clsx } from "clsx";
@@ -18,10 +18,11 @@ export function isMobile() {
   return window.innerWidth < 640;
 }
 
-export function signalToObj<T>(signal: Signal<T>) {
+export function createObjSignal<T>(initialValue: T) {
+  const [get, set] = createSignal(initialValue);
   return {
-    get: signal[0],
-    set: signal[1],
+    get,
+    set,
   };
 }
 

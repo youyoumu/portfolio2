@@ -1,6 +1,4 @@
-import { createSignal } from "solid-js";
-
-import { signalToObj } from "./utils";
+import { createObjSignal } from "./utils";
 import { musicList } from "./vars";
 
 export class Visualizer {
@@ -69,10 +67,10 @@ export class Visualizer {
     this.volume = init.volume ?? 0.1;
 
     this.signal = {
-      elapsedTime: signalToObj(createSignal(0)),
-      duration: signalToObj(createSignal(musicList[this.music].duration)),
-      musicInfo: signalToObj(createSignal(musicList[this.music])),
-      volume: signalToObj(createSignal(this.volume)),
+      elapsedTime: createObjSignal(0),
+      duration: createObjSignal(musicList[this.music].duration),
+      musicInfo: createObjSignal(musicList[this.music]),
+      volume: createObjSignal(this.volume),
     };
 
     this.audioContext = new AudioContext();
