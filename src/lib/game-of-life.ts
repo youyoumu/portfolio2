@@ -73,7 +73,7 @@ export class GameOfLife {
     this.updateCanvas();
   }
 
-  randomize(percentage: number = 0.2) {
+  randomize(percentage: number = 0.4) {
     const scale = 0.05;
     const seed = Math.random() * 1000;
     for (let y = 0; y < this.height; y++) {

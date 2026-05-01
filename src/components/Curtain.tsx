@@ -17,17 +17,20 @@ export function Curtain({ onHide }: { onHide?: () => void }) {
   gameOfLife.energy = 1;
   gameOfLife.transparentCell = true;
   gameOfLife.bgColor = gameOfLife.cellColor;
+  gameOfLife.next2();
   gameOfLife.updateCanvas();
 
   let intervalId: ReturnType<typeof setInterval> | undefined;
   onMount(() => {
-    intervalId = setInterval(() => {
-      if (gameOfLife.density === 1) {
-        setHide(true);
-      }
-      gameOfLife.next2();
-      gameOfLife.updateCanvas();
-    }, 50);
+    setTimeout(() => {
+      intervalId = setInterval(() => {
+        if (gameOfLife.density === 1) {
+          setHide(true);
+        }
+        gameOfLife.next2();
+        gameOfLife.updateCanvas();
+      }, 24);
+    }, 1000);
   });
 
   createEffect(() => {
