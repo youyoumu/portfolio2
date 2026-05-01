@@ -1,7 +1,5 @@
-import { createSignal } from "solid-js";
-
-import { createBreakpoints } from "@solid-primitives/media";
 import { type ClassValue, clsx } from "clsx";
+import { createSignal } from "solid-js";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -25,16 +23,3 @@ export function createObjSignal<T>(initialValue: T) {
     set,
   };
 }
-
-const breakpoints = {
-  sm: "640px",
-  md: "768px",
-  lg: "1024px",
-  xl: "1280px",
-  "2xl": "1536px",
-};
-
-export function tailwindBreakpoints() {
-  return createBreakpoints(breakpoints);
-}
-

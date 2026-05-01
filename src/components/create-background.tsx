@@ -6,8 +6,8 @@ import {
   cn,
   getDynamicViewportDelta,
   isMobile,
-  tailwindBreakpoints,
 } from "#/lib/utils";
+import { useTailwindBreakpoints } from "#/hooks";
 import { Visualizer } from "#/lib/visualizer";
 import { debounce } from "@solid-primitives/scheduled";
 import {
@@ -215,7 +215,7 @@ function AudioControl(props: {
 }) {
   const [previousPercentage, setPreviousPercentage] = createSignal(0);
   const percentage = () => (props.volume / MAX_VOLUME) * 100;
-  const matches = tailwindBreakpoints();
+  const matches = useTailwindBreakpoints();
 
   const isMobile = createMemo(() => !matches.sm);
 
