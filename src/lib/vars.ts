@@ -49,11 +49,13 @@ export const musicList = {
   },
 };
 
-export const badAppleLyrics: {
+export type LyricPart = {
   text: string;
   startTime: number;
   endTime?: number;
-}[] = [
+};
+
+const _badAppleLyrics: LyricPart[] = [
   { text: "流れてく 時の中ででも", startTime: 29 },
   { text: "気だるさが ほらグルグル廻って", startTime: 33.013 },
   { text: "私から 離れる心も", startTime: 36.415 },
@@ -109,3 +111,8 @@ export const badAppleLyrics: {
   { text: "重い目蓋を 開けたのならば", startTime: 202.809 },
   { text: "全壊すのなら 黒になれ", startTime: 206.256, endTime: 210.256 },
 ];
+
+export const badAppleLyrics = _badAppleLyrics.map((value) => ({
+  ...value,
+  startTime: value.startTime + -0.9,
+}));

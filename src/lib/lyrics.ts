@@ -1,19 +1,15 @@
 import { debounce } from "@solid-primitives/scheduled";
 
-import { badAppleLyrics } from "./vars";
-
-const offset = -0.9;
+import { type LyricPart } from "./vars";
 
 export class Lyrics {
   container: HTMLElement = document.createElement("div");
-  lyrics = badAppleLyrics.map((value) => ({
-    ...value,
-    startTime: value.startTime + offset,
-  }));
+  lyrics: LyricPart[];
   currentIndex = -1;
   split?: SplitText;
 
-  constructor() {
+  constructor({ lyrics }: { lyrics: LyricPart[] }) {
+    this.lyrics = lyrics;
     this.container.classList.add(
       "text-7xl",
       "text-gray-300",
@@ -125,18 +121,18 @@ export class Lyrics {
     });
   }
 
-  startSyncRafId: number = 0;
+  #startSyncRafId: number = 0;
   startSync(getTime: () => number) {
     const loop = () => {
       const time = getTime();
       this.render(time);
-      this.startSyncRafId = requestAnimationFrame(loop);
+      this.#startSyncRafId = requestAnimationFrame(loop);
     };
     loop();
   }
 
   stopSync() {
-    cancelAnimationFrame(this.startSyncRafId);
-    this.startSyncRafId = 0;
+    cancelAnimationFrame(this.#startSyncRafId);
+    this.#startSyncRafId = 0;
   }
 }

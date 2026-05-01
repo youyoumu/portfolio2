@@ -4,6 +4,7 @@ import { BadApple } from "#/lib/bad-apple";
 import { GameOfLife } from "#/lib/game-of-life";
 import { Lyrics } from "#/lib/lyrics";
 import { cn, getDynamicViewportDelta, isMobile } from "#/lib/utils";
+import { badAppleLyrics } from "#/lib/vars";
 import { Visualizer } from "#/lib/visualizer";
 import { debounce } from "@solid-primitives/scheduled";
 import {
@@ -43,7 +44,7 @@ export function createBackground() {
     game: gameOfLife,
   });
 
-  const lyrics = new Lyrics();
+  const lyrics = new Lyrics({ lyrics: badAppleLyrics });
 
   const visualizer = new Visualizer({
     onEnergyUpdate: (energy) => {
