@@ -1,10 +1,10 @@
 import { env } from "#/env";
+import { useBackground } from "#/hooks/background";
 import { hidePortalDiv } from "#/lib/utils";
 import { createSignal, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 
 import { BlurOverlay } from "../../BlurOverlay";
-import { createBackground } from "../../create-background";
 import { Curtain } from "../../Curtain";
 import { DebugPanel } from "../../DebugPanel";
 import { RevealingText } from "../../RevealingText";
@@ -12,7 +12,7 @@ import { SideNav } from "../../SideNav";
 import { Content } from "./Content";
 
 export default function RootPage() {
-  const background = createBackground();
+  const background = useBackground();
   const [sections, setSections] = createSignal<HTMLDivElement[]>();
 
   return (

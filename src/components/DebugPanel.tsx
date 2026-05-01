@@ -1,4 +1,4 @@
-import type { createBackground } from "./create-background";
+import type { useBackground } from "#/hooks/background";
 
 function DebugButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
@@ -8,7 +8,9 @@ function DebugButton({ label, onClick }: { label: string; onClick: () => void })
   );
 }
 
-export function DebugPanel({ background }: { background: ReturnType<typeof createBackground> }) {
+export function DebugPanel(props: { background: ReturnType<typeof useBackground> }) {
+  const background = props.background;
+
   return (
     <>
       <DebugButton

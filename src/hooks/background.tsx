@@ -1,3 +1,4 @@
+import { AudioControl } from "#/components/AudioControl";
 import { useGeneralContext } from "#/context/GeneralContext";
 import { BadApple } from "#/lib/bad-apple";
 import { GameOfLife } from "#/lib/game-of-life";
@@ -8,8 +9,6 @@ import { Visualizer } from "#/lib/visualizer";
 import { debounce } from "@solid-primitives/scheduled";
 import { createSignal, onMount } from "solid-js";
 
-import { AudioControl } from "./AudioControl";
-
 const MAX_VOLUME = 0.3;
 
 function formatTime(seconds: number): string {
@@ -18,7 +17,7 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-export function createBackground() {
+export function useBackground() {
   const [, setStore] = useGeneralContext();
   const [playing, setPlaying] = createSignal(false);
 
