@@ -1,7 +1,9 @@
-import { getDynamicViewportDelta, isMobile } from "./utils";
 import { SimplexNoise } from "./noise";
+import { getDynamicViewportDelta, isMobile } from "./utils";
 
 const TWO_PI = Math.PI * 2;
+
+export type CellShape = "circle" | "square";
 
 export class GameOfLife {
   width: number;
@@ -22,8 +24,20 @@ export class GameOfLife {
   offsetX = 0;
   offsetY = 0;
   noise: SimplexNoise;
+  shape: CellShape;
 
-  constructor({ width, height, cellSize }: { width: number; height: number; cellSize: number }) {
+  constructor({
+    width,
+    height,
+    cellSize,
+    shape = "circle",
+  }: {
+    width: number;
+    height: number;
+    cellSize: number;
+    shape?: CellShape;
+  }) {
+    this.shape = shape;
     this.noise = new SimplexNoise();
     this.width = width;
     this.height = height;
@@ -59,7 +73,7 @@ export class GameOfLife {
     this.updateCanvas();
   }
 
-randomize(percentage: number = 0.2) {
+  randomize(percentage: number = 0.2) {
     const scale = 0.05;
     const seed = Math.random() * 1000;
     for (let y = 0; y < this.height; y++) {
@@ -193,6 +207,9 @@ randomize(percentage: number = 0.2) {
       ctx.globalCompositeOperation = "destination-out";
     }
 
+    const isSquare = this.shape === "square";
+    const size = radius * 2;
+
     ctx.beginPath();
     for (let y = 0; y < height; y++) {
       const gy = (cellOffsetY + y) % height;
@@ -204,8 +221,12 @@ randomize(percentage: number = 0.2) {
         const i = gy * width + gx;
 
         if (this.grid[i]) {
-          ctx.moveTo(cx + radius, cy);
-          ctx.arc(cx, cy, radius, 0, TWO_PI);
+          if (isSquare) {
+            ctx.rect(cx - radius, cy - radius, size, size);
+          } else {
+            ctx.moveTo(cx + radius, cy);
+            ctx.arc(cx, cy, radius, 0, TWO_PI);
+          }
         }
       }
     }
@@ -328,7 +349,8 @@ randomize(percentage: number = 0.2) {
   }
   /* eslint-enable prefer-const */
 
-  resize(width: number, height: number, cellSize: number) {
+  resize(width: number, height: number, cellSize: number, shape?: CellShape) {
+    if (shape) this.shape = shape;
     this.width = width;
     this.height = height;
     this.cellSize = cellSize;

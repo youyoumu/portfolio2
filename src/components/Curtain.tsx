@@ -4,15 +4,16 @@ import { isMobile } from "#/lib/utils";
 import { createEffect, createSignal, onMount, Show } from "solid-js";
 
 export function Curtain({ onHide }: { onHide?: () => void }) {
-  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(isMobile() ? 2 : 2.5);
+  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(isMobile() ? 1.5 : 2.0);
   const [hide, setHide] = createSignal(false);
   const gameOfLife = new GameOfLife({
     width,
     height,
     cellSize,
+    shape: "square",
   });
   gameOfLife.grid.fill(0);
-  gameOfLife.randomize(0.005);
+  gameOfLife.randomize(0.2);
   gameOfLife.energy = 1;
   gameOfLife.transparentCell = true;
   gameOfLife.bgColor = gameOfLife.cellColor;
@@ -26,7 +27,7 @@ export function Curtain({ onHide }: { onHide?: () => void }) {
       }
       gameOfLife.next2();
       gameOfLife.updateCanvas();
-    }, 30);
+    }, 50);
   });
 
   createEffect(() => {
