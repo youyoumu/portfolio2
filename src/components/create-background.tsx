@@ -6,20 +6,21 @@ import { getDynamicViewportDelta, isMobile } from "#/lib/utils";
 import { badAppleLyrics } from "#/lib/vars";
 import { Visualizer } from "#/lib/visualizer";
 import { debounce } from "@solid-primitives/scheduled";
-import { addSeconds, format } from "date-fns";
 import { createSignal, onMount } from "solid-js";
 
 import { AudioControl } from "./AudioControl";
 
 const MAX_VOLUME = 0.3;
 
+function formatTime(seconds: number): string {
+  const mins = Math.floor(Math.floor(seconds) / 60);
+  const secs = Math.floor(seconds) % 60;
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+}
+
 export function createBackground() {
   const [, setStore] = useGeneralContext();
   const [playing, setPlaying] = createSignal(false);
-
-  function formatTime(seconds: number): string {
-    return format(addSeconds(new Date(0), Math.floor(seconds)), "m:ss");
-  }
 
   const { cellSize, width, height } = GameOfLife.getGameOfLifeSize();
   const gameOfLife = new GameOfLife({
