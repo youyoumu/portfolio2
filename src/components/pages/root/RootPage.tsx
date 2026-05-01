@@ -4,15 +4,14 @@ import { createSignal, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 
 import { BlurOverlay } from "../../BlurOverlay";
-import { Content } from "./Content";
 import { createBackground } from "../../create-background";
 import { Curtain } from "../../Curtain";
 import { DebugPanel } from "../../DebugPanel";
 import { RevealingText } from "../../RevealingText";
 import { SideNav } from "../../SideNav";
+import { Content } from "./Content";
 
 export default function RootPage() {
-  const [hide, setHide] = createSignal(false);
   const background = createBackground();
   const [sections, setSections] = createSignal<HTMLDivElement[]>();
 
@@ -33,7 +32,7 @@ export default function RootPage() {
           <div class="bg-crt h-lvh w-full absolute top-0 left-0"></div>
         </div>
       </Portal>
-      <Show when={env.DEV && false}>
+      <Show when={env.DEV}>
         <div class="fixed top-0 left-0 flex gap-1 flex-wrap p-1 ">
           <DebugPanel background={background} />
         </div>
@@ -48,11 +47,9 @@ export default function RootPage() {
         <SideNav sections={sections()} />
       </Portal>
       <Portal mount={document.getElementById("curtain") ?? undefined} ref={hidePortalDiv}>
-        <Show when={!hide()}>
-          <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full">
-            <Curtain onHide={() => setHide(true)} />
-          </div>
-        </Show>
+        <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full pointer-events-none">
+          <Curtain />
+        </div>
       </Portal>
     </div>
   );

@@ -1,11 +1,9 @@
-import { env } from "#/env";
 import { GameOfLife } from "#/lib/game-of-life";
 import { isMobile } from "#/lib/utils";
-import { createEffect, createSignal, onMount, Show } from "solid-js";
+import { onMount } from "solid-js";
 
-export function Curtain({ onHide }: { onHide?: () => void }) {
+export function Curtain() {
   const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(isMobile() ? 1.5 : 2.0);
-  const [hide, setHide] = createSignal(false);
   const gameOfLife = new GameOfLife({
     width,
     height,
@@ -25,7 +23,7 @@ export function Curtain({ onHide }: { onHide?: () => void }) {
     setTimeout(() => {
       intervalId = setInterval(() => {
         if (gameOfLife.density === 1) {
-          setHide(true);
+          clearInterval(intervalId);
         }
         gameOfLife.next2();
         gameOfLife.updateCanvas();
@@ -33,35 +31,5 @@ export function Curtain({ onHide }: { onHide?: () => void }) {
     }, 1000);
   });
 
-  createEffect(() => {
-    if (hide()) {
-      clearInterval(intervalId);
-      onHide?.();
-    }
-  });
-
-  return (
-    <>
-      {!hide() && gameOfLife.canvas}
-      <Show when={env.DEV}>
-        <DebugPanel gameOfLife={gameOfLife} />
-      </Show>
-    </>
-  );
-}
-
-function DebugPanel({ gameOfLife }: { gameOfLife: GameOfLife }) {
-  return (
-    <div class="fixed bottom-0 left-0 flex gap-1 flex-wrap p-1 ">
-      <button
-        class="btn btn-primary"
-        onClick={() => {
-          gameOfLife.next2();
-          gameOfLife.updateCanvas();
-        }}
-      >
-        next
-      </button>
-    </div>
-  );
+  return <>{gameOfLife.canvas}</>;
 }
