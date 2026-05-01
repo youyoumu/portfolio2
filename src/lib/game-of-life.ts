@@ -1,5 +1,7 @@
 import { getDynamicViewportDelta, isMobile } from "./utils";
 
+const TWO_PI = Math.PI * 2;
+
 export class GameOfLife {
   width: number;
   cellSize: number;
@@ -168,8 +170,6 @@ export class GameOfLife {
     const baseRadius = (cellSize * (0.9 + this.energy / 1.75) - 1) / 2;
     const radius = baseRadius * easeScale;
 
-    const twoPi = Math.PI * 2;
-
     const pixelOffsetX = offsetX % cellSize;
     const pixelOffsetY = offsetY % cellSize;
 
@@ -180,6 +180,7 @@ export class GameOfLife {
       ctx.globalCompositeOperation = "destination-out";
     }
 
+    ctx.beginPath();
     for (let y = 0; y < height; y++) {
       const gy = (cellOffsetY + y) % height;
       const cy = y * cellSize - pixelOffsetY + cellSize / 2;
@@ -190,12 +191,12 @@ export class GameOfLife {
         const i = gy * width + gx;
 
         if (this.grid[i]) {
-          ctx.beginPath();
-          ctx.arc(cx, cy, radius, 0, twoPi);
-          ctx.fill();
+          ctx.moveTo(cx + radius, cy);
+          ctx.arc(cx, cy, radius, 0, TWO_PI);
         }
       }
     }
+    ctx.fill();
     ctx.globalCompositeOperation = "source-over";
 
     return this.canvas;
