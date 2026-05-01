@@ -1,4 +1,5 @@
 import { getDynamicViewportDelta, isMobile } from "./utils";
+import { SimplexNoise } from "./noise";
 
 const TWO_PI = Math.PI * 2;
 
@@ -20,8 +21,10 @@ export class GameOfLife {
   transparentCell = false;
   offsetX = 0;
   offsetY = 0;
+  noise: SimplexNoise;
 
   constructor({ width, height, cellSize }: { width: number; height: number; cellSize: number }) {
+    this.noise = new SimplexNoise();
     this.width = width;
     this.height = height;
     this.cellSize = cellSize;
@@ -56,8 +59,18 @@ export class GameOfLife {
     this.updateCanvas();
   }
 
-  randomize(percentage: number = 0.2) {
-    this.grid = this.grid.map(() => (Math.random() > 1 - percentage ? 1 : 0));
+randomize(percentage: number = 0.2) {
+    const scale = 0.05;
+    const seed = Math.random() * 1000;
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const nx = x * scale;
+        const ny = y * scale;
+        const noise = this.noise.noise2D(nx + seed, ny + seed);
+        const threshold = 1 - percentage * 2;
+        this.grid[y * this.width + x] = noise > threshold ? 1 : 0;
+      }
+    }
   }
 
   static getGameOfLifeSize(multiplier = 1) {
