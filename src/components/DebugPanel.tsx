@@ -1,49 +1,46 @@
 import type { createBackground } from "./create-background";
 
+function DebugButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button class="btn btn-primary btn-sm" onClick={onClick}>
+      {label}
+    </button>
+  );
+}
+
 export function DebugPanel({ background }: { background: ReturnType<typeof createBackground> }) {
   return (
     <>
-      <button
-        class="btn btn-primary"
+      <DebugButton
+        label="refresh"
         onClick={() => {
           background.gameOfLife.randomize();
           background.gameOfLife.next();
         }}
-      >
-        refresh
-      </button>
-
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="pulse"
         onClick={() => {
           background.gameOfLife.pulse();
           setTimeout(() => {
             background.gameOfLife.next();
           }, background.gameOfLife.pulseDuration / 2);
         }}
-      >
-        pulse
-      </button>
-
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="benchmark"
         onClick={() => {
           background.gameOfLife.benchmark(1000);
         }}
-      >
-        benchmark
-      </button>
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="benchmark canvas"
         onClick={() => {
           background.gameOfLife.benchmarkCanvasRender(1000);
         }}
-      >
-        benchmark canvas
-      </button>
-
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="play/stop music"
         onClick={() => {
           if (background.visualizer.playing) {
             background.visualizer.stop();
@@ -51,12 +48,9 @@ export function DebugPanel({ background }: { background: ReturnType<typeof creat
             background.visualizer.play();
           }
         }}
-      >
-        play/stop music
-      </button>
-
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="resume/pause music"
         onClick={() => {
           if (background.visualizer.playing) {
             background.visualizer.stop({ pause: true });
@@ -64,56 +58,39 @@ export function DebugPanel({ background }: { background: ReturnType<typeof creat
             background.visualizer.play({ resume: true });
           }
         }}
-      >
-        resume/pause music
-      </button>
-
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="next"
         onClick={() => {
           background.gameOfLife.next();
         }}
-      >
-        next
-      </button>
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="inject"
         onClick={() => {
           background.badApple.injectFrameIntoGame(10);
         }}
-      >
-        inject
-      </button>
-
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="updateCanvas"
         onClick={() => {
           background.gameOfLife.updateCanvas();
         }}
-      >
-        updateCanvas
-      </button>
-
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="next track"
         onClick={() => {
           background.visualizer.skip();
         }}
-      >
-        next track
-      </button>
-
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="prev track"
         onClick={() => {
           background.visualizer.skip(-1);
         }}
-      >
-        prev track
-      </button>
-
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="start lyrics"
         onClick={() => {
           let seconds = 20;
           setInterval(() => {
@@ -121,19 +98,15 @@ export function DebugPanel({ background }: { background: ReturnType<typeof creat
           }, 1000);
           background.lyrics.startSync(() => seconds);
         }}
-      >
-        start lyrics
-      </button>
-      <button
-        class="btn btn-primary"
+      />
+      <DebugButton
+        label="remove lyrics"
         onClick={() => {
           background.lyrics.removeLyrics().catch((e) => {
             console.error(e);
           });
         }}
-      >
-        remove lyrics
-      </button>
+      />
     </>
   );
 }
