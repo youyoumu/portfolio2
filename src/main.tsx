@@ -5,6 +5,7 @@ import { render } from "solid-js/web";
 import { init } from "./lib/gsap";
 import { isMobile } from "./lib/utils";
 import { routeTree } from "./routeTree.gen";
+import { GeneralProvider } from "./context/GeneralContext";
 
 init();
 
@@ -23,7 +24,14 @@ declare module "@tanstack/solid-router" {
 
 const rootElement = document.getElementById("app");
 if (rootElement) {
-  render(() => <RouterProvider router={router} />, rootElement);
+  render(
+    () => (
+      <GeneralProvider>
+        <RouterProvider router={router} />
+      </GeneralProvider>
+    ),
+    rootElement
+  );
 }
 
 if (!isMobile()) {

@@ -1,7 +1,7 @@
 import { BadApple } from "#/lib/bad-apple";
 import { GameOfLife } from "#/lib/game-of-life";
 import { Lyrics } from "#/lib/lyrics";
-import { setStore } from "#/lib/store";
+import { useGeneralContext } from "#/context/GeneralContext";
 import {
   cn,
   getDynamicViewportDelta,
@@ -28,6 +28,7 @@ import { ZagSlider } from "./ZagSlider";
 const MAX_VOLUME = 0.3;
 
 export function createBackground() {
+  const [, setStore] = useGeneralContext();
   const [playing, setPlaying] = createSignal(false);
 
   function formatTime(seconds: number): string {

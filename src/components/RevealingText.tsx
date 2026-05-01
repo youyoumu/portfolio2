@@ -1,7 +1,8 @@
-import { store } from "#/lib/store";
+import { useGeneralContext } from "#/context/GeneralContext";
 import { createSignal, onMount } from "solid-js";
 
 export function RevealingText() {
+  const [store] = useGeneralContext();
   const [wipe, setWipe] = createSignal<HTMLDivElement>();
   const [text, setText] = createSignal<HTMLDivElement>();
 
