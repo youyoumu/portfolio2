@@ -1,16 +1,22 @@
-import { isMobile } from "#/lib/utils";
-import { createSignal, onMount } from "solid-js";
+import { useIsMobile } from "#/hooks";
+import { createEffect, createSignal } from "solid-js";
 
 export function BlurOverlay() {
   const [overlay, setOverlay] = createSignal<HTMLDivElement>();
   const [overlay2, setOverlay2] = createSignal<HTMLDivElement>();
+  const isMobile = useIsMobile();
 
-  onMount(() => {
+  createEffect(() => {
     const el = overlay();
     const el2 = overlay2();
     if (!el || !el2) return;
 
-    if (isMobile()) {
+    const mobile = isMobile();
+    ScrollTrigger.getAll().forEach((st) => {
+      if (st.trigger === el || st.trigger === el2) st.kill();
+    });
+
+    if (mobile) {
       ScrollTrigger.create({
         trigger: el,
         start: "top top",

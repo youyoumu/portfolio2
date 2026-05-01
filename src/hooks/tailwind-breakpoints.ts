@@ -11,3 +11,8 @@ const breakpoints = {
 export function useTailwindBreakpoints() {
   return createBreakpoints(breakpoints);
 }
+export function useIsMobile() {
+  const bp = useTailwindBreakpoints();
+  return () => !bp.sm;
+}
+
