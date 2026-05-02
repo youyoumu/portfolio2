@@ -1,7 +1,7 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { env } from "#/env";
 import { useBackground } from "#/hooks/background";
-import { hidePortalDiv } from "#/lib/utils";
+import { type ParentComponent } from "solid-js";
 import { Show } from "solid-js";
 import { createEffect } from "solid-js";
 import { Portal } from "solid-js/web";
@@ -15,6 +15,23 @@ import { Section2 } from "./Section2";
 import { Section3 } from "./Section3";
 import { Section4 } from "./Section4";
 import { Section5 } from "./Section5";
+
+const ContentsPortal: ParentComponent<{
+  mount: HTMLElement | undefined | null;
+  ref?: (ref: HTMLElement) => void;
+}> = (props) => {
+  return (
+    <Portal
+      mount={props.mount ?? undefined}
+      ref={(ref) => {
+        ref.style.display = "contents";
+        props.ref?.(ref);
+      }}
+    >
+      {props.children}
+    </Portal>
+  );
+};
 
 export function RootPage() {
   const background = useBackground();
@@ -38,7 +55,7 @@ export function RootPage() {
 
   return (
     <div class="relative">
-      <Portal mount={document.getElementById("background") ?? undefined} ref={hidePortalDiv}>
+      <ContentsPortal mount={document.getElementById("background")}>
         <div class="fixed z-[-10] top-0 left-0 overflow-hidden h-lvh w-full">
           {background.gameOfLife.canvas}
           <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -52,7 +69,7 @@ export function RootPage() {
           </div>
           <div class="bg-crt h-lvh w-full absolute top-0 left-0"></div>
         </div>
-      </Portal>
+      </ContentsPortal>
       <Show when={env.DEV}>
         <div class="fixed top-0 left-0 flex gap-1 flex-wrap p-1 ">
           <DebugPanel background={background} />
@@ -63,15 +80,15 @@ export function RootPage() {
       <Section3 />
       <Section4 />
       <Section5 />
-      <Portal mount={document.getElementById("audio-control") ?? undefined} ref={hidePortalDiv}>
+      <ContentsPortal mount={document.getElementById("audio-control")}>
         {background.audioControl}
         <SideNav />
-      </Portal>
-      <Portal mount={document.getElementById("curtain") ?? undefined} ref={hidePortalDiv}>
+      </ContentsPortal>
+      <ContentsPortal mount={document.getElementById("curtain")}>
         <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full pointer-events-none">
           <Curtain />
         </div>
-      </Portal>
+      </ContentsPortal>
     </div>
   );
 }
