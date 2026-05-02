@@ -49,12 +49,7 @@ export class BadApple {
   }
 
   injectFrameIntoGame(_frameIndex?: number) {
-    if (!this.data.length) {
-      this.load().catch((e) => {
-        console.error(e);
-      });
-      return;
-    }
+    if (!this.data.length) return;
     const frameIndex = _frameIndex ?? this.frameIndex;
     const game = this.game;
     const packed = this.getFrame(frameIndex % this.frameCount);
@@ -99,7 +94,6 @@ export class BadApple {
   }
 
   play() {
-    if (!this.data.length) return;
     this.intervalId = setInterval(() => {
       this.frameIndex++;
       if (this.frameIndex >= this.frameCount) {
