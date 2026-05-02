@@ -15,4 +15,3 @@ export function useIsMobile() {
   const bp = useTailwindBreakpoints();
   return () => !bp.sm;
 }
-

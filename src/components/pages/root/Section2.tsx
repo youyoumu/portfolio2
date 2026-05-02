@@ -3,13 +3,7 @@ import { isMobile } from "#/lib/utils";
 import { getRouteApi } from "@tanstack/solid-router";
 import { createSignal, onCleanup, onMount } from "solid-js";
 
-import {
-  DockerIcon,
-  NeovimIcon,
-  NixIcon,
-  ReactIcon,
-  TypescriptIcon,
-} from "../../svgs";
+import { DockerIcon, NeovimIcon, NixIcon, ReactIcon, TypescriptIcon } from "../../svgs";
 
 export function Section2(props: {
   ref: HTMLDivElement;

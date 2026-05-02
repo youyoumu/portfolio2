@@ -2,10 +2,10 @@ import "./styles.css";
 import { createRouter, RouterProvider } from "@tanstack/solid-router";
 import { render } from "solid-js/web";
 
+import { GeneralProvider } from "./context/GeneralContext";
 import { init } from "./lib/gsap";
 import { isMobile } from "./lib/utils";
 import { routeTree } from "./routeTree.gen";
-import { GeneralProvider } from "./context/GeneralContext";
 
 init();
 
@@ -30,7 +30,7 @@ if (rootElement) {
         <RouterProvider router={router} />
       </GeneralProvider>
     ),
-    rootElement
+    rootElement,
   );
 }
 
