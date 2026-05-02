@@ -1,29 +1,63 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { scrollingChars } from "#/lib/gsap";
-import { getRouteApi } from "@tanstack/solid-router";
-import { createSignal, onCleanup, onMount } from "solid-js";
+import { useSearch } from "@tanstack/solid-router";
+import { range, shuffle } from "es-toolkit";
+import { createMemo, createSignal, onCleanup, onMount } from "solid-js";
+import { createStore } from "solid-js/store";
 
 import { DockerIcon, NeovimIcon, NixIcon, ReactIcon, TypescriptIcon } from "../../svgs";
+
+type IconRefs = {
+  "0": HTMLDivElement | undefined;
+  "1": HTMLDivElement | undefined;
+  "2": HTMLDivElement | undefined;
+  "3": HTMLDivElement | undefined;
+  "4": HTMLDivElement | undefined;
+};
+
+type TextRefs = {
+  "0": HTMLDivElement | undefined;
+  "1": HTMLDivElement | undefined;
+  "2": HTMLDivElement | undefined;
+  "3": HTMLDivElement | undefined;
+};
 
 export function Section2(props: {
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
+  const search = useSearch({ from: "/" });
+  const name = createMemo(() => (search().yym === 0 ? "DONNY LAU KIM LENG" : "youyoumu"));
+
   const { $setGeneral } = useGeneralContext();
-  const iconsRef: HTMLDivElement[] = [];
-  const textsRef: HTMLDivElement[] = [];
-  const routeApi = getRouteApi("/");
-  const { yym } = routeApi.useSearch()();
-  const realName = () => yym === 0;
+  const [$iconRef, $setIconRef] = createStore<IconRefs>({
+    "0": undefined,
+    "1": undefined,
+    "2": undefined,
+    "3": undefined,
+    "4": undefined,
+  });
+  const $iconRefs = createMemo(() => [
+    $iconRef[0],
+    $iconRef[1],
+    $iconRef[2],
+    $iconRef[3],
+    $iconRef[4],
+  ]);
+  const [$textRef, $setTextRef] = createStore<TextRefs>({
+    "0": undefined,
+    "1": undefined,
+    "2": undefined,
+    "3": undefined,
+  });
+  const $textRefs = createMemo(() => [$textRef[0], $textRef[1], $textRef[2], $textRef[3]]);
   const isMobile = useIsMobile();
 
   const iconColor = getComputedStyle(document.documentElement)
     .getPropertyValue("--color-neutral-content")
     .trim();
-
   const iconClass = "size-16 sm:size-20";
-
-  const iconNodes = [
+  const icons = [
     <TypescriptIcon class={iconClass} path1Props={{ fill: iconColor }} />,
     <DockerIcon class={iconClass} path1Props={{ fill: iconColor }} />,
     <NixIcon class={iconClass} path1Props={{ fill: iconColor }} path2Props={{ fill: iconColor }} />,
@@ -31,19 +65,14 @@ export function Section2(props: {
     <NeovimIcon class={iconClass} path1Props={{ fill: iconColor }} />,
   ] as const;
 
-  const [order, setOrder] = createSignal<number[]>(
-    Array.from({ length: iconNodes.length }, (_, i) => i),
-  );
+  const [order, setOrder] = createSignal<number[]>(range(icons.length));
 
-  function shuffle(prev: number[]) {
-    const next = prev.slice();
-    const randomIndex = () => Math.floor(Math.random() * next.length);
-    const i = randomIndex();
-    let j = randomIndex();
-    while (j === i) j = randomIndex();
-    [next[i], next[j]] = [next[j], next[i]];
-    return next;
-  }
+  const texts = [
+    <div class="text-lg text-nowrap font-medium">{name()}</div>,
+    <div class="text-nowrap">WEB DEVELOPER</div>,
+    <div class="text-nowrap">LINUX ENTHUSIAST</div>,
+    <div class="text-nowrap opacity-40">WEEB</div>,
+  ];
 
   let running = false;
   let intervalId: ReturnType<typeof setInterval> | null = null;
@@ -78,15 +107,6 @@ export function Section2(props: {
     running = false;
   }
 
-  const textsNodes = [
-    <div class="text-lg text-nowrap font-medium">
-      {realName() ? "DONNY LAU KIM LENG" : "youyoumu"}
-    </div>,
-    <div class="text-nowrap">WEB DEVELOPER</div>,
-    <div class="text-nowrap">LINUX ENTHUSIAST</div>,
-    <div class="text-nowrap opacity-40">WEEB</div>,
-  ];
-
   const [heading1, setHeading1] = createSignal<HTMLDivElement>();
   const [heading2, setHeading2] = createSignal<HTMLDivElement>();
   onMount(() => {
@@ -95,9 +115,10 @@ export function Section2(props: {
     if (!h1 || !h2) return;
 
     const toggleActions = isMobile() ? "play none none none" : "restart none none none";
-    gsap.to(iconsRef, {
+    const iconRefs = $iconRefs().filter(Boolean) as HTMLDivElement[];
+    gsap.to(iconRefs, {
       scrollTrigger: {
-        trigger: iconsRef,
+        trigger: iconRefs,
         toggleActions: toggleActions,
       },
       delay: 0.5,
@@ -111,15 +132,16 @@ export function Section2(props: {
         startShuffleCycle();
       },
     });
-
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: iconsRef,
+        trigger: iconRefs,
         toggleActions: toggleActions,
       },
       delay: 0.5,
     });
-    textsRef.forEach((ref) => {
+
+    const textRefs = $textRefs().filter(Boolean) as HTMLDivElement[];
+    textRefs.forEach((ref) => {
       tl.add(
         gsap
           .timeline()
@@ -168,27 +190,35 @@ export function Section2(props: {
       class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative"
     >
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
-        {iconNodes.map((_, i) => {
-          return (
-            <div
-              ref={iconsRef[i]}
-              style={{
-                opacity: 0,
-              }}
-            >
-              {iconNodes[order()[i]]}
-            </div>
-          );
-        })}
+        <div ref={(ref) => $setIconRef("0", ref)} class="opacity-0">
+          {icons[order()[0]]}
+        </div>
+        <div ref={(ref) => $setIconRef("1", ref)} class="opacity-0">
+          {icons[order()[1]]}
+        </div>
+        <div ref={(ref) => $setIconRef("2", ref)} class="opacity-0">
+          {icons[order()[2]]}
+        </div>
+        <div ref={(ref) => $setIconRef("3", ref)} class="opacity-0">
+          {icons[order()[3]]}
+        </div>
+        <div ref={(ref) => $setIconRef("4", ref)} class="opacity-0">
+          {icons[order()[4]]}
+        </div>
 
         <div class="size-20 overflow-visible leading-none">
-          {textsNodes.map((_, i) => {
-            return (
-              <div ref={textsRef[i]} class="opacity-0">
-                {textsNodes[i]}
-              </div>
-            );
-          })}
+          <div ref={(ref) => $setTextRef("0", ref)} class="opacity-0">
+            {texts[0]}
+          </div>
+          <div ref={(ref) => $setTextRef("1", ref)} class="opacity-0">
+            {texts[1]}
+          </div>
+          <div ref={(ref) => $setTextRef("2", ref)} class="opacity-0">
+            {texts[2]}
+          </div>
+          <div ref={(ref) => $setTextRef("3", ref)} class="opacity-0">
+            {texts[3]}
+          </div>
         </div>
       </div>
 
