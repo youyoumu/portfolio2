@@ -1,8 +1,10 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { scrollingChars } from "#/lib/gsap";
+import { cn } from "#/lib/utils";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { useSearch } from "@tanstack/solid-router";
+import { type Component } from "solid-js";
 import { createMemo, createSignal, onMount } from "solid-js";
 
 import { Heading } from "../../Heading";
@@ -86,48 +88,19 @@ export function Section5() {
       </div>
       <p class="text-sm text-neutral-content/50">hire me pls</p>
       <div class="text-neutral-content flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-lg pt-8 pb-16">
-        <a
-          target="_blank"
-          class="flex items-center gap-1 underline cursor-pointer text-sm sm:text-base"
+        <ContactItem
           href="https://github.com/youyoumu"
-        >
-          <GithubIcon class="size-5" />
-          <span ref={setGithubRef}>youyoumu</span>
-        </a>
-        <ZagTooltip
-          trigger={
-            <div
-              class="flex items-center gap-1 cursor-pointer"
-              onClick={async () => {
-                await navigator.clipboard.writeText("youyoumu2017");
-              }}
-            >
-              <DiscordIcon class="size-5" />
-              <span ref={setDiscordRef} class="underline text-sm sm:text-base">
-                youyoumu2017
-              </span>
-              <IconCopy class="size-4 opacity-50 sm:hidden" />
-            </div>
-          }
-          tooltop={CopyTooltip()}
+          icon={GithubIcon}
+          ref={setGithubRef}
+          label="youyoumu"
         />
-        <ZagTooltip
-          trigger={
-            <div
-              class="flex items-center gap-1 cursor-pointer"
-              onClick={async () => {
-                await navigator.clipboard.writeText(email());
-              }}
-            >
-              <IconMail class="size-5" />
-              <span ref={setEmailRef} class="underline text-sm sm:text-base">
-                {email()}
-              </span>
-              <IconCopy class="size-4 opacity-50 sm:hidden" />
-            </div>
-          }
-          tooltop={CopyTooltip()}
+        <ContactItem
+          copyText="youyoumu2017"
+          icon={DiscordIcon}
+          ref={setDiscordRef}
+          label="youyoumu2017"
         />
+        <ContactItem copyText={email()} icon={IconMail} ref={setEmailRef} label={email()} />
       </div>
 
       <Heading
@@ -156,6 +129,49 @@ export function Section5() {
   );
 }
 
-function CopyTooltip() {
-  return <div class="text-sm opacity-50 hidden sm:block">click to copy</div>;
+function ContactItem(props: {
+  icon: Component<{ class?: string }>;
+  ref?: (el: HTMLSpanElement) => void;
+  href?: string;
+  copyText?: string;
+  label: string;
+}) {
+  const labelClass = cn("underline text-sm sm:text-base leading-tight font-jetbrains-mono");
+  const containerClass = cn("flex items-center gap-1 cursor-pointer");
+
+  if (props.href) {
+    return (
+      <a target="_blank" class={containerClass} href={props.href}>
+        <props.icon class="size-5" />
+        <span ref={props.ref} class={labelClass}>
+          {props.label}
+        </span>
+      </a>
+    );
+  }
+
+  if (props.copyText) {
+    return (
+      <ZagTooltip
+        trigger={
+          <div
+            class={containerClass}
+            onClick={async () => {
+              if (!props.copyText) return;
+              await navigator.clipboard.writeText(props.copyText);
+            }}
+          >
+            <props.icon class="size-5" />
+            <span ref={props.ref} class={labelClass}>
+              {props.label}
+            </span>
+            <IconCopy class="size-4 opacity-50 sm:hidden" />
+          </div>
+        }
+        tooltop={<div class="text-sm opacity-50 hidden sm:block">click to copy</div>}
+      />
+    );
+  }
+
+  return null;
 }

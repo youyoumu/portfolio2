@@ -12,7 +12,7 @@ export default defineConfig({
     solidPlugin(),
     tailwindcss(),
     webfontDownload([
-      "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bitcount+Single:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,101;1,300;1,400;1,700;1,900&family=Yuji+Syuku&display=swap",
+      "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bitcount+Single:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,101;1,300;1,400;1,700;1,900&family=Yuji+Syuku&display=swap&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800",
     ]),
   ],
   resolve: {
