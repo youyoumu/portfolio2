@@ -69,7 +69,7 @@ export function AudioControl(props: {
             <div class="w-64 sm:w-40">
               <ScrollingText
                 trenshold={14}
-                text={props.music?.artist ?? "a"}
+                text={props.music?.title ?? "a"}
                 classNames={{
                   container: "leading-none",
                   text: cn("me-16 font-bitcount-single leading-none text-neutral-content", {
@@ -79,7 +79,7 @@ export function AudioControl(props: {
               />
               <ScrollingText
                 trenshold={21}
-                text={props.music?.title ?? "a"}
+                text={props.music?.artist ?? "a"}
                 classNames={{
                   container: "leading-none",
                   text: cn(
