@@ -1,7 +1,9 @@
+import { useGeneralContext } from "#/context/GeneralContext";
 import { env } from "#/env";
 import { useBackground } from "#/hooks/background";
 import { hidePortalDiv } from "#/lib/utils";
 import { Show } from "solid-js";
+import { createEffect } from "solid-js";
 import { Portal } from "solid-js/web";
 
 import { BlurOverlay } from "../../BlurOverlay";
@@ -9,10 +11,31 @@ import { Curtain } from "../../Curtain";
 import { DebugPanel } from "../../DebugPanel";
 import { RevealingText } from "../../RevealingText";
 import { SideNav } from "../../SideNav";
-import { Content } from "./Content";
+import { Section2 } from "./Section2";
+import { Section3 } from "./Section3";
+import { Section4 } from "./Section4";
+import { Section5 } from "./Section5";
 
-export default function RootPage() {
+export function RootPage() {
   const background = useBackground();
+  const { $sections } = useGeneralContext();
+  const tweenRestarts: Array<() => void> = [];
+
+  createEffect(() => {
+    gsap.to($sections(), {
+      scrollTrigger: {
+        snap: {
+          snapTo: 1 / 4,
+          duration: 1,
+          directional: false,
+        },
+        scrub: false,
+        onSnapComplete() {
+          tweenRestarts.forEach((f) => f());
+        },
+      },
+    });
+  });
 
   return (
     <div class="relative">
@@ -36,7 +59,27 @@ export default function RootPage() {
           <DebugPanel background={background} />
         </div>
       </Show>
-      <Content />
+      <Section1 />
+      <Section2
+        onMount={({ tweenRestart }) => {
+          tweenRestarts.push(tweenRestart);
+        }}
+      />
+      <Section3
+        onMount={({ tweenRestart }) => {
+          tweenRestarts.push(tweenRestart);
+        }}
+      />
+      <Section4
+        onMount={({ tweenRestart }) => {
+          tweenRestarts.push(tweenRestart);
+        }}
+      />
+      <Section5
+        onMount={({ tweenRestart }) => {
+          tweenRestarts.push(tweenRestart);
+        }}
+      />
       <Portal mount={document.getElementById("audio-control") ?? undefined} ref={hidePortalDiv}>
         {background.audioControl}
         <SideNav />
@@ -48,4 +91,10 @@ export default function RootPage() {
       </Portal>
     </div>
   );
+}
+
+function Section1() {
+  const { $setGeneral } = useGeneralContext();
+
+  return <div ref={(el) => $setGeneral("section1", el)} class="h-lvh w-full"></div>;
 }

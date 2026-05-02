@@ -1,4 +1,4 @@
-import RootPage from "#/components/pages/root/RootPage";
+import { RootPage } from "#/components/pages/root";
 import { createFileRoute } from "@tanstack/solid-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
