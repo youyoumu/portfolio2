@@ -2,8 +2,8 @@ import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { scrollingChars } from "#/lib/gsap";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
-import { getRouteApi } from "@tanstack/solid-router";
-import { createSignal, onMount } from "solid-js";
+import { useSearch } from "@tanstack/solid-router";
+import { createMemo, createSignal, onMount } from "solid-js";
 
 import { DiscordIcon, GithubIcon } from "../../svgs";
 import { ZagTooltip } from "../../ZagTooltip";
@@ -12,13 +12,11 @@ export function Section5(props: {
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
   const { $setGeneral } = useGeneralContext();
-  const routeApi = getRouteApi("/");
-  const { yym } = routeApi.useSearch()();
-  const realName = () => yym === 0;
-  const email = () => (realName() ? "donnylaukimleng@outlook.com" : "youyoumu2024@proton.me");
+  const search = useSearch({ from: "/" });
+  const email = createMemo(() =>
+    search().yym === 0 ? "donnylaukimleng@outlook.com" : "youyoumu2024@proton.me",
+  );
   const isMobile = useIsMobile();
-
-  const tooltip = <div class="text-sm opacity-50 hidden sm:block">click to copy</div>;
 
   function attachScramble(el: HTMLElement) {
     const original = el.textContent || "";
@@ -114,7 +112,7 @@ export function Section5(props: {
               <IconCopy class="size-4 opacity-50 sm:hidden" />
             </div>
           }
-          tooltop={tooltip}
+          tooltop={CopyTooltip()}
         />
         <ZagTooltip
           trigger={
@@ -131,7 +129,7 @@ export function Section5(props: {
               <IconCopy class="size-4 opacity-50 sm:hidden" />
             </div>
           }
-          tooltop={tooltip}
+          tooltop={CopyTooltip()}
         />
       </div>
 
@@ -161,4 +159,8 @@ function Heading(props: { ref: (el: HTMLDivElement) => void }) {
       CONTACT
     </div>
   );
+}
+
+function CopyTooltip() {
+  return <div class="text-sm opacity-50 hidden sm:block">click to copy</div>;
 }
