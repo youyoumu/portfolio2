@@ -6,6 +6,9 @@ import { musicList } from "./vars";
 const DEBUG = false;
 const DEFAULT_FADE_DURATION = 500;
 const LOW_FREQ_BINS = 64;
+const LOW_FREQ_START = 100;
+const LOW_FREQ_END = 108;
+const MIN_BAR_HEIGHT = 2;
 
 export class Visualizer {
   static audioBufferCache = new Map<string, AudioBuffer>();
@@ -290,6 +293,7 @@ export class Visualizer {
   }
 
   #listenRafId: number = 0;
+  #renderRafId: number = 0;
   private listen = () => {
     const { bpm, firstBeatOffset, lowFreqStart, lowFreqEnd } = musicList[this.music];
     const { width, height } = this.canvas;
@@ -323,20 +327,49 @@ export class Visualizer {
         this.canvasContext.fillRect(x, height - barHeight, barWidth - 2, barHeight);
       }
     } else {
-      const lowFreqStart = 100;
-      const lowFreqEnd = 108;
-      const lowFreqWidth = lowFreqEnd - lowFreqStart;
+      const lowFreqWidth = LOW_FREQ_END - LOW_FREQ_START;
       const barWidth = width / lowFreqWidth;
       this.canvasContext.fillStyle = this.barColor;
 
-      for (let i = lowFreqStart; i < lowFreqEnd; i++) {
+      for (let i = LOW_FREQ_START; i < LOW_FREQ_END; i++) {
         const value = this.freqData[i];
-        const barHeight = (value / 255) * height;
-        const x = (i - lowFreqStart) * barWidth;
+        const barHeight = clamp((value / 255) * height, MIN_BAR_HEIGHT, height);
+        const x = (i - LOW_FREQ_START) * barWidth;
         this.canvasContext.fillRect(x, height - barHeight, barWidth - 0.5, barHeight);
       }
     }
 
     this.#listenRafId = requestAnimationFrame(this.listen);
   };
+
+  private renderIdle = () => {
+    const { width, height } = this.canvas;
+    const lowFreqWidth = LOW_FREQ_END - LOW_FREQ_START;
+    const barWidth = width / lowFreqWidth;
+
+    this.canvasContext.clearRect(0, 0, width, height);
+    this.canvasContext.fillStyle = this.barColor;
+
+    for (let i = LOW_FREQ_START; i < LOW_FREQ_END; i++) {
+      const x = (i - LOW_FREQ_START) * barWidth;
+      this.canvasContext.fillRect(x, height - MIN_BAR_HEIGHT, barWidth - 0.5, MIN_BAR_HEIGHT);
+    }
+
+    this.#renderRafId = requestAnimationFrame(this.renderIdle);
+  };
+
+  startIdleRender() {
+    if (this.#renderRafId === 0) {
+      this.renderIdle();
+    }
+  }
+
+  stopIdleRender() {
+    if (this.#renderRafId !== 0) {
+      cancelAnimationFrame(this.#renderRafId);
+      this.#renderRafId = 0;
+      const { width, height } = this.canvas;
+      this.canvasContext.clearRect(0, 0, width, height);
+    }
+  }
 }

@@ -47,6 +47,7 @@ export function useBackground() {
       gameOfLife.next();
     },
     onStart: ({ resume, bpm }) => {
+      visualizer.stopIdleRender();
       setPlaying(true);
       if (visualizer.music === "bad-apple-ft-sekai") {
         lyrics.startSync(() => visualizer.getTime());
@@ -74,6 +75,7 @@ export function useBackground() {
         gameOfLife.injectionMask.fill(0);
         setPlaying(false);
       }
+      visualizer.startIdleRender();
 
       if (visualizer.music === "bad-apple-ft-sekai") {
         lyrics.stopSync();
@@ -105,6 +107,7 @@ export function useBackground() {
   });
 
   onMount(() => {
+    visualizer.startIdleRender();
     let lastWidth = window.innerWidth;
     let lastHeight = window.innerHeight;
 
@@ -129,7 +132,10 @@ export function useBackground() {
 
     resize();
     window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+    return () => {
+      window.removeEventListener("resize", resize);
+      visualizer.stopIdleRender();
+    };
   });
 
   const progress = () => {
