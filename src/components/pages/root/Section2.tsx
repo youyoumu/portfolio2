@@ -1,3 +1,4 @@
+import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { scrollingChars } from "#/lib/gsap";
 import { getRouteApi } from "@tanstack/solid-router";
@@ -6,9 +7,9 @@ import { createSignal, onCleanup, onMount } from "solid-js";
 import { DockerIcon, NeovimIcon, NixIcon, ReactIcon, TypescriptIcon } from "../../svgs";
 
 export function Section2(props: {
-  ref: HTMLDivElement;
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
+  const [, setStore] = useGeneralContext();
   const iconsRef: HTMLDivElement[] = [];
   const textsRef: HTMLDivElement[] = [];
   const routeApi = getRouteApi("/");
@@ -177,7 +178,7 @@ export function Section2(props: {
 
   return (
     <div
-      ref={props.ref}
+      ref={(el) => setStore("section2", el)}
       class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative"
     >
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">

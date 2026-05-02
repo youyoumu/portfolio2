@@ -1,3 +1,4 @@
+import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { cn } from "#/lib/utils";
 import { createEffect, createSignal, onMount } from "solid-js";
@@ -6,7 +7,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 const headings: string[] = ["GAME OF LIFE", "ESSENCE", "WORKS", "ENVIRONMENT", "CONTACT"];
 
-export function SideNav(props: { sections: HTMLDivElement[] | undefined }) {
+export function SideNav() {
+  const [store] = useGeneralContext();
   const [activeIndex, setActiveIndex] = createSignal(0);
   const [hoveredIndex, setHoveredIndex] = createSignal<number | null>(null);
   const headingRefs: HTMLDivElement[] = [];
@@ -14,9 +16,15 @@ export function SideNav(props: { sections: HTMLDivElement[] | undefined }) {
 
   const headingTweens: gsap.core.Tween[] = [];
   onMount(() => {
-    if (!props.sections) return;
+    const sections = [
+      store.section1,
+      store.section2,
+      store.section3,
+      store.section4,
+      store.section5,
+    ];
 
-    props.sections.forEach((section, i) => {
+    sections.forEach((section, i) => {
       ScrollTrigger.create({
         trigger: section,
         start: "top center", // when section reaches center of viewport
@@ -75,7 +83,9 @@ export function SideNav(props: { sections: HTMLDivElement[] | undefined }) {
         },
       )}
     >
-      {props.sections?.map((_, i) => (
+      {(
+        [store.section1, store.section2, store.section3, store.section4, store.section5] as const
+      ).map((section, i) => (
         <button
           class={cn("h-3 duration-300 relative", {
             "py-3": activeIndex() === i,
@@ -83,7 +93,7 @@ export function SideNav(props: { sections: HTMLDivElement[] | undefined }) {
           })}
           onClick={() => {
             if (activeIndex() === 0) return;
-            gsap.to(window, { duration: 1, scrollTo: props.sections?.[i] });
+            gsap.to(window, { duration: 1, scrollTo: section });
           }}
           onMouseEnter={() => setHoveredIndex(i)}
           onMouseLeave={() => setHoveredIndex(null)}

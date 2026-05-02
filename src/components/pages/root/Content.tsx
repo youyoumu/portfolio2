@@ -1,21 +1,22 @@
-import { onMount } from "solid-js";
+import { useGeneralContext } from "#/context/GeneralContext";
+import { createEffect } from "solid-js";
 
 import { Section2 } from "./Section2";
 import { Section3 } from "./Section3";
 import { Section4 } from "./Section4";
 import { Section5 } from "./Section5";
 
-export function Content(props: {
-  onMount?: ({ sections }: { sections: HTMLDivElement[] }) => void;
-}) {
-  const sections: HTMLDivElement[] = [];
+export function Content() {
+  const [store, setStore] = useGeneralContext();
   const tweenRestarts: Array<() => void> = [];
 
-  onMount(() => {
-    gsap.to(sections, {
+  createEffect(() => {
+    if (!store.section1) return;
+
+    gsap.to([store.section1, store.section2, store.section3, store.section4, store.section5], {
       scrollTrigger: {
         snap: {
-          snapTo: 1 / (sections.length - 1),
+          snapTo: 1 / 4,
           duration: 1,
           directional: false,
         },
@@ -25,35 +26,27 @@ export function Content(props: {
         },
       },
     });
-
-    props.onMount?.({
-      sections,
-    });
   });
 
   return (
     <>
-      <div ref={sections[0]} class="h-lvh w-full"></div>
+      <div ref={(el) => setStore("section1", el)} class="h-lvh w-full"></div>
       <Section2
-        ref={sections[1]}
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);
         }}
       />
       <Section3
-        ref={sections[2]}
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);
         }}
       />
       <Section4
-        ref={sections[3]}
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);
         }}
       />
       <Section5
-        ref={sections[4]}
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);
         }}

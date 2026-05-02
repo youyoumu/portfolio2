@@ -1,3 +1,4 @@
+import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { scrollingChars } from "#/lib/gsap";
 import { cn } from "#/lib/utils";
@@ -64,9 +65,9 @@ const markers: Marker[] = [
 ];
 
 export function Section4(props: {
-  ref: HTMLDivElement;
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
+  const [, setStore] = useGeneralContext();
   const [containerRef, setContainerRef] = createSignal<HTMLDivElement>();
   const [x, setX] = createSignal(50);
   const [y, setY] = createSignal(50);
@@ -192,7 +193,7 @@ export function Section4(props: {
 
   return (
     <div
-      ref={props.ref}
+      ref={(el) => setStore("section4", el)}
       class="h-lvh w-full bg-black/10 flex flex-col justify-center items-center p-2 md:pb-36 sm:p-8 relative"
     >
       <div class="relative">

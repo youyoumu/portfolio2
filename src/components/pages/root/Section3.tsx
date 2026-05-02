@@ -1,3 +1,4 @@
+import { useGeneralContext } from "#/context/GeneralContext";
 import { scrollingChars } from "#/lib/gsap";
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-solidjs";
 import { createSignal, For, onMount } from "solid-js";
@@ -38,9 +39,9 @@ const clientProjects = [
 ];
 
 export function Section3(props: {
-  ref: HTMLDivElement;
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
+  const [, setStore] = useGeneralContext();
   const [heading1, setHeading1] = createSignal<HTMLDivElement>();
   const [heading2, setHeading2] = createSignal<HTMLDivElement>();
   const showUpElements: HTMLElement[] = [];
@@ -128,7 +129,7 @@ export function Section3(props: {
 
   return (
     <div
-      ref={props.ref}
+      ref={(el) => setStore("section3", el)}
       class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
     >
       <Heading ref={setHeading1} />

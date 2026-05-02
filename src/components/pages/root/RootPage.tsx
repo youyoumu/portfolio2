@@ -1,7 +1,7 @@
 import { env } from "#/env";
 import { useBackground } from "#/hooks/background";
 import { hidePortalDiv } from "#/lib/utils";
-import { createSignal, Show } from "solid-js";
+import { Show } from "solid-js";
 import { Portal } from "solid-js/web";
 
 import { BlurOverlay } from "../../BlurOverlay";
@@ -13,7 +13,6 @@ import { Content } from "./Content";
 
 export default function RootPage() {
   const background = useBackground();
-  const [sections, setSections] = createSignal<HTMLDivElement[]>();
 
   return (
     <div class="relative">
@@ -37,14 +36,10 @@ export default function RootPage() {
           <DebugPanel background={background} />
         </div>
       </Show>
-      <Content
-        onMount={({ sections: s }) => {
-          setSections(s);
-        }}
-      />
+      <Content />
       <Portal mount={document.getElementById("audio-control") ?? undefined} ref={hidePortalDiv}>
         {background.audioControl}
-        <SideNav sections={sections()} />
+        <SideNav />
       </Portal>
       <Portal mount={document.getElementById("curtain") ?? undefined} ref={hidePortalDiv}>
         <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full pointer-events-none">
