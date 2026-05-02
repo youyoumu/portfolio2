@@ -23,13 +23,11 @@ type TextRefs = {
   "3": HTMLDivElement | undefined;
 };
 
-export function Section2(props: {
-  onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
-}) {
+export function Section2() {
   const search = useSearch({ from: "/" });
   const name = createMemo(() => (search().yym === 0 ? "DONNY LAU KIM LENG" : "youyoumu"));
 
-  const { $setGeneral } = useGeneralContext();
+  const { $setGeneral, onSnapCompletes } = useGeneralContext();
   const [$iconRef, $setIconRef] = createStore<IconRefs>({
     "0": undefined,
     "1": undefined,
@@ -175,9 +173,7 @@ export function Section2(props: {
     });
 
     const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
-    props.onMount?.({
-      tweenRestart,
-    });
+    onSnapCompletes.add(tweenRestart);
   });
 
   onCleanup(() => {

@@ -18,8 +18,7 @@ import { Section5 } from "./Section5";
 
 export function RootPage() {
   const background = useBackground();
-  const { $sections } = useGeneralContext();
-  const tweenRestarts: Array<() => void> = [];
+  const { $sections, onSnapCompletes } = useGeneralContext();
 
   createEffect(() => {
     gsap.to($sections(), {
@@ -31,7 +30,7 @@ export function RootPage() {
         },
         scrub: false,
         onSnapComplete() {
-          tweenRestarts.forEach((f) => f());
+          onSnapCompletes.forEach((f) => f());
         },
       },
     });
@@ -60,26 +59,10 @@ export function RootPage() {
         </div>
       </Show>
       <Section1 />
-      <Section2
-        onMount={({ tweenRestart }) => {
-          tweenRestarts.push(tweenRestart);
-        }}
-      />
-      <Section3
-        onMount={({ tweenRestart }) => {
-          tweenRestarts.push(tweenRestart);
-        }}
-      />
-      <Section4
-        onMount={({ tweenRestart }) => {
-          tweenRestarts.push(tweenRestart);
-        }}
-      />
-      <Section5
-        onMount={({ tweenRestart }) => {
-          tweenRestarts.push(tweenRestart);
-        }}
-      />
+      <Section2 />
+      <Section3 />
+      <Section4 />
+      <Section5 />
       <Portal mount={document.getElementById("audio-control") ?? undefined} ref={hidePortalDiv}>
         {background.audioControl}
         <SideNav />

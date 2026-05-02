@@ -64,10 +64,8 @@ const markers: Marker[] = [
   },
 ];
 
-export function Section4(props: {
-  onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
-}) {
-  const { $setGeneral } = useGeneralContext();
+export function Section4() {
+  const { $setGeneral, onSnapCompletes } = useGeneralContext();
   const [containerRef, setContainerRef] = createSignal<HTMLDivElement>();
   const [x, setX] = createSignal(50);
   const [y, setY] = createSignal(50);
@@ -172,9 +170,7 @@ export function Section4(props: {
     });
 
     const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
-    props.onMount?.({
-      tweenRestart,
-    });
+    onSnapCompletes.add(tweenRestart);
   });
 
   return (

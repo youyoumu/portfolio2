@@ -8,10 +8,8 @@ import { createMemo, createSignal, onMount } from "solid-js";
 import { DiscordIcon, GithubIcon } from "../../svgs";
 import { ZagTooltip } from "../../ZagTooltip";
 
-export function Section5(props: {
-  onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
-}) {
-  const { $setGeneral } = useGeneralContext();
+export function Section5() {
+  const { $setGeneral, onSnapCompletes } = useGeneralContext();
   const search = useSearch({ from: "/" });
   const email = createMemo(() =>
     search().yym === 0 ? "donnylaukimleng@outlook.com" : "youyoumu2024@proton.me",
@@ -62,9 +60,7 @@ export function Section5(props: {
     });
 
     const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
-    props.onMount?.({
-      tweenRestart,
-    });
+    onSnapCompletes.add(tweenRestart);
 
     if (!isMobile()) {
       const refs = [gh, dc, em].filter((r): r is HTMLSpanElement => !!r);

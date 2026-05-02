@@ -16,6 +16,7 @@ export const GeneralContext = createContext<{
   $general: GeneralStore;
   $setGeneral: SetStoreFunction<GeneralStore>;
   $sections: Accessor<(HTMLDivElement | undefined)[]>;
+  onSnapCompletes: Set<() => void>;
 }>();
 
 export function useGeneralContext() {
@@ -50,6 +51,7 @@ export function GeneralProvider(props: { children: JSX.Element }) {
         $general,
         $setGeneral,
         $sections,
+        onSnapCompletes: new Set(),
       }}
     >
       {props.children}

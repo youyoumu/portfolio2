@@ -7,10 +7,8 @@ import { createStore } from "solid-js/store";
 type ShowUpElements = Record<string, HTMLElement | undefined>;
 type SlideSideElements = Record<string, HTMLElement | undefined>;
 
-export function Section3(props: {
-  onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
-}) {
-  const { $setGeneral } = useGeneralContext();
+export function Section3() {
+  const { $setGeneral, onSnapCompletes } = useGeneralContext();
   const [heading1, setHeading1] = createSignal<HTMLDivElement>();
   const [heading2, setHeading2] = createSignal<HTMLDivElement>();
   const [$showUpElements, $setShowUpElements] = createStore<ShowUpElements>({});
@@ -41,9 +39,7 @@ export function Section3(props: {
     });
 
     const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
-    props.onMount?.({
-      tweenRestart,
-    });
+    onSnapCompletes.add(tweenRestart);
 
     SplitText.create($showUpElementRefs(), {
       type: "words,lines",
@@ -218,4 +214,3 @@ function Heading(props: { ref: (el: HTMLDivElement) => void }) {
     </div>
   );
 }
-
