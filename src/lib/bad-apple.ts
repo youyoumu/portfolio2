@@ -1,7 +1,7 @@
 import type { GameOfLife } from "./game-of-life";
 
-const src = "/bad-apple-pixel-frame.bin.gz";
 const binMetadata = {
+  src: "/bad-apple-pixel-frame.bin.gz",
   width: 128,
   height: 96,
   threshold: 127,
@@ -13,19 +13,16 @@ const binMetadata = {
 };
 
 export class BadApple {
-  src: string;
   data: Uint8Array = new Uint8Array();
   width = binMetadata.width;
   height = binMetadata.height;
   bytesPerFrame = (this.width * this.height) / 8;
   frameCount = binMetadata.frames;
   frameIndex = 0;
-  fps = binMetadata.fps;
   intervalId: ReturnType<typeof setInterval> | null = null;
   game: GameOfLife;
 
   constructor({ game }: { game: GameOfLife }) {
-    this.src = src;
     this.game = game;
     this.load().catch((e) => {
       console.error(e);
@@ -33,7 +30,7 @@ export class BadApple {
   }
 
   async load(): Promise<void> {
-    const res = await fetch(this.src);
+    const res = await fetch(binMetadata.src);
     this.data = new Uint8Array(await res.arrayBuffer());
   }
 
@@ -59,12 +56,12 @@ export class BadApple {
       return;
     }
     const frameIndex = _frameIndex ?? this.frameIndex;
-    const _game = this.game;
+    const game = this.game;
     const packed = this.getFrame(frameIndex % this.frameCount);
     const unpacked = this.unpackFrame(packed);
 
-    const targetWidth = _game.width;
-    const targetHeight = _game.height;
+    const targetWidth = game.width;
+    const targetHeight = game.height;
 
     const srcAspect = this.width / this.height;
     const targetAspect = targetWidth / targetHeight;
@@ -81,7 +78,7 @@ export class BadApple {
     const offsetX = Math.floor((targetWidth - scaledWidth) / 2);
     const offsetY = Math.floor((targetHeight - scaledHeight) / 2);
 
-    _game.injectionMask.fill(0);
+    game.injectionMask.fill(0);
     for (let y = 0; y < scaledHeight; y++) {
       for (let x = 0; x < scaledWidth; x++) {
         const srcX = Math.floor((x / scaledWidth) * this.width);
@@ -89,15 +86,15 @@ export class BadApple {
         const dstX = x + offsetX;
         const dstY = y + offsetY;
 
-        const i = dstY * _game.width + dstX;
-        _game.grid[i] = unpacked[srcY * this.width + srcX];
-        _game.injectionMask[i] = 1;
+        const i = dstY * game.width + dstX;
+        game.grid[i] = unpacked[srcY * this.width + srcX];
+        game.injectionMask[i] = 1;
       }
     }
   }
 
   onSeek({ target }: { target: number }) {
-    const newFrameIndex = Math.floor(target * this.fps);
+    const newFrameIndex = Math.floor(target * binMetadata.fps);
     this.frameIndex = Math.max(0, Math.min(this.frameCount - 1, newFrameIndex));
   }
 
@@ -110,7 +107,7 @@ export class BadApple {
         return;
       }
       this.injectFrameIntoGame();
-    }, 1000 / this.fps);
+    }, 1000 / binMetadata.fps);
   }
 
   stop(pause = false): void {
