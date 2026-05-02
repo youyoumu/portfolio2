@@ -1,5 +1,5 @@
 import { SimplexNoise } from "./noise";
-import { getDynamicViewportDelta, isMobile } from "./utils";
+import { getDynamicViewportDelta } from "./utils";
 
 const TWO_PI = Math.PI * 2;
 
@@ -87,8 +87,8 @@ export class GameOfLife {
     }
   }
 
-  static getGameOfLifeSize(multiplier = 1) {
-    const cellSize = (isMobile() ? 10 : 20) * multiplier;
+  static getGameOfLifeSize(multiplier = 1, isMobile: boolean) {
+    const cellSize = (isMobile ? 10 : 20) * multiplier;
     const width = Math.floor((window.innerWidth + cellSize) / cellSize);
     const height = Math.floor(
       (window.innerHeight + cellSize + getDynamicViewportDelta()) / cellSize,

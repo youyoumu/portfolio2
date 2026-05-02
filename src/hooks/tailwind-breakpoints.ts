@@ -1,4 +1,5 @@
 import { createBreakpoints } from "@solid-primitives/media";
+import { createMemo } from "solid-js";
 
 const breakpoints = {
   sm: "640px",
@@ -13,5 +14,5 @@ export function useTailwindBreakpoints() {
 }
 export function useIsMobile() {
   const bp = useTailwindBreakpoints();
-  return () => !bp.sm;
+  return createMemo(() => !bp.sm);
 }

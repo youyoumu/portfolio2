@@ -1,4 +1,4 @@
-import { useTailwindBreakpoints } from "#/hooks";
+import { useIsMobile } from "#/hooks";
 import { cn } from "#/lib/utils";
 import {
   IconExternalLink,
@@ -9,7 +9,7 @@ import {
   IconVolume,
   IconVolume3,
 } from "@tabler/icons-solidjs";
-import { createMemo, createSignal, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 
 import { ScrollingText } from "./ScrollingText";
 import { ZagSlider } from "./ZagSlider";
@@ -36,9 +36,7 @@ export function AudioControl(props: {
 }) {
   const [previousPercentage, setPreviousPercentage] = createSignal(0);
   const percentage = () => (props.volume / MAX_VOLUME) * 100;
-  const matches = useTailwindBreakpoints();
-
-  const isMobile = createMemo(() => !matches.sm);
+  const isMobile = useIsMobile();
 
   const ProgressBar = () => (
     <div class="flex items-center gap-4">

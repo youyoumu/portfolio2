@@ -1,5 +1,5 @@
+import { useIsMobile } from "#/hooks";
 import { scrollingChars } from "#/lib/gsap";
-import { isMobile } from "#/lib/utils";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { getRouteApi } from "@tanstack/solid-router";
 import { createSignal, onMount } from "solid-js";
@@ -15,6 +15,7 @@ export function Section5(props: {
   const { yym } = routeApi.useSearch()();
   const realName = () => yym === 0;
   const email = () => (realName() ? "donnylaukimleng@outlook.com" : "youyoumu2024@proton.me");
+  const isMobile = useIsMobile();
 
   const tooltip = <div class="text-sm opacity-50 hidden sm:block">click to copy</div>;
 

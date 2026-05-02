@@ -1,9 +1,13 @@
+import { useIsMobile } from "#/hooks";
 import { GameOfLife } from "#/lib/game-of-life";
-import { isMobile } from "#/lib/utils";
 import { onMount } from "solid-js";
 
 export function Curtain() {
-  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(isMobile() ? 1.5 : 2.0);
+  const isMobile = useIsMobile();
+  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(
+    isMobile() ? 1.5 : 2.0,
+    isMobile(),
+  );
   const gameOfLife = new GameOfLife({
     width,
     height,

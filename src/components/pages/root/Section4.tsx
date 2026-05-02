@@ -1,5 +1,6 @@
+import { useIsMobile } from "#/hooks";
 import { scrollingChars } from "#/lib/gsap";
-import { cn, isMobile } from "#/lib/utils";
+import { cn } from "#/lib/utils";
 import { IconZoom } from "@tabler/icons-solidjs";
 import { createSignal, type JSX, onMount } from "solid-js";
 
@@ -73,6 +74,7 @@ export function Section4(props: {
   const [touching, setTouching] = createSignal(false);
   const [hoveredMarker, setHoveredMarker] = createSignal<number | null>(null);
   const [showMarker, setShowMarker] = createSignal(false);
+  const isMobile = useIsMobile();
 
   function toggleZoom() {
     if (zoom() === 1) {

@@ -1,4 +1,5 @@
-import { cn, isMobile } from "#/lib/utils";
+import { useIsMobile } from "#/hooks";
+import { cn } from "#/lib/utils";
 import { createEffect, createSignal, onMount } from "solid-js";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -9,6 +10,7 @@ export function SideNav(props: { sections: HTMLDivElement[] | undefined }) {
   const [activeIndex, setActiveIndex] = createSignal(0);
   const [hoveredIndex, setHoveredIndex] = createSignal<number | null>(null);
   const headingRefs: HTMLDivElement[] = [];
+  const isMobile = useIsMobile();
 
   const headingTweens: gsap.core.Tween[] = [];
   onMount(() => {

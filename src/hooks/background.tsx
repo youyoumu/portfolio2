@@ -3,11 +3,13 @@ import { useGeneralContext } from "#/context/GeneralContext";
 import { BadApple } from "#/lib/bad-apple";
 import { GameOfLife } from "#/lib/game-of-life";
 import { Lyrics } from "#/lib/lyrics";
-import { getDynamicViewportDelta, isMobile } from "#/lib/utils";
+import { getDynamicViewportDelta } from "#/lib/utils";
 import { badAppleLyrics } from "#/lib/vars";
 import { Visualizer } from "#/lib/visualizer";
 import { debounce } from "@solid-primitives/scheduled";
 import { createSignal, onMount } from "solid-js";
+
+import { useIsMobile } from "./tailwind-breakpoints";
 
 const MAX_VOLUME = 0.3;
 
@@ -20,8 +22,9 @@ function formatTime(seconds: number): string {
 export function useBackground() {
   const [, setStore] = useGeneralContext();
   const [playing, setPlaying] = createSignal(false);
+  const isMobile = useIsMobile();
 
-  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize();
+  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(1, isMobile());
   const gameOfLife = new GameOfLife({
     width,
     height,
@@ -119,7 +122,7 @@ export function useBackground() {
       if (shouldResize) {
         lastWidth = newWidth;
         lastHeight = newHeight;
-        const { cellSize, width, height } = GameOfLife.getGameOfLifeSize();
+        const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(1, isMobile());
         gameOfLife.resize(width, height, cellSize);
       }
     }, 250);

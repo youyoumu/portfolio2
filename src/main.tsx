@@ -3,8 +3,8 @@ import { createRouter, RouterProvider } from "@tanstack/solid-router";
 import { render } from "solid-js/web";
 
 import { GeneralProvider } from "./context/GeneralContext";
+import { useIsMobile } from "./hooks";
 import { init } from "./lib/gsap";
-import { isMobile } from "./lib/utils";
 import { routeTree } from "./routeTree.gen";
 
 init();
@@ -22,23 +22,26 @@ declare module "@tanstack/solid-router" {
   }
 }
 
-const rootElement = document.getElementById("app");
-if (rootElement) {
-  render(
-    () => (
-      <GeneralProvider>
-        <RouterProvider router={router} />
-      </GeneralProvider>
-    ),
-    rootElement,
+function App() {
+  const isMobile = useIsMobile();
+
+  if (!isMobile()) {
+    ScrollSmoother.create({
+      content: rootElement,
+      smooth: 1, // how long (in seconds) it takes to "catch up" to the native scroll position
+      effects: true, // looks for data-speed and data-lag attributes on elements
+      smoothTouch: 0.1, // much shorter smoothing time on touch devices (default is NO smoothing on touch devices)
+    });
+  }
+
+  return (
+    <GeneralProvider>
+      <RouterProvider router={router} />
+    </GeneralProvider>
   );
 }
 
-if (!isMobile()) {
-  ScrollSmoother.create({
-    content: rootElement,
-    smooth: 1, // how long (in seconds) it takes to "catch up" to the native scroll position
-    effects: true, // looks for data-speed and data-lag attributes on elements
-    smoothTouch: 0.1, // much shorter smoothing time on touch devices (default is NO smoothing on touch devices)
-  });
+const rootElement = document.getElementById("app");
+if (rootElement) {
+  render(App, rootElement);
 }

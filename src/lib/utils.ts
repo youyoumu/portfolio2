@@ -12,10 +12,6 @@ export function getDynamicViewportDelta() {
 
 export const hidePortalDiv: (x: HTMLElement) => void = (x) => (x.style.display = "contents");
 
-export function isMobile() {
-  return window.innerWidth < 640;
-}
-
 export function createObjSignal<T>(initialValue: T) {
   const [get, set] = createSignal(initialValue);
   return {

@@ -1,5 +1,5 @@
+import { useIsMobile } from "#/hooks";
 import { scrollingChars } from "#/lib/gsap";
-import { isMobile } from "#/lib/utils";
 import { getRouteApi } from "@tanstack/solid-router";
 import { createSignal, onCleanup, onMount } from "solid-js";
 
@@ -14,6 +14,7 @@ export function Section2(props: {
   const routeApi = getRouteApi("/");
   const { yym } = routeApi.useSearch()();
   const realName = () => yym === 0;
+  const isMobile = useIsMobile();
 
   const iconColor = getComputedStyle(document.documentElement)
     .getPropertyValue("--color-neutral-content")
