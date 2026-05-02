@@ -5,6 +5,8 @@ import { cn } from "#/lib/utils";
 import { IconZoom } from "@tabler/icons-solidjs";
 import { createSignal, type JSX, onMount } from "solid-js";
 
+import { Heading } from "../../Heading";
+
 type Marker = {
   x: number; // % position
   y: number;
@@ -298,22 +300,20 @@ export function Section4() {
         </div>
       </div>
 
-      <Heading ref={setHeading1} />
-      <Heading ref={setHeading2} />
-    </div>
-  );
-}
-
-function Heading(props: { ref: (el: HTMLDivElement) => void }) {
-  return (
-    <div
-      ref={props.ref}
-      class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
-      style={{
-        transform: "translateY(-110%)",
-      }}
-    >
-      ENVIRONMENT
+      <Heading
+        ref={setHeading1}
+        style={{ transform: "translateY(-110%)" }}
+        class="bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 left-10/100"
+      >
+        ENVIRONMENT
+      </Heading>
+      <Heading
+        ref={setHeading2}
+        style={{ transform: "translateY(-110%)" }}
+        class="bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 left-10/100"
+      >
+        ENVIRONMENT
+      </Heading>
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { IconBrandGithub, IconExternalLink } from "@tabler/icons-solidjs";
 import { createMemo, createSignal, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 
+import { Heading } from "../../Heading";
+
 type ShowUpElements = Record<string, HTMLElement | undefined>;
 type SlideSideElements = Record<string, HTMLElement | undefined>;
 
@@ -84,8 +86,20 @@ export function Section3() {
       ref={(el) => $setGeneral("section3", el)}
       class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
     >
-      <Heading ref={setHeading1} />
-      <Heading ref={setHeading2} />
+      <Heading
+        ref={setHeading1}
+        style={{ transform: "translateY(-100%)" }}
+        class="top-10/100 left-10/100"
+      >
+        WORKS
+      </Heading>
+      <Heading
+        ref={setHeading2}
+        style={{ transform: "translateY(-100%)" }}
+        class="top-10/100 left-10/100"
+      >
+        WORKS
+      </Heading>
       <div class="text-neutral-content flex flex-col">
         <div>
           <h2 ref={(el) => $setShowUpElements("1", el)} class="text-2xl font-bold">
@@ -198,19 +212,5 @@ function ProjectItem(props: {
         )}
       </div>
     </li>
-  );
-}
-
-function Heading(props: { ref: (el: HTMLDivElement) => void }) {
-  return (
-    <div
-      ref={props.ref}
-      class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute top-10/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
-      style={{
-        transform: "translateY(-100%)",
-      }}
-    >
-      WORKS
-    </div>
   );
 }
