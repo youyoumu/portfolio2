@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const headings: string[] = ["GAME OF LIFE", "ESSENCE", "WORKS", "ENVIRONMENT", "CONTACT"];
 
 export function SideNav() {
-  const [store] = useGeneralContext();
+  const { $general } = useGeneralContext();
   const [activeIndex, setActiveIndex] = createSignal(0);
   const [hoveredIndex, setHoveredIndex] = createSignal<number | null>(null);
   const headingRefs: HTMLDivElement[] = [];
@@ -17,11 +17,11 @@ export function SideNav() {
   const headingTweens: gsap.core.Tween[] = [];
   onMount(() => {
     const sections = [
-      store.section1,
-      store.section2,
-      store.section3,
-      store.section4,
-      store.section5,
+      $general.section1,
+      $general.section2,
+      $general.section3,
+      $general.section4,
+      $general.section5,
     ];
 
     sections.forEach((section, i) => {
@@ -84,7 +84,13 @@ export function SideNav() {
       )}
     >
       {(
-        [store.section1, store.section2, store.section3, store.section4, store.section5] as const
+        [
+          $general.section1,
+          $general.section2,
+          $general.section3,
+          $general.section4,
+          $general.section5,
+        ] as const
       ).map((section, i) => (
         <button
           class={cn("h-3 duration-300 relative", {

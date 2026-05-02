@@ -9,7 +9,7 @@ import { DockerIcon, NeovimIcon, NixIcon, ReactIcon, TypescriptIcon } from "../.
 export function Section2(props: {
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
-  const [, setStore] = useGeneralContext();
+  const { $setGeneral } = useGeneralContext();
   const iconsRef: HTMLDivElement[] = [];
   const textsRef: HTMLDivElement[] = [];
   const routeApi = getRouteApi("/");
@@ -178,7 +178,7 @@ export function Section2(props: {
 
   return (
     <div
-      ref={(el) => setStore("section2", el)}
+      ref={(el) => $setGeneral("section2", el)}
       class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative"
     >
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">

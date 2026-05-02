@@ -2,7 +2,7 @@ import { useGeneralContext } from "#/context/GeneralContext";
 import { createSignal, onMount } from "solid-js";
 
 export function RevealingText() {
-  const [store] = useGeneralContext();
+  const { $general } = useGeneralContext();
   const [wipe, setWipe] = createSignal<HTMLDivElement>();
   const [text, setText] = createSignal<HTMLDivElement>();
 
@@ -21,7 +21,7 @@ export function RevealingText() {
       })
       .to(wipeEl, { scaleX: 0, transformOrigin: "right center" })
       .add(() => {
-        if (store.musicPlayed) {
+        if ($general.musicPlayed) {
           hide({ delay: 0 });
         } else {
           setTimeout(() => {
@@ -39,7 +39,7 @@ export function RevealingText() {
   let hideTriggered = false;
   function hide({ delay = 2000 } = {}) {
     if (hideTriggered) return;
-    if (window.scrollY > 0 && !store.musicPlayed) return;
+    if (window.scrollY > 0 && !$general.musicPlayed) return;
     hideTriggered = true;
 
     const wipeEl = wipe();
@@ -67,7 +67,7 @@ export function RevealingText() {
 
   onMount(() => {
     setTimeout(() => {
-      if (store.musicPlayed) return;
+      if ($general.musicPlayed) return;
       show();
     }, 5000);
   });

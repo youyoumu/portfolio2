@@ -3,7 +3,7 @@ import type { SetStoreFunction } from "solid-js/store";
 import { createContext, useContext, type JSX } from "solid-js";
 import { createStore } from "solid-js/store";
 
-type Store = {
+type GeneralStore = {
   musicPlayed: boolean;
   section1: HTMLDivElement | undefined;
   section2: HTMLDivElement | undefined;
@@ -12,7 +12,10 @@ type Store = {
   section5: HTMLDivElement | undefined;
 };
 
-export const GeneralContext = createContext<[Store, SetStoreFunction<Store>]>();
+export const GeneralContext = createContext<{
+  $general: GeneralStore;
+  $setGeneral: SetStoreFunction<GeneralStore>;
+}>();
 
 export function useGeneralContext() {
   const context = useContext(GeneralContext);
@@ -23,7 +26,7 @@ export function useGeneralContext() {
 }
 
 export function GeneralProvider(props: { children: JSX.Element }) {
-  const [store, setStore] = createStore<Store>({
+  const [$general, $setGeneral] = createStore<GeneralStore>({
     musicPlayed: false,
     section1: undefined,
     section2: undefined,
@@ -33,6 +36,13 @@ export function GeneralProvider(props: { children: JSX.Element }) {
   });
 
   return (
-    <GeneralContext.Provider value={[store, setStore]}>{props.children}</GeneralContext.Provider>
+    <GeneralContext.Provider
+      value={{
+        $general,
+        $setGeneral,
+      }}
+    >
+      {props.children}
+    </GeneralContext.Provider>
   );
 }

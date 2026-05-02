@@ -7,30 +7,39 @@ import { Section4 } from "./Section4";
 import { Section5 } from "./Section5";
 
 export function Content() {
-  const [store, setStore] = useGeneralContext();
+  const { $general, $setGeneral } = useGeneralContext();
   const tweenRestarts: Array<() => void> = [];
 
   createEffect(() => {
-    if (!store.section1) return;
+    if (!$general.section1) return;
 
-    gsap.to([store.section1, store.section2, store.section3, store.section4, store.section5], {
-      scrollTrigger: {
-        snap: {
-          snapTo: 1 / 4,
-          duration: 1,
-          directional: false,
-        },
-        scrub: false,
-        onSnapComplete() {
-          tweenRestarts.forEach((f) => f());
+    gsap.to(
+      [
+        $general.section1,
+        $general.section2,
+        $general.section3,
+        $general.section4,
+        $general.section5,
+      ],
+      {
+        scrollTrigger: {
+          snap: {
+            snapTo: 1 / 4,
+            duration: 1,
+            directional: false,
+          },
+          scrub: false,
+          onSnapComplete() {
+            tweenRestarts.forEach((f) => f());
+          },
         },
       },
-    });
+    );
   });
 
   return (
     <>
-      <div ref={(el) => setStore("section1", el)} class="h-lvh w-full"></div>
+      <div ref={(el) => $setGeneral("section1", el)} class="h-lvh w-full"></div>
       <Section2
         onMount={({ tweenRestart }) => {
           tweenRestarts.push(tweenRestart);

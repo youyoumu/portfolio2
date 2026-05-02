@@ -11,7 +11,7 @@ import { ZagTooltip } from "../../ZagTooltip";
 export function Section5(props: {
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
-  const [, setStore] = useGeneralContext();
+  const { $setGeneral } = useGeneralContext();
   const routeApi = getRouteApi("/");
   const { yym } = routeApi.useSearch()();
   const realName = () => yym === 0;
@@ -90,7 +90,7 @@ export function Section5(props: {
 
   return (
     <div
-      ref={(el) => setStore("section5", el)}
+      ref={(el) => $setGeneral("section5", el)}
       class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
     >
       <div class="h-[35svh] sm:h-[40svh] rounded-sm overflow-hidden relative">

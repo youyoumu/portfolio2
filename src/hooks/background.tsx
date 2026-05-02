@@ -20,7 +20,7 @@ function formatTime(seconds: number): string {
 }
 
 export function useBackground() {
-  const [, setStore] = useGeneralContext();
+  const { $setGeneral } = useGeneralContext();
   const [playing, setPlaying] = createSignal(false);
   const isMobile = useIsMobile();
 
@@ -155,7 +155,7 @@ export function useBackground() {
         visualizer.signal.volume.set(actualVolume);
       }}
       onPlayPause={() => {
-        setStore("musicPlayed", true);
+        $setGeneral("musicPlayed", true);
         if (visualizer.playing) {
           visualizer.stop({ pause: true });
           setPlaying(false);
@@ -165,11 +165,11 @@ export function useBackground() {
         }
       }}
       onSkipBack={() => {
-        setStore("musicPlayed", true);
+        $setGeneral("musicPlayed", true);
         visualizer.skip(-1);
       }}
       onSkipForward={() => {
-        setStore("musicPlayed", true);
+        $setGeneral("musicPlayed", true);
         visualizer.skip();
       }}
     />

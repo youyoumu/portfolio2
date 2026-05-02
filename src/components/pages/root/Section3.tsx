@@ -41,7 +41,7 @@ const clientProjects = [
 export function Section3(props: {
   onMount?: ({ tweenRestart }: { tweenRestart: () => void }) => void;
 }) {
-  const [, setStore] = useGeneralContext();
+  const { $setGeneral } = useGeneralContext();
   const [heading1, setHeading1] = createSignal<HTMLDivElement>();
   const [heading2, setHeading2] = createSignal<HTMLDivElement>();
   const showUpElements: HTMLElement[] = [];
@@ -129,7 +129,7 @@ export function Section3(props: {
 
   return (
     <div
-      ref={(el) => setStore("section3", el)}
+      ref={(el) => $setGeneral("section3", el)}
       class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
     >
       <Heading ref={setHeading1} />
