@@ -5,7 +5,7 @@ import { createEffect, createSignal, onMount } from "solid-js";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const headings: string[] = ["GAME OF LIFE", "ESSENCE", "WORKS", "ENVIRONMENT", "CONTACT"];
+const headings: string[] = ["GAME OF LIFE", "STACKS", "WORKS", "GALLERY", "CONTACT"];
 
 export function SideNav() {
   const { $general, $sections } = useGeneralContext();

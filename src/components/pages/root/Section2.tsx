@@ -224,14 +224,14 @@ export function Section2() {
         style={{ transform: "translateY(-100%)" }}
         class="bottom-10/100 right-10/100"
       >
-        ESSENCE
+        STACKS
       </Heading>
       <Heading
         ref={setHeading2}
         style={{ transform: "translateY(-100%)" }}
         class="bottom-10/100 right-10/100"
       >
-        ESSENCE
+        STACKS
       </Heading>
     </div>
   );
