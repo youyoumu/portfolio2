@@ -1,6 +1,6 @@
 import type { SetStoreFunction } from "solid-js/store";
 
-import { createContext, useContext, type JSX } from "solid-js";
+import { createContext, createMemo, useContext, type Accessor, type JSX } from "solid-js";
 import { createStore } from "solid-js/store";
 
 type GeneralStore = {
@@ -15,6 +15,7 @@ type GeneralStore = {
 export const GeneralContext = createContext<{
   $general: GeneralStore;
   $setGeneral: SetStoreFunction<GeneralStore>;
+  $sections: Accessor<(HTMLDivElement | undefined)[]>;
 }>();
 
 export function useGeneralContext() {
@@ -35,11 +36,20 @@ export function GeneralProvider(props: { children: JSX.Element }) {
     section5: undefined,
   });
 
+  const $sections = createMemo(() => [
+    $general.section1,
+    $general.section2,
+    $general.section3,
+    $general.section4,
+    $general.section5,
+  ]);
+
   return (
     <GeneralContext.Provider
       value={{
         $general,
         $setGeneral,
+        $sections,
       }}
     >
       {props.children}

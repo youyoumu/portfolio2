@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const headings: string[] = ["GAME OF LIFE", "ESSENCE", "WORKS", "ENVIRONMENT", "CONTACT"];
 
 export function SideNav() {
-  const { $general } = useGeneralContext();
+  const { $general, $sections } = useGeneralContext();
   const [activeIndex, setActiveIndex] = createSignal(0);
   const [hoveredIndex, setHoveredIndex] = createSignal<number | null>(null);
   const headingRefs: HTMLDivElement[] = [];
@@ -16,15 +16,7 @@ export function SideNav() {
 
   const headingTweens: gsap.core.Tween[] = [];
   onMount(() => {
-    const sections = [
-      $general.section1,
-      $general.section2,
-      $general.section3,
-      $general.section4,
-      $general.section5,
-    ];
-
-    sections.forEach((section, i) => {
+    $sections().forEach((section, i) => {
       ScrollTrigger.create({
         trigger: section,
         start: "top center", // when section reaches center of viewport
