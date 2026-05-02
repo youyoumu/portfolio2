@@ -162,20 +162,6 @@ export function Section2(props: {
     stopShuffleCycle();
   });
 
-  function Heading(props: { ref: (el: HTMLDivElement) => void }) {
-    return (
-      <div
-        ref={props.ref}
-        class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute bottom-10/100 text-[15svw] lg:text-[10svw] text-neutral-content right-10/100 opacity-50 pointer-events-none"
-        style={{
-          transform: "translateY(-100%)",
-        }}
-      >
-        ESSENCE
-      </div>
-    );
-  }
-
   return (
     <div
       ref={(el) => $setGeneral("section2", el)}
@@ -208,6 +194,20 @@ export function Section2(props: {
 
       <Heading ref={setHeading1} />
       <Heading ref={setHeading2} />
+    </div>
+  );
+}
+
+function Heading(props: { ref: (el: HTMLDivElement) => void }) {
+  return (
+    <div
+      ref={props.ref}
+      class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute bottom-10/100 text-[15svw] lg:text-[10svw] text-neutral-content right-10/100 opacity-50 pointer-events-none"
+      style={{
+        transform: "translateY(-100%)",
+      }}
+    >
+      ESSENCE
     </div>
   );
 }

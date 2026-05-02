@@ -177,20 +177,6 @@ export function Section4(props: {
     });
   });
 
-  function Heading(props: { ref: (el: HTMLDivElement) => void }) {
-    return (
-      <div
-        ref={props.ref}
-        class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
-        style={{
-          transform: "translateY(-110%)",
-        }}
-      >
-        ENVIRONMENT
-      </div>
-    );
-  }
-
   return (
     <div
       ref={(el) => $setGeneral("section4", el)}
@@ -318,6 +304,20 @@ export function Section4(props: {
 
       <Heading ref={setHeading1} />
       <Heading ref={setHeading2} />
+    </div>
+  );
+}
+
+function Heading(props: { ref: (el: HTMLDivElement) => void }) {
+  return (
+    <div
+      ref={props.ref}
+      class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
+      style={{
+        transform: "translateY(-110%)",
+      }}
+    >
+      ENVIRONMENT
     </div>
   );
 }

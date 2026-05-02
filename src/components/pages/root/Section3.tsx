@@ -113,20 +113,6 @@ export function Section3(props: {
     );
   });
 
-  function Heading(props: { ref: (el: HTMLDivElement) => void }) {
-    return (
-      <div
-        ref={props.ref}
-        class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute top-10/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
-        style={{
-          transform: "translateY(-100%)",
-        }}
-      >
-        WORKS
-      </div>
-    );
-  }
-
   return (
     <div
       ref={(el) => $setGeneral("section3", el)}
@@ -211,6 +197,20 @@ export function Section3(props: {
           </ul>
         </div>
       </div>
+    </div>
+  );
+}
+
+function Heading(props: { ref: (el: HTMLDivElement) => void }) {
+  return (
+    <div
+      ref={props.ref}
+      class="text-nowrap leading-[0.85] font-bebas-neue tracking-wide absolute top-10/100 text-[15svw] lg:text-[10svw] text-neutral-content left-10/100 opacity-50 pointer-events-none"
+      style={{
+        transform: "translateY(-100%)",
+      }}
+    >
+      WORKS
     </div>
   );
 }
