@@ -106,13 +106,7 @@ export function Section2() {
     running = false;
   }
 
-  const [heading1, setHeading1] = createSignal<HTMLDivElement>();
-  const [heading2, setHeading2] = createSignal<HTMLDivElement>();
   onMount(() => {
-    const h1 = heading1();
-    const h2 = heading2();
-    if (!h1 || !h2) return;
-
     const toggleActions = isMobile() ? "play none none none" : "restart none none none";
     const iconRefs = $iconRefs().filter(Boolean) as HTMLDivElement[];
     gsap.to(iconRefs, {
@@ -159,22 +153,6 @@ export function Section2() {
         "+=0.1",
       );
     });
-
-    // Parallax effect on heading
-    const heading = [h1, h2];
-    gsap.to(heading, {
-      yPercent: 200, // moves downward as you scroll
-      ease: "none", // keeps motion linear
-      scrollTrigger: {
-        trigger: heading, // or the whole section
-        start: "top bottom", // when section enters viewport
-        end: "bottom top", // when section leaves
-        scrub: true, // link animation progress with scroll
-      },
-    });
-
-    const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
-    onSnapCompletes.add(tweenRestart);
   });
 
   onCleanup(() => {
@@ -220,14 +198,6 @@ export function Section2() {
       </div>
 
       <Heading
-        ref={setHeading1}
-        style={{ transform: "translateY(-100%)" }}
-        class="bottom-10/100 right-10/100"
-      >
-        STACKS
-      </Heading>
-      <Heading
-        ref={setHeading2}
         style={{ transform: "translateY(-100%)" }}
         class="bottom-10/100 right-10/100"
       >

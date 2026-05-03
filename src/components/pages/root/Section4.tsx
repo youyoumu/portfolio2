@@ -1,9 +1,8 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
-import { scrollingChars } from "#/lib/gsap";
 import { cn } from "#/lib/utils";
 import { IconZoom } from "@tabler/icons-solidjs";
-import { createSignal, type JSX, onMount } from "solid-js";
+import { createSignal, type JSX } from "solid-js";
 
 import { Heading } from "../../Heading";
 
@@ -67,7 +66,7 @@ const markers: Marker[] = [
 ];
 
 export function Section4() {
-  const { $setGeneral, onSnapCompletes } = useGeneralContext();
+  const { $setGeneral } = useGeneralContext();
   const [containerRef, setContainerRef] = createSignal<HTMLDivElement>();
   const [x, setX] = createSignal(50);
   const [y, setY] = createSignal(50);
@@ -149,31 +148,6 @@ export function Section4() {
     setZoom(1);
     setShowMarker(false);
   }
-
-  const [heading1, setHeading1] = createSignal<HTMLDivElement>();
-  const [heading2, setHeading2] = createSignal<HTMLDivElement>();
-
-  onMount(() => {
-    const h1 = heading1();
-    const h2 = heading2();
-    if (!h1 || !h2) return;
-
-    // Parallax effect on heading
-    const heading = [h1, h2];
-    gsap.to(heading, {
-      yPercent: 200, // moves downward as you scroll
-      ease: "none", // keeps motion linear
-      scrollTrigger: {
-        trigger: heading, // or the whole section
-        start: "top bottom", // when section enters viewport
-        end: "bottom top", // when section leaves
-        scrub: true, // link animation progress with scroll
-      },
-    });
-
-    const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
-    onSnapCompletes.add(tweenRestart);
-  });
 
   return (
     <div
@@ -301,14 +275,6 @@ export function Section4() {
       </div>
 
       <Heading
-        ref={setHeading1}
-        style={{ transform: "translateY(-110%)" }}
-        class="bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 left-10/100"
-      >
-        GALLERY
-      </Heading>
-      <Heading
-        ref={setHeading2}
         style={{ transform: "translateY(-110%)" }}
         class="bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 left-10/100"
       >

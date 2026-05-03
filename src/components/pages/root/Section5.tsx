@@ -1,6 +1,5 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
-import { scrollingChars } from "#/lib/gsap";
 import { cn } from "#/lib/utils";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { useSearch } from "@tanstack/solid-router";
@@ -14,7 +13,7 @@ import { ZagTooltip } from "../../ZagTooltip";
 declare const __COMMIT_SHA__: string;
 
 export function Section5() {
-  const { $setGeneral, onSnapCompletes } = useGeneralContext();
+  const { $setGeneral } = useGeneralContext();
   const search = useSearch({ from: "/" });
   const email = createMemo(() =>
     search().yym === 0 ? "donnylaukimleng@outlook.com" : "youyoumu2024@proton.me",
@@ -38,34 +37,13 @@ export function Section5() {
     });
   }
 
-  const [heading1, setHeading1] = createSignal<HTMLDivElement>();
-  const [heading2, setHeading2] = createSignal<HTMLDivElement>();
   const [githubRef, setGithubRef] = createSignal<HTMLSpanElement>();
   const [discordRef, setDiscordRef] = createSignal<HTMLSpanElement>();
   const [emailRef, setEmailRef] = createSignal<HTMLSpanElement>();
   onMount(() => {
-    const h1 = heading1();
-    const h2 = heading2();
     const gh = githubRef();
     const dc = discordRef();
     const em = emailRef();
-    if (!h1 || !h2) return;
-
-    // Parallax effect on heading
-    const heading = [h1, h2];
-    gsap.to(heading, {
-      yPercent: 200, // moves downward as you scroll
-      ease: "none", // keeps motion linear
-      scrollTrigger: {
-        trigger: heading, // or the whole section
-        start: "top bottom", // when section enters viewport
-        end: "bottom top", // when section leaves
-        scrub: true, // link animation progress with scroll
-      },
-    });
-
-    const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
-    onSnapCompletes.add(tweenRestart);
 
     if (!isMobile()) {
       const refs = [gh, dc, em].filter((r): r is HTMLSpanElement => !!r);
@@ -105,18 +83,7 @@ export function Section5() {
         <ContactItem copyText={email()} icon={IconMail} ref={setEmailRef} label={email()} />
       </div>
 
-      <Heading
-        ref={setHeading1}
-        style={{ transform: "translateY(-110%)" }}
-        class="top-9/100 right-10/100"
-      >
-        CONTACT
-      </Heading>
-      <Heading
-        ref={setHeading2}
-        style={{ transform: "translateY(-110%)" }}
-        class="top-9/100 right-10/100"
-      >
+      <Heading style={{ transform: "translateY(-110%)" }} class="top-9/100 right-10/100">
         CONTACT
       </Heading>
       <footer class="text-neutral-content text-sm absolute bottom-40 left-0 right-0 flex flex-col gap-1 items-center justify-center">

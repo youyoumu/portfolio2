@@ -1,5 +1,4 @@
 import { useGeneralContext } from "#/context/GeneralContext";
-import { scrollingChars } from "#/lib/gsap";
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-solidjs";
 import { createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -10,9 +9,7 @@ type ShowUpElements = Record<string, HTMLElement | undefined>;
 type SlideSideElements = Record<string, HTMLElement | undefined>;
 
 export function Section3() {
-  const { $setGeneral, onSnapCompletes } = useGeneralContext();
-  const [heading1, setHeading1] = createSignal<HTMLDivElement>();
-  const [heading2, setHeading2] = createSignal<HTMLDivElement>();
+  const { $setGeneral } = useGeneralContext();
   const [$showUpElements, $setShowUpElements] = createStore<ShowUpElements>({});
   const [$slideSideElements, $setSlideSideElements] = createStore<SlideSideElements>({});
   const $showUpElementRefs = createMemo(
@@ -24,25 +21,6 @@ export function Section3() {
   const iconClass = "size-4.5 cursor-pointer opacity-75";
 
   onMount(() => {
-    const h1 = heading1();
-    const h2 = heading2();
-    if (!h1 || !h2) return;
-
-    const heading = [h1, h2];
-    gsap.to(heading, {
-      yPercent: 200,
-      ease: "none",
-      scrollTrigger: {
-        trigger: heading,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-
-    const { tweenRestart } = scrollingChars({ heading1: h1, heading2: h2 });
-    onSnapCompletes.add(tweenRestart);
-
     SplitText.create($showUpElementRefs(), {
       type: "words,lines",
       autoSplit: true,
@@ -86,18 +64,7 @@ export function Section3() {
       ref={(el) => $setGeneral("section3", el)}
       class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
     >
-      <Heading
-        ref={setHeading1}
-        style={{ transform: "translateY(-100%)" }}
-        class="top-10/100 left-10/100"
-      >
-        WORKS
-      </Heading>
-      <Heading
-        ref={setHeading2}
-        style={{ transform: "translateY(-100%)" }}
-        class="top-10/100 left-10/100"
-      >
+      <Heading style={{ transform: "translateY(-100%)" }} class="top-10/100 left-10/100">
         WORKS
       </Heading>
       <div class="text-neutral-content flex flex-col">
