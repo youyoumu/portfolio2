@@ -32,7 +32,7 @@ export function Curtain() {
         gameOfLife.next2();
         gameOfLife.updateCanvas();
       }, 24);
-    }, 1000);
+    }, 2000);
   });
 
   return <>{gameOfLife.canvas}</>;

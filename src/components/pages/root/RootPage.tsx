@@ -88,6 +88,7 @@ export function RootPage() {
         <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full pointer-events-none">
           <Curtain />
         </div>
+        <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full pointer-events-none animate-curtain bg-neutral"></div>
       </ContentsPortal>
     </div>
   );

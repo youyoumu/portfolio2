@@ -11,6 +11,19 @@
   --font-lato: "Lato", "sans-serif";
   --font-bebas-neue: "Bebas Neue", "sans-serif";
   --font-jetbrains-mono: "JetBrains Mono", "monospace";
+  --animate-curtain: curtain 2s ease-in-out forwards;
+
+  @keyframes curtain {
+    0% {
+      opacity: 1;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
 }
 
 @font-face {
