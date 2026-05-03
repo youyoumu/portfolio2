@@ -64,6 +64,9 @@ export function Section3() {
       ref={(el) => $setGeneral("section3", el)}
       class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
     >
+      <div class="blur-shape w-96 h-96 -top-20 -left-20"></div>
+      <div class="blur-shape w-80 h-80 top-1/2 left-1/3 opacity-50"></div>
+      <div class="blur-shape w-[500px] h-[500px] -bottom-40 -right-20"></div>
       <Heading style={{ transform: "translateY(-100%)" }} class="top-10/100 left-10/100">
         WORKS
       </Heading>

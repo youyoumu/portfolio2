@@ -154,6 +154,7 @@ export function Section4() {
       ref={(el) => $setGeneral("section4", el)}
       class="h-lvh w-full bg-black/10 flex flex-col justify-center items-center p-2 md:pb-36 sm:p-8 relative"
     >
+      <div class="blur-shape w-[500px] h-[500px] -bottom-40 -left-20"></div>
       <div class="relative">
         <div
           class={cn(

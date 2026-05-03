@@ -164,6 +164,11 @@ export function Section2() {
       ref={(el) => $setGeneral("section2", el)}
       class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative"
     >
+      <div class="blur-shape w-96 h-96 top-1/20 left-1/6"></div>
+      <div class="blur-shape w-80 h-80 top-1/3 left-2/3 opacity-75"></div>
+      <Heading style={{ transform: "translateY(-100%)" }} class="bottom-10/100 right-10/100">
+        STACKS
+      </Heading>
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
         <div ref={(ref) => $setIconRef("0", ref)} class="opacity-0">
           {icons[order()[0]]}
@@ -196,13 +201,6 @@ export function Section2() {
           </div>
         </div>
       </div>
-
-      <Heading
-        style={{ transform: "translateY(-100%)" }}
-        class="bottom-10/100 right-10/100"
-      >
-        STACKS
-      </Heading>
     </div>
   );
 }

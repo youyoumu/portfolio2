@@ -56,6 +56,10 @@ export function Section5() {
       ref={(el) => $setGeneral("section5", el)}
       class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
     >
+      <div class="blur-shape w-80 h-80 top-1/2 left-1/3 opacity-50"></div>
+      <Heading style={{ transform: "translateY(-110%)" }} class="top-9/100 right-10/100">
+        CONTACT
+      </Heading>
       <div class="h-[35svh] sm:h-[40svh] rounded-sm overflow-hidden relative">
         <video
           src="/video/aochi2.mp4"
@@ -83,9 +87,6 @@ export function Section5() {
         <ContactItem copyText={email()} icon={IconMail} ref={setEmailRef} label={email()} />
       </div>
 
-      <Heading style={{ transform: "translateY(-110%)" }} class="top-9/100 right-10/100">
-        CONTACT
-      </Heading>
       <footer class="text-neutral-content text-sm absolute bottom-40 left-0 right-0 flex flex-col gap-1 items-center justify-center">
         <span>
           Cooked 🍙 using{" "}
