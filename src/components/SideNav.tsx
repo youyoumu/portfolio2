@@ -2,16 +2,18 @@ import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { cn } from "#/lib/utils";
 import { createEffect, createSignal, onMount } from "solid-js";
+import { createStore } from "solid-js/store";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const headings: string[] = ["GAME OF LIFE", "STACKS", "WORKS", "GALLERY", "CONTACT"];
+type HeadingElement = Record<string, HTMLElement>;
 
 export function SideNav() {
   const { $general, $sections } = useGeneralContext();
   const [activeIndex, setActiveIndex] = createSignal(0);
   const [hoveredIndex, setHoveredIndex] = createSignal<number | null>(null);
-  const headingRefs: HTMLDivElement[] = [];
+  const [$headingRefs, $setHeadingRefs] = createStore<HeadingElement>({});
   const isMobile = useIsMobile();
 
   const headingTweens: gsap.core.Tween[] = [];
@@ -27,7 +29,7 @@ export function SideNav() {
     });
 
     if (isMobile()) return;
-    headingRefs.forEach((ref, i) => {
+    Object.values($headingRefs).forEach((ref, i) => {
       SplitText.create(ref, {
         type: "words,lines",
         autoSplit: true,
@@ -102,7 +104,9 @@ export function SideNav() {
             })}
           ></div>
           <div
-            ref={headingRefs[i]}
+            ref={(ref) => {
+              $setHeadingRefs(i.toString(), ref);
+            }}
             class="hidden xl:block absolute top-1/2 right-0 -translate-x-12 -translate-y-1/2 text-sm text-neutral-content text-nowrap leading-none pointer-events-none"
           >
             {headings[i]}
