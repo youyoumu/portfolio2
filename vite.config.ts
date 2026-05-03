@@ -7,6 +7,9 @@ import webfontDownload from "vite-plugin-webfont-dl";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  define: {
+    __COMMIT_SHA__: JSON.stringify(process.env.VERCEL_GIT_COMMIT_SHA || "dev"),
+  },
   plugins: [
     tanstackRouter({ target: "solid", autoCodeSplitting: true }),
     solidPlugin(),

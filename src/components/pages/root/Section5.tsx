@@ -11,6 +11,8 @@ import { Heading } from "../../Heading";
 import { DiscordIcon, GithubIcon } from "../../svgs";
 import { ZagTooltip } from "../../ZagTooltip";
 
+declare const __COMMIT_SHA__: string;
+
 export function Section5() {
   const { $setGeneral, onSnapCompletes } = useGeneralContext();
   const search = useSearch({ from: "/" });
@@ -123,6 +125,9 @@ export function Section5() {
           <a class="underline cursor-pointer" href="https://www.solidjs.com/" target="_blank">
             SolidJS
           </a>
+        </span>
+        <span class="opacity-50 font-jetbrains-mono text-xs">
+          {typeof __COMMIT_SHA__ !== "undefined" ? __COMMIT_SHA__ : null}
         </span>
       </footer>
     </div>
