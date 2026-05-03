@@ -39,6 +39,31 @@
   background-size: 2px 4px;
 }
 
+@utility bg-crt-mask {
+  content: "";
+  --cursor-x: 50%;
+  --cursor-y: 50%;
+  --spotlight-size: 256px;
+  opacity: 0.05;
+  background-image:
+    linear-gradient(#ff0000 8px, transparent 0), linear-gradient(90deg, transparent 4px, #00ff00 0);
+  background-size: 8px 16px;
+  mask-image: radial-gradient(
+    circle at var(--cursor-x) var(--cursor-y),
+    black 0px,
+    black calc(var(--spotlight-size) * 0.1),
+    transparent var(--spotlight-size)
+  );
+  -webkit-mask-image: radial-gradient(
+    circle at var(--cursor-x) var(--cursor-y),
+    black 0px,
+    black calc(var(--spotlight-size) * 0.1),
+    transparent var(--spotlight-size)
+  );
+  mask-attachment: fixed;
+  -webkit-mask-attachment: fixed;
+}
+
 @utility blur-shape {
   pointer-events: none;
   position: absolute;

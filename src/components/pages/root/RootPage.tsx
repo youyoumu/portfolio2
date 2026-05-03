@@ -1,9 +1,10 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { env } from "#/env";
 import { useBackground } from "#/hooks/background";
-import { type ParentComponent } from "solid-js";
+import { createSignal, type ParentComponent } from "solid-js";
 import { Show } from "solid-js";
 import { createEffect } from "solid-js";
+import { onCleanup } from "solid-js";
 import { Portal } from "solid-js/web";
 
 import { BlurOverlay } from "../../BlurOverlay";
@@ -36,6 +37,7 @@ const ContentsPortal: ParentComponent<{
 export function RootPage() {
   const background = useBackground();
   const { $sections, onSnapCompletes } = useGeneralContext();
+  const [crtRef, setCrtRef] = createSignal<HTMLDivElement>();
 
   createEffect(() => {
     gsap.to($sections(), {
@@ -50,6 +52,27 @@ export function RootPage() {
           onSnapCompletes.forEach((f) => f());
         },
       },
+    });
+  });
+
+  createEffect(() => {
+    const ref = crtRef();
+    if (!ref) return;
+    let idleTimeout: ReturnType<typeof setTimeout>;
+    const setIdle = () => {
+      ref.style.opacity = "0";
+    };
+    const handleMouseMove = (e: MouseEvent) => {
+      ref.style.setProperty("--cursor-x", `${e.clientX}px`);
+      ref.style.setProperty("--cursor-y", `${e.clientY}px`);
+      ref.style.opacity = "0.05";
+      clearTimeout(idleTimeout);
+      idleTimeout = setTimeout(setIdle, 1000);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    onCleanup(() => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      clearTimeout(idleTimeout);
     });
   });
 
@@ -68,6 +91,10 @@ export function RootPage() {
             <BlurOverlay />
           </div>
           <div class="bg-crt h-lvh w-full absolute top-0 left-0"></div>
+          <div
+            ref={(ref) => setCrtRef(ref)}
+            class="bg-crt-mask h-lvh w-full absolute top-0 left-0 transition-opacity duration-500"
+          ></div>
         </div>
       </ContentsPortal>
       <Show when={env.DEV}>
