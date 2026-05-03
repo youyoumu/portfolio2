@@ -126,9 +126,13 @@ export function Section5() {
             SolidJS
           </a>
         </span>
-        <span class="opacity-50 font-jetbrains-mono text-xs">
-          {typeof __COMMIT_SHA__ !== "undefined" ? __COMMIT_SHA__ : null}
-        </span>
+        <a
+            class="opacity-50 font-jetbrains-mono text-xs underline"
+            href={`https://github.com/youyoumu/portfolio2/commit/${__COMMIT_SHA__}`}
+            target="_blank"
+          >
+            {typeof __COMMIT_SHA__ !== "undefined" ? __COMMIT_SHA__.slice(0, 7) : null}
+          </a>
       </footer>
     </div>
   );
