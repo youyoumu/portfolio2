@@ -1,7 +1,7 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { scrollingChars } from "#/lib/gsap";
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-solidjs";
-import { createMemo, createSignal, onMount } from "solid-js";
+import { createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 
 import { Heading } from "../../Heading";
@@ -102,82 +102,48 @@ export function Section3() {
       </Heading>
       <div class="text-neutral-content flex flex-col">
         <div>
-          <h2 ref={(el) => $setShowUpElements("1", el)} class="text-2xl font-bold">
+          <h2 ref={(el) => $setShowUpElements("1", el)} class="text-3xl font-bold">
             Projects
           </h2>
-          <p ref={(el) => $setShowUpElements("2", el)} class="mb-2 text-sm">
+          <p ref={(el) => $setShowUpElements("2", el)} class="mb-4 text-sm text-neutral-content/75">
             Side projects, open source.
           </p>
-          <ul class="overflow-hidden">
+          <ul class="overflow-hidden flex flex-col gap-4">
             <ProjectItem
               ref={(el) => $setSlideSideElements("1", el)}
               title="kiku"
               repo="https://github.com/youyoumu/kiku"
               live="https://kiku.youyoumu.my.id/"
+              desc="菊 Kiku is modern, fully interactive Anki note type designed for Japanese learners."
               iconClass={iconClass}
             />
             <ProjectItem
               ref={(el) => $setSlideSideElements("2", el)}
-              title="pretty-ts-errors.nvim"
-              repo="https://github.com/youyoumu/pretty-ts-errors.nvim"
+              title="mahiru"
+              repo="https://github.com/youyoumu/mahiru"
+              desc="🌼 Silly Discord bot inspired by the character Shiina Mahiru"
               iconClass={iconClass}
             />
             <ProjectItem
               ref={(el) => $setSlideSideElements("3", el)}
-              title="discord-clone"
-              repo="https://github.com/youyoumu/discord-clone"
-              live="https://corddis.youyoumu.my.id/"
+              title="pretty-ts-errors.nvim"
+              repo="https://github.com/youyoumu/pretty-ts-errors.nvim"
+              desc="🔴 Make TypeScript errors prettier and human-readable in Neovim 🎀"
               iconClass={iconClass}
             />
           </ul>
-          <div class="overflow-hidden">
+          <div class="overflow-hidden mt-4">
             <a
               ref={(el) => $setSlideSideElements("4", el)}
               href="https://github.com/youyoumu"
               target="_blank"
-              class="link block"
+              class="link block hover:underline-offset-2 text-lg"
               rel="noopener"
             >
               see more
             </a>
           </div>
         </div>
-
-        {/* <div class="overflow-hidden"> */}
-        {/*   <div */}
-        {/*     ref={(el) => $setSlideSideElements("5", el)} */}
-        {/*     class="divider after:bg-neutral-content/25 before:bg-neutral-content/25" */}
-        {/*   ></div> */}
-        {/* </div> */}
-        {/**/}
-        {/* <div> */}
-        {/*   <h2 ref={(el) => $setShowUpElements("3", el)} class="text-xl font-bold"> */}
-        {/*     Client Projects */}
-        {/*   </h2> */}
-        {/*   <p ref={(el) => $setShowUpElements("4", el)} class="mb-2 text-sm"> */}
-        {/*     Industry projects, freelance work. */}
-        {/*   </p> */}
-        {/*   <ul class="overflow-hidden"> */}
-        {/*     <ProjectItem */}
-        {/*       ref={(el) => $setSlideSideElements("6", el)} */}
-        {/*       title="Sisva" */}
-        {/*       url="https://app.sisva.id/" */}
-        {/*       iconClass={iconClass} */}
-        {/*     /> */}
-        {/*     <ProjectItem */}
-        {/*       ref={(el) => $setSlideSideElements("7", el)} */}
-        {/*       title="POTEHI" */}
-        {/*       url="https://katalog-potehi-six.vercel.app/" */}
-        {/*       iconClass={iconClass} */}
-        {/*     /> */}
-        {/*     <ProjectItem */}
-        {/*       ref={(el) => $setSlideSideElements("8", el)} */}
-        {/*       title="Nongki" */}
-        {/*       url="https://nongki.vercel.app" */}
-        {/*       iconClass={iconClass} */}
-        {/*     /> */}
-        {/*   </ul> */}
-        {/* </div> */}
       </div>
     </div>
   );
@@ -189,27 +155,88 @@ function ProjectItem(props: {
   repo?: string;
   live?: string;
   url?: string;
+  desc?: string;
   iconClass: string;
 }) {
+  const [hovered, setHovered] = createSignal(false);
+  const [descRef, setDescRef] = createSignal<HTMLDivElement>();
+
+  let descTween: gsap.core.Tween | undefined;
+  onMount(() => {
+    const ref = descRef();
+    if (!ref) return;
+    SplitText.create(ref, {
+      type: "words,lines",
+      autoSplit: true,
+      mask: "lines",
+      onSplit: (self) => {
+        descTween = gsap.fromTo(
+          self.lines,
+          {
+            height: "0",
+            yPercent: 100,
+          },
+          {
+            height: "auto",
+            duration: 1,
+            yPercent: 0,
+            ease: "expo.out",
+            paused: true,
+          },
+        );
+      },
+    });
+  });
+
+  createEffect(() => {
+    if (hovered()) {
+      descTween?.duration(1);
+      descTween?.play();
+    } else {
+      descTween?.duration(0.2);
+      descTween?.reverse();
+    }
+  });
+
   return (
-    <li ref={props.ref} class="flex items-center gap-2">
-      <span>{props.title}</span>
-      <div class="flex items-center">
-        {props.repo && (
-          <a href={props.repo} target="_blank" rel="noopener">
-            <IconBrandGithub class={props.iconClass} />
-          </a>
-        )}
-        {props.live && (
-          <a href={props.live} target="_blank" rel="noopener">
-            <IconExternalLink class={props.iconClass} />
-          </a>
-        )}
-        {props.url && (
-          <a href={props.url} target="_blank" rel="noopener">
-            <IconExternalLink class={props.iconClass} />
-          </a>
-        )}
+    <li ref={props.ref} class="flex flex-col">
+      <div
+        class="flex items-center gap-2"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onTouchStart={() => setHovered(true)}
+        onTouchEnd={() => setHovered(false)}
+      >
+        <span class="text-lg">{props.title}</span>
+        <div class="flex items-center">
+          {props.repo && (
+            <a href={props.repo} target="_blank" rel="noopener">
+              <IconBrandGithub class={props.iconClass} />
+            </a>
+          )}
+          {props.live && (
+            <a href={props.live} target="_blank" rel="noopener">
+              <IconExternalLink class={props.iconClass} />
+            </a>
+          )}
+          {props.url && (
+            <a href={props.url} target="_blank" rel="noopener">
+              <IconExternalLink class={props.iconClass} />
+            </a>
+          )}
+        </div>
+      </div>
+      <div
+        ref={(ref) => {
+          setDescRef(ref);
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onTouchStart={() => setHovered(true)}
+        onTouchEnd={() => setHovered(false)}
+        class="text-sm text-neutral-content/60 max-w-3xs"
+      >
+        {props.desc}
       </div>
     </li>
   );
