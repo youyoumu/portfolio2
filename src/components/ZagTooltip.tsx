@@ -5,7 +5,7 @@ import { createMemo, createUniqueId, type JSX, Show } from "solid-js";
 
 export function ZagTooltip(props: {
   trigger: JSX.Element;
-  tooltop: JSX.Element;
+  tooltip: JSX.Element;
   classNames?: {
     root?: string;
   };
@@ -28,7 +28,7 @@ export function ZagTooltip(props: {
       <button {...api().getTriggerProps()}>{props.trigger}</button>
       <Show when={api().open}>
         <div {...api().getPositionerProps()}>
-          <div {...api().getContentProps()}>{props.tooltop}</div>
+          <div {...api().getContentProps()}>{props.tooltip}</div>
         </div>
       </Show>
     </div>

@@ -127,12 +127,12 @@ export function Section5() {
           </a>
         </span>
         <a
-            class="opacity-50 font-jetbrains-mono text-xs underline"
-            href={`https://github.com/youyoumu/portfolio2/commit/${__COMMIT_SHA__}`}
-            target="_blank"
-          >
-            {typeof __COMMIT_SHA__ !== "undefined" ? __COMMIT_SHA__.slice(0, 7) : null}
-          </a>
+          class="opacity-50 font-jetbrains-mono text-xs underline"
+          href={`https://github.com/youyoumu/portfolio2/commit/${__COMMIT_SHA__}`}
+          target="_blank"
+        >
+          {typeof __COMMIT_SHA__ !== "undefined" ? __COMMIT_SHA__.slice(0, 7) : null}
+        </a>
       </footer>
     </div>
   );
@@ -177,7 +177,7 @@ function ContactItem(props: {
             <IconCopy class="size-4 opacity-50 sm:hidden" />
           </div>
         }
-        tooltop={<div class="text-sm opacity-50 hidden sm:block">click to copy</div>}
+        tooltip={<div class="text-sm opacity-50 hidden sm:block">click to copy</div>}
       />
     );
   }
