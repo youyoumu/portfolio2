@@ -106,12 +106,12 @@ export function Section3() {
             Projects
           </h2>
           <p ref={(el) => $setShowUpElements("2", el)} class="mb-2 text-sm">
-            Personal projects, open source.
+            Side projects, open source.
           </p>
           <ul class="overflow-hidden">
             <ProjectItem
               ref={(el) => $setSlideSideElements("1", el)}
-              title="Kiku"
+              title="kiku"
               repo="https://github.com/youyoumu/kiku"
               live="https://kiku.youyoumu.my.id/"
               iconClass={iconClass}
@@ -143,41 +143,41 @@ export function Section3() {
           </div>
         </div>
 
-        <div class="overflow-hidden">
-          <div
-            ref={(el) => $setSlideSideElements("5", el)}
-            class="divider after:bg-neutral-content/25 before:bg-neutral-content/25"
-          ></div>
-        </div>
-
-        <div>
-          <h2 ref={(el) => $setShowUpElements("3", el)} class="text-xl font-bold">
-            Client Projects
-          </h2>
-          <p ref={(el) => $setShowUpElements("4", el)} class="mb-2 text-sm">
-            Industry projects, freelance work.
-          </p>
-          <ul class="overflow-hidden">
-            <ProjectItem
-              ref={(el) => $setSlideSideElements("6", el)}
-              title="Sisva"
-              url="https://app.sisva.id/"
-              iconClass={iconClass}
-            />
-            <ProjectItem
-              ref={(el) => $setSlideSideElements("7", el)}
-              title="POTEHI"
-              url="https://katalog-potehi-six.vercel.app/"
-              iconClass={iconClass}
-            />
-            <ProjectItem
-              ref={(el) => $setSlideSideElements("8", el)}
-              title="Nongki"
-              url="https://nongki.vercel.app"
-              iconClass={iconClass}
-            />
-          </ul>
-        </div>
+        {/* <div class="overflow-hidden"> */}
+        {/*   <div */}
+        {/*     ref={(el) => $setSlideSideElements("5", el)} */}
+        {/*     class="divider after:bg-neutral-content/25 before:bg-neutral-content/25" */}
+        {/*   ></div> */}
+        {/* </div> */}
+        {/**/}
+        {/* <div> */}
+        {/*   <h2 ref={(el) => $setShowUpElements("3", el)} class="text-xl font-bold"> */}
+        {/*     Client Projects */}
+        {/*   </h2> */}
+        {/*   <p ref={(el) => $setShowUpElements("4", el)} class="mb-2 text-sm"> */}
+        {/*     Industry projects, freelance work. */}
+        {/*   </p> */}
+        {/*   <ul class="overflow-hidden"> */}
+        {/*     <ProjectItem */}
+        {/*       ref={(el) => $setSlideSideElements("6", el)} */}
+        {/*       title="Sisva" */}
+        {/*       url="https://app.sisva.id/" */}
+        {/*       iconClass={iconClass} */}
+        {/*     /> */}
+        {/*     <ProjectItem */}
+        {/*       ref={(el) => $setSlideSideElements("7", el)} */}
+        {/*       title="POTEHI" */}
+        {/*       url="https://katalog-potehi-six.vercel.app/" */}
+        {/*       iconClass={iconClass} */}
+        {/*     /> */}
+        {/*     <ProjectItem */}
+        {/*       ref={(el) => $setSlideSideElements("8", el)} */}
+        {/*       title="Nongki" */}
+        {/*       url="https://nongki.vercel.app" */}
+        {/*       iconClass={iconClass} */}
+        {/*     /> */}
+        {/*   </ul> */}
+        {/* </div> */}
       </div>
     </div>
   );
