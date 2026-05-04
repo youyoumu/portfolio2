@@ -1,6 +1,5 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
-import { scrollingChars } from "#/lib/gsap";
 import { useSearch } from "@tanstack/solid-router";
 import { range, shuffle } from "es-toolkit";
 import { createMemo, createSignal, onCleanup, onMount } from "solid-js";
@@ -28,7 +27,7 @@ export function Section2() {
   const search = useSearch({ from: "/" });
   const name = createMemo(() => (search().yym === 0 ? "DONNY LAU KIM LENG" : "youyoumu"));
 
-  const { $setGeneral, onSnapCompletes } = useGeneralContext();
+  const { $setGeneral } = useGeneralContext();
   const [$iconRef, $setIconRef] = createStore<IconRefs>({
     "0": undefined,
     "1": undefined,
@@ -166,7 +165,12 @@ export function Section2() {
     >
       <div class="blur-shape w-96 h-96 top-1/20 left-1/6"></div>
       <div class="blur-shape w-80 h-80 top-1/3 left-2/3 opacity-75"></div>
-      <Heading style={{ transform: "translateY(-100%)" }} class="bottom-10/100 right-10/100">
+      <Heading
+        style={{ transform: "translateY(-100%)" }}
+        class="bottom-10/100 right-10/100"
+        flipIndex={3}
+        flipDirection="horizontal"
+      >
         STACKS
       </Heading>
       <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">

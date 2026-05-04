@@ -278,6 +278,8 @@ export function Section4() {
       <Heading
         style={{ transform: "translateY(-110%)" }}
         class="bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 left-10/100"
+        flipIndex={4}
+        flipDirection={"horizontal"}
       >
         GALLERY
       </Heading>

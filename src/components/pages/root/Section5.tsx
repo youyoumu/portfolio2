@@ -57,7 +57,12 @@ export function Section5() {
       class="h-lvh w-full bg-black/20 flex flex-col justify-center items-center relative"
     >
       <div class="blur-shape w-80 h-80 top-1/2 left-1/3 opacity-50"></div>
-      <Heading style={{ transform: "translateY(-110%)" }} class="top-9/100 right-10/100">
+      <Heading
+        style={{ transform: "translateY(-110%)" }}
+        class="top-9/100 right-10/100"
+        flipIndex={3}
+        flipDirection={"vertical"}
+      >
         CONTACT
       </Heading>
       <div class="h-[35svh] sm:h-[40svh] rounded-sm overflow-hidden relative">
