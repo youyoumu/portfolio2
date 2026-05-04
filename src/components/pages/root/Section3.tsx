@@ -79,6 +79,9 @@ export function Section3() {
       </Heading>
       <div class="text-neutral-content flex flex-col">
         <div>
+          <p class="text-xs font-jetbrains-mono opacity-40 max-w-xs mb-4">
+            [03] A collection of digital daydreams I’ve managed to turn into real things.
+          </p>
           <h2 ref={(el) => $setShowUpElements("1", el)} class="text-3xl font-bold">
             Projects
           </h2>

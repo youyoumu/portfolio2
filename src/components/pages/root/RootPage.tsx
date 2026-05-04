@@ -13,6 +13,7 @@ import { Curtain } from "../../Curtain";
 import { DebugPanel } from "../../DebugPanel";
 import { RevealingText } from "../../RevealingText";
 import { SideNav } from "../../SideNav";
+import { Section1 } from "./Section1";
 import { Section2 } from "./Section2";
 import { Section3 } from "./Section3";
 import { Section4 } from "./Section4";
@@ -130,10 +131,4 @@ export function RootPage() {
       </ContentsPortal>
     </div>
   );
-}
-
-function Section1() {
-  const { $setGeneral } = useGeneralContext();
-
-  return <div ref={(el) => $setGeneral("section1", el)} class="h-lvh w-full"></div>;
 }

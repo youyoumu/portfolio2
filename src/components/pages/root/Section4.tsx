@@ -275,6 +275,9 @@ export function Section4() {
         </div>
       </div>
 
+      <p class="absolute text-xs font-jetbrains-mono opacity-40 max-w-xs bottom-18/100 right-10/100 text-neutral-content text-right">
+        [04] Peek into my cozy workspace, where all the magic and a lot of snacking happens.
+      </p>
       <Heading
         style={{ transform: "translateY(-110%)" }}
         class="bottom-18/100 sm:bottom-12/100 md:bottom-11/100 lg:bottom-10/100 xl:bottom-8/100 left-10/100"

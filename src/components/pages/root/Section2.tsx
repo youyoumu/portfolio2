@@ -179,7 +179,11 @@ export function Section2() {
       >
         STACKS
       </Heading>
-      <div class="flex flex-wrap gap-1 max-w-52 sm:max-w-64">
+      <div class="relative flex flex-wrap gap-1 max-w-52 sm:max-w-64">
+        <p class="text-xs font-jetbrains-mono opacity-40 max-w-xs absolute -top-20">
+          [02] My favorite toys and tools—mostly just a bunch of fancy ways to tell a computer what
+          to do.
+        </p>
         <div ref={(ref) => $setIconRef("0", ref)} class="opacity-0">
           {icons[order()[0]]}
         </div>
