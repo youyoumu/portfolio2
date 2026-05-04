@@ -65,7 +65,7 @@ export function RootPage() {
     const handleMouseMove = (e: MouseEvent) => {
       ref.style.setProperty("--cursor-x", `${e.clientX}px`);
       ref.style.setProperty("--cursor-y", `${e.clientY}px`);
-      ref.style.opacity = "0.05";
+      ref.style.opacity = "0.1";
       clearTimeout(idleTimeout);
       idleTimeout = setTimeout(setIdle, 1000);
     };
@@ -95,6 +95,9 @@ export function RootPage() {
             ref={(ref) => setCrtRef(ref)}
             class="bg-crt-mask h-lvh w-full absolute top-0 left-0 transition-opacity duration-500"
           ></div>
+          <div class="absolute top-6 left-6 text-2xl pointer-events-none font-extrabold text-neutral-content mix-blend-difference">
+            yym.
+          </div>
         </div>
       </ContentsPortal>
       <Show when={env.DEV}>

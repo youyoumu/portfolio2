@@ -44,7 +44,7 @@
   --cursor-x: 50%;
   --cursor-y: 50%;
   --spotlight-size: 256px;
-  opacity: 0.05;
+  opacity: 0.1;
   background-image:
     linear-gradient(#ff0000 8px, transparent 0), linear-gradient(90deg, transparent 4px, #00ff00 0);
   background-size: 8px 16px;
