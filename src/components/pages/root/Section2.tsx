@@ -1,5 +1,6 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
+import { useHoverBlink } from "#/hooks/blink";
 import { useSearch } from "@tanstack/solid-router";
 import { range, shuffle } from "es-toolkit";
 import { createMemo, createSignal, onCleanup, onMount } from "solid-js";
@@ -35,20 +36,21 @@ export function Section2() {
     "3": undefined,
     "4": undefined,
   });
-  const $iconRefs = createMemo(() => [
-    $iconRef[0],
-    $iconRef[1],
-    $iconRef[2],
-    $iconRef[3],
-    $iconRef[4],
-  ]);
+  const $iconRefs = createMemo(
+    () =>
+      [$iconRef[0], $iconRef[1], $iconRef[2], $iconRef[3], $iconRef[4]].filter(
+        Boolean,
+      ) as HTMLDivElement[],
+  );
   const [$textRef, $setTextRef] = createStore<TextRefs>({
     "0": undefined,
     "1": undefined,
     "2": undefined,
     "3": undefined,
   });
-  const $textRefs = createMemo(() => [$textRef[0], $textRef[1], $textRef[2], $textRef[3]]);
+  const $textRefs = createMemo(
+    () => [$textRef[0], $textRef[1], $textRef[2], $textRef[3]].filter(Boolean) as HTMLDivElement[],
+  );
   const isMobile = useIsMobile();
 
   const iconColor = getComputedStyle(document.documentElement)
@@ -107,7 +109,7 @@ export function Section2() {
 
   onMount(() => {
     const toggleActions = isMobile() ? "play none none none" : "restart none none none";
-    const iconRefs = $iconRefs().filter(Boolean) as HTMLDivElement[];
+    const iconRefs = $iconRefs();
     gsap.to(iconRefs, {
       scrollTrigger: {
         trigger: iconRefs,
@@ -132,7 +134,7 @@ export function Section2() {
       delay: 0.5,
     });
 
-    const textRefs = $textRefs().filter(Boolean) as HTMLDivElement[];
+    const textRefs = $textRefs();
     textRefs.forEach((ref) => {
       tl.add(
         gsap
@@ -157,6 +159,8 @@ export function Section2() {
   onCleanup(() => {
     stopShuffleCycle();
   });
+
+  useHoverBlink(createMemo(() => [$iconRef[0], $textRef[1], $textRef[2]]));
 
   return (
     <div

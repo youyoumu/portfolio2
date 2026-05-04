@@ -1,7 +1,8 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { env } from "#/env";
 import { useBackground } from "#/hooks/background";
-import { createSignal, type ParentComponent } from "solid-js";
+import { useHoverBlink } from "#/hooks/blink";
+import { createMemo, createSignal, type ParentComponent } from "solid-js";
 import { Show } from "solid-js";
 import { createEffect } from "solid-js";
 import { onCleanup } from "solid-js";
@@ -76,6 +77,9 @@ export function RootPage() {
     });
   });
 
+  const [nameRef, setNameRef] = createSignal<HTMLDivElement>();
+  useHoverBlink(createMemo(() => [nameRef()]));
+
   return (
     <div class="relative">
       <ContentsPortal mount={document.getElementById("background")}>
@@ -90,14 +94,11 @@ export function RootPage() {
           <div class="absolute top-0 left-0 h-lvh w-full">
             <BlurOverlay />
           </div>
-          <div class="bg-crt h-lvh w-full absolute top-0 left-0"></div>
+          <div class="bg-crt h-lvh w-full absolute top-0 left-0 pointer-events-none"></div>
           <div
             ref={(ref) => setCrtRef(ref)}
-            class="bg-crt-mask h-lvh w-full absolute top-0 left-0 transition-opacity duration-500"
+            class="bg-crt-mask h-lvh w-full absolute top-0 left-0 transition-opacity duration-500 pointer-events-none"
           ></div>
-          <div class="absolute top-6 left-6 text-2xl pointer-events-none font-extrabold text-neutral-content mix-blend-difference">
-            yym.
-          </div>
         </div>
       </ContentsPortal>
       <Show when={env.DEV}>
@@ -110,9 +111,16 @@ export function RootPage() {
       <Section3 />
       <Section4 />
       <Section5 />
-      <ContentsPortal mount={document.getElementById("audio-control")}>
+
+      <ContentsPortal mount={document.getElementById("fixed-container")}>
         {background.audioControl}
         <SideNav />
+        <div
+          ref={(ref) => setNameRef(ref)}
+          class="fixed top-6 left-6 text-2xl font-extrabold text-neutral-content mix-blend-difference"
+        >
+          yym.
+        </div>
       </ContentsPortal>
       <ContentsPortal mount={document.getElementById("curtain")}>
         <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full pointer-events-none">
