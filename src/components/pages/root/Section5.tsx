@@ -54,7 +54,9 @@ export function Section5() {
 
   const [footerRef1, setFooterRef2] = createSignal<HTMLSpanElement>();
   const [footerRef2, setFooterRef1] = createSignal<HTMLSpanElement>();
+  const [sentenceRef, setSentenceRef] = createSignal<HTMLParagraphElement>();
   useHoverBlink(createMemo(() => [footerRef1(), footerRef2()]));
+  useHoverBlink(createMemo(() => [sentenceRef()]), { targetOpacity: 0.4 });
 
   return (
     <div
@@ -82,7 +84,10 @@ export function Section5() {
         ></video>
         <div class="absolute inset-0 pointer-events-none bg-black/15" />
       </div>
-      <p class="text-xs text-neutral-content opacity-50 mt-2 font-jetbrains-mono max-w-xs text-center">
+      <p
+        ref={setSentenceRef}
+        class="text-xs text-neutral-content opacity-50 mt-2 font-jetbrains-mono max-w-xs text-center"
+      >
         [05] Always happy to connect and have a friendly chat about anything on your mind.
       </p>
       <div class="text-neutral-content flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-lg pt-8 pb-16">

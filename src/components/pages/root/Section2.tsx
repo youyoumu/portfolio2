@@ -160,7 +160,9 @@ export function Section2() {
     stopShuffleCycle();
   });
 
+  const [sentenceRef, setSentenceRef] = createSignal<HTMLParagraphElement>();
   useHoverBlink(createMemo(() => [$iconRef[0], $iconRef[4], $textRef[1], $textRef[2]]));
+  useHoverBlink(createMemo(() => [sentenceRef()]), { targetOpacity: 0.4 });
 
   return (
     <div
@@ -180,7 +182,10 @@ export function Section2() {
         STACKS
       </Heading>
       <div class="relative flex flex-wrap gap-1 max-w-52 sm:max-w-64">
-        <p class="text-xs font-jetbrains-mono opacity-40 max-w-xs absolute -top-20">
+        <p
+          ref={setSentenceRef}
+          class="text-xs font-jetbrains-mono opacity-40 max-w-xs absolute -top-20"
+        >
           [02] My favorite toys and tools—mostly just a bunch of fancy ways to tell a computer what
           to do.
         </p>

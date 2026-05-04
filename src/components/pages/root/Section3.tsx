@@ -1,4 +1,5 @@
 import { useGeneralContext } from "#/context/GeneralContext";
+import { useHoverBlink } from "#/hooks/blink";
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-solidjs";
 import { createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -19,6 +20,9 @@ export function Section3() {
     () => Object.values($slideSideElements).filter(Boolean) as HTMLElement[],
   );
   const iconClass = "size-4.5 cursor-pointer opacity-75";
+
+  const [sentenceRef, setSentenceRef] = createSignal<HTMLParagraphElement>();
+  useHoverBlink(createMemo(() => [sentenceRef()]), { targetOpacity: 0.4 });
 
   onMount(() => {
     SplitText.create($showUpElementRefs(), {
@@ -79,7 +83,7 @@ export function Section3() {
       </Heading>
       <div class="text-neutral-content flex flex-col">
         <div>
-          <p class="text-xs font-jetbrains-mono opacity-40 max-w-xs mb-4">
+          <p ref={setSentenceRef} class="text-xs font-jetbrains-mono opacity-40 max-w-xs mb-4">
             [03] A collection of digital daydreams I’ve managed to turn into real things.
           </p>
           <h2 ref={(el) => $setShowUpElements("1", el)} class="text-3xl font-bold">

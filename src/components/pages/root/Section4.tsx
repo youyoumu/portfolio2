@@ -1,8 +1,9 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
+import { useHoverBlink } from "#/hooks/blink";
 import { cn } from "#/lib/utils";
 import { IconZoom } from "@tabler/icons-solidjs";
-import { createSignal, type JSX } from "solid-js";
+import { createMemo, createSignal, type JSX } from "solid-js";
 
 import { Heading } from "../../Heading";
 
@@ -75,6 +76,9 @@ export function Section4() {
   const [hoveredMarker, setHoveredMarker] = createSignal<number | null>(null);
   const [showMarker, setShowMarker] = createSignal(false);
   const isMobile = useIsMobile();
+
+  const [sentenceRef, setSentenceRef] = createSignal<HTMLParagraphElement>();
+  useHoverBlink(createMemo(() => [sentenceRef()]), { targetOpacity: 0.4 });
 
   function toggleZoom() {
     if (zoom() === 1) {
@@ -275,7 +279,10 @@ export function Section4() {
         </div>
       </div>
 
-      <p class="absolute text-xs font-jetbrains-mono opacity-40 max-w-xs bottom-18/100 right-10/100 text-neutral-content text-right">
+      <p
+        ref={setSentenceRef}
+        class="absolute text-xs font-jetbrains-mono opacity-40 max-w-xs bottom-18/100 right-10/100 text-neutral-content text-right"
+      >
         [04] Peek into my cozy workspace, where all the magic and a lot of snacking happens.
       </p>
       <Heading
