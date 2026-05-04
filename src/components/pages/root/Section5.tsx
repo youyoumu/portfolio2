@@ -60,8 +60,7 @@ export function Section5() {
       <Heading
         style={{ transform: "translateY(-110%)" }}
         class="top-9/100 right-10/100"
-        flipIndex={3}
-        flipDirection={"vertical"}
+        flip={[{ index: 3, direction: "vertical" }]}
       >
         CONTACT
       </Heading>

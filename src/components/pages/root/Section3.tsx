@@ -70,8 +70,7 @@ export function Section3() {
       <Heading
         style={{ transform: "translateY(-100%)" }}
         class="top-10/100 left-10/100"
-        flipIndex={3}
-        flipDirection={"vertical"}
+        flip={[{ index: 3, direction: "vertical" }]}
       >
         WORKS
       </Heading>

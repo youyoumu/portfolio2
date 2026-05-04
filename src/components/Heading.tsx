@@ -7,8 +7,7 @@ export function Heading(props: {
   style?: { transform: string };
   class?: string;
   children: string;
-  flipIndex?: number;
-  flipDirection?: "horizontal" | "vertical";
+  flip?: { index: number; direction?: "horizontal" | "vertical" }[];
 }) {
   const { onSnapCompletes } = useGeneralContext();
   const [heading1, setHeading1] = createSignal<HTMLDivElement>();
@@ -35,15 +34,15 @@ export function Heading(props: {
       heading1: h1,
       heading2: h2,
       onSplit: (self) => {
-        if (props.flipIndex !== undefined) {
-          const char = self.chars[props.flipIndex];
+        props.flip?.forEach((f) => {
+          const char = self.chars[f.index];
           if (char) {
             flipChars({
               chars: [char],
-              flipDirection: props.flipDirection,
+              flipDirection: f.direction,
             });
           }
-        }
+        });
       },
     });
 

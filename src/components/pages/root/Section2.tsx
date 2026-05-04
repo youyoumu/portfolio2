@@ -172,8 +172,7 @@ export function Section2() {
       <Heading
         style={{ transform: "translateY(-100%)" }}
         class="bottom-10/100 right-10/100"
-        flipIndex={3}
-        flipDirection="horizontal"
+        flip={[{ index: 3, direction: "horizontal" }]}
       >
         STACKS
       </Heading>
