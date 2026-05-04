@@ -160,7 +160,7 @@ export function Section2() {
     stopShuffleCycle();
   });
 
-  useHoverBlink(createMemo(() => [$iconRef[0], $textRef[1], $textRef[2]]));
+  useHoverBlink(createMemo(() => [$iconRef[0], $iconRef[4], $textRef[1], $textRef[2]]));
 
   return (
     <div
@@ -172,7 +172,10 @@ export function Section2() {
       <Heading
         style={{ transform: "translateY(-100%)" }}
         class="bottom-10/100 right-10/100"
-        flip={[{ index: 3, direction: "horizontal" }]}
+        flip={[
+          { index: 0, direction: "horizontal" },
+          { index: 3, direction: "vertical" },
+        ]}
       >
         STACKS
       </Heading>

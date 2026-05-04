@@ -1,5 +1,6 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
+import { useHoverBlink } from "#/hooks/blink";
 import { cn } from "#/lib/utils";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { useSearch } from "@tanstack/solid-router";
@@ -51,6 +52,10 @@ export function Section5() {
     }
   });
 
+  const [footerRef1, setFooterRef2] = createSignal<HTMLSpanElement>();
+  const [footerRef2, setFooterRef1] = createSignal<HTMLSpanElement>();
+  useHoverBlink(createMemo(() => [footerRef1(), footerRef2()]));
+
   return (
     <div
       ref={(el) => $setGeneral("section5", el)}
@@ -60,7 +65,10 @@ export function Section5() {
       <Heading
         style={{ transform: "translateY(-110%)" }}
         class="top-9/100 right-10/100"
-        flip={[{ index: 3, direction: "vertical" }]}
+        flip={[
+          { index: 1, direction: "vertical" },
+          { index: 4, direction: "horizontal" },
+        ]}
       >
         CONTACT
       </Heading>
@@ -92,13 +100,14 @@ export function Section5() {
       </div>
 
       <footer class="text-neutral-content text-sm absolute bottom-40 left-0 right-0 flex flex-col gap-1 items-center justify-center">
-        <span>
+        <span ref={setFooterRef2}>
           Cooked 🍙 using{" "}
           <a class="underline cursor-pointer" href="https://www.solidjs.com/" target="_blank">
             SolidJS
           </a>
         </span>
         <a
+          ref={setFooterRef1}
           class="opacity-50 font-jetbrains-mono text-xs underline"
           href={`https://github.com/youyoumu/portfolio2/commit/${__COMMIT_SHA__}`}
           target="_blank"

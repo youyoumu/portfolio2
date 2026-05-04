@@ -117,7 +117,7 @@ export function RootPage() {
         <SideNav />
         <div
           ref={(ref) => setNameRef(ref)}
-          class="fixed top-6 left-6 text-2xl font-extrabold text-neutral-content mix-blend-difference"
+          class="fixed top-6 left-6 text-2xl font-extrabold text-neutral-content mix-blend-difference cursor-default"
         >
           yym.
         </div>

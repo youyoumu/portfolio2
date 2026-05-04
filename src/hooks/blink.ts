@@ -9,12 +9,10 @@ export function blink(el: Element) {
     .to(el, { opacity: 0.4, duration: 0.03 })
     .to(el, {
       opacity: 1,
-      scale: 1.01,
       duration: 0.02,
       ease: "expo.out",
     })
     .to(el, {
-      scale: 1,
       filter: "brightness(1)",
       duration: 0.15,
     });
@@ -31,8 +29,10 @@ export const useHoverBlink = (elements: Accessor<(Element | undefined)[]>) => {
       };
 
       el.addEventListener("mouseenter", handler);
+      el.addEventListener("touchstart", handler);
       onCleanup(() => {
         el.removeEventListener("mouseenter", handler);
+        el.removeEventListener("touchstart", handler);
       });
     });
   });
