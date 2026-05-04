@@ -1,5 +1,5 @@
 import { useGeneralContext } from "#/context/GeneralContext";
-import { scrollingChars } from "#/lib/gsap";
+import { flipChars, scrollingChars } from "#/lib/gsap";
 import { cn } from "#/lib/utils";
 import { createSignal, onMount } from "solid-js";
 
@@ -34,9 +34,19 @@ export function Heading(props: {
     const { tweenRestart } = scrollingChars({
       heading1: h1,
       heading2: h2,
-      flipIndex: props.flipIndex,
-      flipDirection: props.flipDirection,
+      onSplit: (self) => {
+        if (props.flipIndex !== undefined) {
+          const char = self.chars[props.flipIndex];
+          if (char) {
+            flipChars({
+              chars: [char],
+              flipDirection: props.flipDirection,
+            });
+          }
+        }
+      },
     });
+
     onSnapCompletes.add(tweenRestart);
   });
 
