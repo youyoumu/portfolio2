@@ -11,19 +11,6 @@
   --font-lato: "Lato", "sans-serif";
   --font-bebas-neue: "Bebas Neue", "sans-serif";
   --font-jetbrains-mono: "JetBrains Mono", "monospace";
-  --animate-curtain: curtain 2s ease-in-out forwards;
-
-  @keyframes curtain {
-    0% {
-      opacity: 1;
-    }
-    30% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
 }
 
 @font-face {
@@ -71,6 +58,15 @@
   filter: blur(60px);
   border-radius: 50%;
   z-index: -1;
+}
+
+@utility paper-sheet {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-neutral-content) 10%, transparent),
+    0 28px 80px color-mix(in srgb, black 20%, transparent),
+    0 8px 24px color-mix(in srgb, black 10%, transparent);
+  transform-origin: center top;
+  will-change: transform, opacity;
 }
 
 body {

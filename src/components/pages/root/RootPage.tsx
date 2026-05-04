@@ -11,6 +11,7 @@ import { Portal } from "solid-js/web";
 import { BlurOverlay } from "../../BlurOverlay";
 import { Curtain } from "../../Curtain";
 import { DebugPanel } from "../../DebugPanel";
+import { PaperStackTransition } from "../../PaperStackTransition";
 import { RevealingText } from "../../RevealingText";
 import { SideNav } from "../../SideNav";
 import { Section1 } from "./Section1";
@@ -127,7 +128,7 @@ export function RootPage() {
         <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full pointer-events-none">
           <Curtain />
         </div>
-        <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full pointer-events-none animate-curtain bg-neutral"></div>
+        <PaperStackTransition />
       </ContentsPortal>
     </div>
   );
