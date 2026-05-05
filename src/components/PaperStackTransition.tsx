@@ -7,10 +7,10 @@ const PAPER_SHEETS = [
     color: "color-mix(in oklch, var(--color-neutral) 100%, var(--color-neutral-content))",
   },
   {
-    color: "color-mix(in oklch, var(--color-neutral) 95%, var(--color-neutral-content))",
+    color: "color-mix(in oklch, var(--color-neutral) 85%, var(--color-neutral-content))",
   },
   {
-    color: "color-mix(in oklch, var(--color-neutral) 90%, var(--color-neutral-content))",
+    color: "color-mix(in oklch, var(--color-neutral) 70%, var(--color-neutral-content))",
   },
   {
     color: "color-mix(in oklch, var(--color-neutral) 95%, var(--color-neutral-content))",
