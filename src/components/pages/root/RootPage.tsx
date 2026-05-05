@@ -103,7 +103,7 @@ export function RootPage() {
           ></div>
         </div>
       </ContentsPortal>
-      <Show when={env.DEV}>
+      <Show when={env.DEV && false}>
         <div class="fixed top-0 left-0 flex gap-1 flex-wrap p-1 ">
           <DebugPanel background={background} />
         </div>

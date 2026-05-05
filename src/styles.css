@@ -62,6 +62,10 @@
   );
   mask-attachment: fixed;
   -webkit-mask-attachment: fixed;
+
+  @media (max-width: 640px) {
+    --spotlight-size: 128px;
+  }
 }
 
 @utility blur-shape {
@@ -71,6 +75,10 @@
   filter: blur(60px);
   border-radius: 50%;
   z-index: -1;
+
+  @media (max-width: 640px) {
+    transform: scale(0.6);
+  }
 }
 
 @utility paper-sheet {

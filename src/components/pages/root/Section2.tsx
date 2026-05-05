@@ -172,7 +172,7 @@ export function Section2() {
   return (
     <div
       ref={(el) => $setGeneral("section2", el)}
-      class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative"
+      class="h-lvh w-full bg-black/10 text-neutral-content flex flex-col items-center justify-center relative overflow-hidden"
     >
       <div class="blur-shape w-96 h-96 top-1/20 left-1/6"></div>
       <div class="blur-shape w-80 h-80 top-1/3 left-2/3 opacity-75"></div>
