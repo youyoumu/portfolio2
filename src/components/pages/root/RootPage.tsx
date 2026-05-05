@@ -2,6 +2,7 @@ import { useGeneralContext } from "#/context/GeneralContext";
 import { env } from "#/env";
 import { useBackground } from "#/hooks/background";
 import { useHoverBlink } from "#/hooks/blink";
+import { IconCell, IconDice3 } from "@tabler/icons-solidjs";
 import { createMemo, createSignal, type ParentComponent } from "solid-js";
 import { Show } from "solid-js";
 import { createEffect } from "solid-js";
@@ -80,7 +81,9 @@ export function RootPage() {
   });
 
   const [nameRef, setNameRef] = createSignal<HTMLDivElement>();
-  useHoverBlink(createMemo(() => [nameRef()]));
+  const [refreshRef, setRefreshRef] = createSignal<HTMLButtonElement>();
+  const [nextRef, setNextRef] = createSignal<HTMLButtonElement>();
+  useHoverBlink(createMemo(() => [nameRef(), refreshRef(), nextRef()]));
 
   return (
     <div class="relative">
@@ -122,6 +125,29 @@ export function RootPage() {
           class="fixed top-6 left-6 text-2xl font-extrabold text-neutral-content mix-blend-difference cursor-default"
         >
           yym.
+        </div>
+        <div class="fixed top-6 right-6 flex gap-4 mix-blend-difference text-neutral-content">
+          <button
+            ref={(ref) => setRefreshRef(ref)}
+            class="cursor-pointer"
+            onClick={() => {
+              background.gameOfLife.randomize();
+              background.gameOfLife.next();
+              background.gameOfLife.updateCanvas();
+            }}
+          >
+            <IconDice3 class="size-6 hover:rotate-90 transition-transform" />
+          </button>
+          <button
+            ref={(ref) => setNextRef(ref)}
+            class="cursor-pointer"
+            onClick={() => {
+              background.gameOfLife.next();
+              background.gameOfLife.pulse();
+            }}
+          >
+            <IconCell class="size-6 hover:rotate-90 transition-transform" />
+          </button>
         </div>
       </ContentsPortal>
       <ContentsPortal mount={document.getElementById("curtain")}>
