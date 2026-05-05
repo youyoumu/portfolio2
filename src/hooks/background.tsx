@@ -63,7 +63,7 @@ export function useBackground() {
         if (!resume) {
           badApple.frameIndex = 0;
         }
-        badApple.play();
+        badApple.startSync(() => visualizer.getTime());
       } else {
         gameOfLife.startRandomPulse({ stop: true });
         gameOfLife.startMovingSlow({ stop: true });

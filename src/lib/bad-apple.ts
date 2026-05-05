@@ -19,7 +19,7 @@ export class BadApple {
   bytesPerFrame = (this.width * this.height) / 8;
   frameCount = binMetadata.frames;
   frameIndex = 0;
-  intervalId: ReturnType<typeof setInterval> | null = null;
+  #syncRafId: number = 0;
   game: GameOfLife;
 
   constructor({ game }: { game: GameOfLife }) {
@@ -91,24 +91,38 @@ export class BadApple {
   onSeek({ target }: { target: number }) {
     const newFrameIndex = Math.floor(target * binMetadata.fps);
     this.frameIndex = Math.max(0, Math.min(this.frameCount - 1, newFrameIndex));
+    this.injectFrameIntoGame();
+  }
+
+  render(currentTime: number) {
+    const newFrameIndex = Math.floor(currentTime * binMetadata.fps);
+    if (newFrameIndex === this.frameIndex) return;
+    this.frameIndex = Math.max(0, Math.min(this.frameCount - 1, newFrameIndex));
+    this.injectFrameIntoGame();
+  }
+
+  startSync(getTime: () => number) {
+    this.stopSync();
+    const loop = () => {
+      this.render(getTime());
+      this.#syncRafId = requestAnimationFrame(loop);
+    };
+    loop();
+  }
+
+  stopSync() {
+    if (this.#syncRafId !== 0) {
+      cancelAnimationFrame(this.#syncRafId);
+      this.#syncRafId = 0;
+    }
   }
 
   play() {
-    this.intervalId = setInterval(() => {
-      this.frameIndex++;
-      if (this.frameIndex >= this.frameCount) {
-        this.stop();
-        return;
-      }
-      this.injectFrameIntoGame();
-    }, 1000 / binMetadata.fps);
+    console.warn("BadApple.play() is deprecated, use startSync() instead");
   }
 
   stop(pause = false): void {
-    if (this.intervalId !== null) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-    }
+    this.stopSync();
     if (!pause) {
       this.frameIndex = 0;
     }
