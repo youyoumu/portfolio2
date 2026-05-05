@@ -29,7 +29,7 @@ export function Curtain() {
         gameOfLife.next2();
         gameOfLife.updateCanvas();
       }, 24);
-    }, 2250);
+    }, 4850);
   });
 
   return <>{gameOfLife.canvas}</>;
