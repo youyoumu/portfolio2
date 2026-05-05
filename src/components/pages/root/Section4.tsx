@@ -4,9 +4,11 @@ import { useHoverBlink } from "#/hooks/blink";
 import { useSlide } from "#/hooks/slide";
 import { cn } from "#/lib/utils";
 import { IconZoom } from "@tabler/icons-solidjs";
-import { createMemo, createSignal, type JSX } from "solid-js";
+import { createMemo, createSignal, Show, type JSX } from "solid-js";
+import { Portal } from "solid-js/web";
 
 import { Heading } from "../../Heading";
+import { MarkerDebug, type TransformValues } from "./MarkerDebug";
 
 type Marker = {
   x: number; // % position
@@ -36,45 +38,67 @@ const markers: Marker[] = [
     x: 84,
     y: 81,
     text: "Vertical mouse, because using a regular mouse for long periods hurts my hand. Model: Rexus Cliff.",
-    transform: "rotateX(3deg) rotateY(-11deg) skewX(3deg)",
+    transform: "rotateX(3deg) rotateY(-9deg) rotateZ(11deg) skewX(11deg)",
   },
   {
     x: 71,
     y: 74,
     text: "Logitech G102, which I mainly use for FPS games because it’s more precise for aiming compared to my vertical mouse.",
-    transform: "rotateX(3deg) rotateY(-3deg) skewX(-1deg)",
+    transform: "rotateY(5deg) rotateZ(-3deg) skewX(-5deg)",
   },
   {
     x: 19,
     y: 77,
     text: "I play some games. In recent years, I’ve played Minecraft, Factorio, Counter-Strike 2, and Zenless Zone Zero. Currently, I mostly use this controller for ZZZ and reviewing my Anki cards. Model: Logitech F310.",
-    transform: "rotateX(15deg) rotateY(20deg) skewX(8deg)",
+    transform: "rotateY(11deg) rotateZ(-11deg) skewX(-11deg)",
   },
   {
     x: 83,
     y: 33,
     text: "This is my main PC. I dual boot NixOS and Windows. I mainly use Linux for everything it supports, and Windows for some games.",
-    transform: "rotateZ(-4deg) skewX(-5deg)",
+    transform: "rotateY(-11deg) rotateZ(-4deg) skewX(-5deg)",
   },
   {
     x: 82,
     y: 51,
     text: "I also have a home server (a MiniPC I SSH into). I use it to host some of my projects, game servers (Minecraft and Factorio), and apps with Docker.",
-    transform: "rotateZ(3deg) rotateY(-50deg) skewX(4deg)",
+    transform: "rotateY(-15deg) rotateZ(3deg)",
   },
   {
     x: 21,
     y: 28,
     text: "SteelSeries Arctis 5, in use since 2019.",
-    transform: "rotateX(-15deg) rotateY(25deg) skewX(10deg)",
+    transform: "rotateZ(7deg) skewX(9deg)",
   },
   {
     x: 93,
     y: 62,
     text: "This is Anki, a flashcard program I use to learn Japanese. I started in November 2023, and my current level is around JLPT N3. I plan to take the JLPT N2 exam next year.",
-    transform: "rotateZ(8deg) skewX(8deg)",
+    transform: "rotateY(-20deg) rotateZ(5deg) skewX(5deg)",
   },
 ];
+
+function parseTransform(transform?: string): TransformValues {
+  const values: TransformValues = {
+    rotateX: 0,
+    rotateY: 0,
+    rotateZ: 0,
+    skewX: 0,
+    skewY: 0,
+  };
+
+  if (!transform) return values;
+
+  const matches = transform.matchAll(/(rotateX|rotateY|rotateZ|skewX|skewY)\(([-\d]+)deg\)/g);
+  for (const match of matches) {
+    const [, prop, val] = match;
+    if (prop in values) {
+      values[prop as keyof TransformValues] = parseInt(val);
+    }
+  }
+
+  return values;
+}
 
 export function Section4() {
   const { $setGeneral } = useGeneralContext();
@@ -86,6 +110,15 @@ export function Section4() {
   const [hoveredMarker, setHoveredMarker] = createSignal<number | null>(null);
   const [showMarker, setShowMarker] = createSignal(false);
   const isMobile = useIsMobile();
+
+  const [activeMarker, setActiveMarker] = createSignal<number | null>(null);
+  const [debugValues, setDebugValues] = createSignal<TransformValues>({
+    rotateX: 0,
+    rotateY: 0,
+    rotateZ: 0,
+    skewX: 0,
+    skewY: 0,
+  });
 
   const [sentenceRef, setSentenceRef] = createSignal<HTMLParagraphElement>();
   useHoverBlink(createMemo(() => [sentenceRef()]));
@@ -167,6 +200,17 @@ export function Section4() {
     setShowMarker(false);
   }
 
+  const activeTransform = createMemo(() => {
+    const values = debugValues();
+    let str = "";
+    if (values.rotateX !== 0) str += `rotateX(${values.rotateX}deg) `;
+    if (values.rotateY !== 0) str += `rotateY(${values.rotateY}deg) `;
+    if (values.rotateZ !== 0) str += `rotateZ(${values.rotateZ}deg) `;
+    if (values.skewX !== 0) str += `skewX(${values.skewX}deg) `;
+    if (values.skewY !== 0) str += `skewY(${values.skewY}deg) `;
+    return str.trim();
+  });
+
   return (
     <div
       ref={(el) => $setGeneral("section4", el)}
@@ -245,7 +289,7 @@ export function Section4() {
             class={cn(
               "transition-transform duration-700 ease-in-out absolute top-0 left-0 size-full",
               {
-                "opacity-0": !showMarker(),
+                "opacity-0": !showMarker() && activeMarker() === null,
               },
             )}
             style={{ "transform-origin": `${x()}% ${y()}%` }}
@@ -253,7 +297,7 @@ export function Section4() {
             {markers.map((m, i) => (
               <div
                 class={cn("absolute", {
-                  "z-10": hoveredMarker() === i,
+                  "z-10": hoveredMarker() === i || activeMarker() === i,
                 })}
                 style={{
                   top: `${m.y}%`,
@@ -262,10 +306,23 @@ export function Section4() {
                 }}
                 onMouseEnter={() => setHoveredMarker(i)}
                 onMouseLeave={() => setHoveredMarker(null)}
+                onClick={(e) => {
+                  if (!import.meta.env.DEV) return;
+                  e.stopPropagation();
+                  setActiveMarker(i);
+                  setDebugValues(parseTransform(m.transform));
+                }}
               >
-                <div class="size-[2svw] sm:size-4 rounded-full bg-warning border-[0.4svw] sm:border-2 border-base-100 shadow-md hover:scale-125 transition-transform"></div>
+                <div
+                  class={cn(
+                    "size-[2svw] sm:size-4 rounded-full bg-warning border-[0.4svw] sm:border-2 border-base-100 shadow-md hover:scale-125 transition-transform",
+                    {
+                      "ring-4 ring-primary ring-offset-2": activeMarker() === i,
+                    },
+                  )}
+                ></div>
 
-                {hoveredMarker() === i && (
+                {(hoveredMarker() === i || activeMarker() === i) && (
                   <div
                     class={cn(
                       "scale-50 origin-bottom transition-transform duration-700 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 border-1 bg-neutral text-neutral-content sm:rounded-lg rounded-sm shadow-lg ",
@@ -284,7 +341,7 @@ export function Section4() {
                       },
                     )}
                     style={{
-                      transform: `${m.transform || ""}`,
+                      transform: `${activeMarker() === i ? activeTransform() : m.transform || ""}`,
                       "transform-style": "preserve-3d",
                     }}
                   >
@@ -296,6 +353,18 @@ export function Section4() {
           </div>
         </div>
       </div>
+
+      {import.meta.env.DEV && (
+        <Show when={activeMarker() !== null}>
+          <Portal>
+            <MarkerDebug
+              values={debugValues()}
+              onChange={setDebugValues}
+              onClose={() => setActiveMarker(null)}
+            />
+          </Portal>
+        </Show>
+      )}
 
       <p
         ref={setSentenceRef}
