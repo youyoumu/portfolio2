@@ -4,10 +4,7 @@ import { onMount } from "solid-js";
 
 export function Curtain() {
   const isMobile = useIsMobile();
-  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(
-    isMobile() ? 1.5 : 2.0,
-    isMobile(),
-  );
+  const { cellSize, width, height } = GameOfLife.getGameOfLifeSize(2, isMobile());
   const gameOfLife = new GameOfLife({
     width,
     height,
