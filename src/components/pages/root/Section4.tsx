@@ -50,7 +50,7 @@ const markers: Marker[] = [
     x: 19,
     y: 77,
     text: "I play some games. In recent years, I’ve played Minecraft, Factorio, Counter-Strike 2, and Zenless Zone Zero. Currently, I mostly use this controller for ZZZ and reviewing my Anki cards. Model: Logitech F310.",
-    transform: "rotateY(11deg) rotateZ(-11deg) skewX(-11deg)",
+    transform: "rotateY(9deg) rotateZ(-7deg) skewX(-5deg)",
   },
   {
     x: 83,
@@ -325,23 +325,24 @@ export function Section4() {
                 {(hoveredMarker() === i || activeMarker() === i) && (
                   <div class={cn("animate-tooltip-in absolute bottom-full left-1/2 mb-2 z-10")}>
                     <div
-                      class={cn(
-                        "scale-50 origin-bottom transition-transform duration-700 border-1 bg-neutral text-neutral-content sm:rounded-lg rounded-sm shadow-lg ",
-                        "font-jetbrains-mono",
-                        "sm:w-64 w-[40svw]",
-                        "sm:text-sm",
-                        "sm:px-2 sm:py-1",
-                        {
-                          "w-[30svw]": m.x > 90 || zoom() === 2,
-                          "text-[1.5svw]": zoom() === 2,
-                          "text-[2.5svw]": zoom() === 1,
-                          "px-2 py-1": zoom() === 1,
-                          "px-1 py-0.5": zoom() === 2,
-                          "-translate-x-1/2": m.x <= 90,
-                          "-translate-x-6/10": m.x > 90,
-                          "-translate-x-8/12": m.x > 90 && zoom() === 2,
-                        },
-                      )}
+                      class={
+                        cn(
+                          "scale-50 origin-bottom transition-transform duration-700 border-1 bg-neutral text-neutral-content sm:rounded-lg rounded-sm shadow-lg ",
+                          "sm:w-64 w-[40svw]",
+                          "sm:text-sm",
+                          "sm:px-2 sm:py-1",
+                          {
+                            "w-[30svw]": m.x > 90 || zoom() === 2,
+                            "text-[1.5svw]": zoom() === 2,
+                            "text-[2.5svw]": zoom() === 1,
+                            "px-2 py-1": zoom() === 1,
+                            "px-1 py-0.5": zoom() === 2,
+                            "-translate-x-1/2": m.x <= 90,
+                            "-translate-x-6/10": m.x > 90,
+                            "-translate-x-8/12": m.x > 90 && zoom() === 2,
+                          },
+                        ) + " leading-tight"
+                      }
                       style={{
                         transform: `${activeMarker() === i ? activeTransform() : m.transform || ""}`,
                         "transform-style": "preserve-3d",
