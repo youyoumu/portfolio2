@@ -40,6 +40,7 @@ export function Heading(props: {
             flipChars({
               chars: [char],
               flipDirection: f.direction,
+              seed: `${props.children}:${f.index}:${f.direction ?? "horizontal"}`,
             });
           }
         });
