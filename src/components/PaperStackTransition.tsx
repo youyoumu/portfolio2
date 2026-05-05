@@ -110,7 +110,10 @@ export function PaperStackTransition() {
   });
 
   return (
-    <div class="fixed inset-0 z-20 overflow-hidden pointer-events-none" ref={$setContainerRef}>
+    <div
+      class="h-lvh fixed inset-0 z-20 overflow-hidden pointer-events-none"
+      ref={$setContainerRef}
+    >
       {PAPER_SHEETS.map((sheet, i) => (
         <div
           ref={(ref) => $setSheetRefs(i.toString(), ref)}
@@ -136,9 +139,7 @@ export function PaperStackTransition() {
                   ref={$setStatusLineRef}
                   class="flex items-center justify-center gap-1 text-xs uppercase tracking-widest opacity-40"
                 >
-                  <span class="inline-block w-[18ch] text-left">
-                    {$statusText()}
-                  </span>
+                  <span class="inline-block w-[18ch] text-left">{$statusText()}</span>
                   <span ref={$setPercentRef} class="inline-block w-[3ch] text-right tabular-nums">
                     0
                   </span>
@@ -146,7 +147,7 @@ export function PaperStackTransition() {
                 </div>
               </div>
 
-              <div class="absolute bottom-32 left-1/2 -translate-x-1/2 opacity-30 select-none flex gap-2 items-center">
+              <div class="absolute bottom-48 sm:bottom-32 left-1/2 -translate-x-1/2 opacity-30 select-none flex gap-2 items-center">
                 <div class="text-xs font-bold">[V2.0.0]</div>
                 <div>-</div>
                 <div class="text-xs leading-none">
