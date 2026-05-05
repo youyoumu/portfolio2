@@ -12,6 +12,7 @@ type Marker = {
   x: number; // % position
   y: number;
   text: JSX.Element;
+  transform?: string;
 };
 
 const markers: Marker[] = [
@@ -29,41 +30,49 @@ const markers: Marker[] = [
     x: 44,
     y: 78,
     text: "A custom split keyboard with a Corne layout. I switched to this recently and I’m still getting used to it.",
+    transform: "rotateX(-15deg) rotateY(20deg) skewX(5deg)",
   },
   {
     x: 84,
     y: 81,
     text: "Vertical mouse, because using a regular mouse for long periods hurts my hand. Model: Rexus Cliff.",
+    transform: "rotateX(3deg) rotateY(-11deg) skewX(3deg)",
   },
   {
     x: 71,
     y: 74,
     text: "Logitech G102, which I mainly use for FPS games because it’s more precise for aiming compared to my vertical mouse.",
+    transform: "rotateX(3deg) rotateY(-3deg) skewX(-1deg)",
   },
   {
     x: 19,
     y: 77,
     text: "I play some games. In recent years, I’ve played Minecraft, Factorio, Counter-Strike 2, and Zenless Zone Zero. Currently, I mostly use this controller for ZZZ and reviewing my Anki cards. Model: Logitech F310.",
+    transform: "rotateX(15deg) rotateY(20deg) skewX(8deg)",
   },
   {
     x: 83,
     y: 33,
     text: "This is my main PC. I dual boot NixOS and Windows. I mainly use Linux for everything it supports, and Windows for some games.",
+    transform: "rotateZ(-4deg) skewX(-5deg)",
   },
   {
     x: 82,
     y: 51,
     text: "I also have a home server (a MiniPC I SSH into). I use it to host some of my projects, game servers (Minecraft and Factorio), and apps with Docker.",
+    transform: "rotateZ(3deg) rotateY(-50deg) skewX(4deg)",
   },
   {
     x: 21,
     y: 28,
     text: "SteelSeries Arctis 5, in use since 2019.",
+    transform: "rotateX(-15deg) rotateY(25deg) skewX(10deg)",
   },
   {
     x: 93,
     y: 62,
     text: "This is Anki, a flashcard program I use to learn Japanese. I started in November 2023, and my current level is around JLPT N3. I plan to take the JLPT N2 exam next year.",
+    transform: "rotateZ(8deg) skewX(8deg)",
   },
 ];
 
@@ -274,6 +283,10 @@ export function Section4() {
                         "-translate-x-8/12": m.x > 90 && zoom() === 2,
                       },
                     )}
+                    style={{
+                      transform: `${m.transform || ""}`,
+                      "transform-style": "preserve-3d",
+                    }}
                   >
                     {m.text}
                   </div>
