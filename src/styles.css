@@ -11,6 +11,19 @@
   --font-lato: "Lato", "sans-serif";
   --font-bebas-neue: "Bebas Neue", "sans-serif";
   --font-jetbrains-mono: "JetBrains Mono", "monospace";
+
+  --animate-tooltip-in: tooltip-fade-in-up 0.15s ease-out forwards;
+
+  @keyframes tooltip-fade-in-up {
+    from {
+      opacity: 0;
+      translate: 0 4px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
 }
 
 @font-face {

@@ -323,29 +323,32 @@ export function Section4() {
                 ></div>
 
                 {(hoveredMarker() === i || activeMarker() === i) && (
-                  <div
-                    class={cn(
-                      "scale-50 origin-bottom transition-transform duration-700 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 border-1 bg-neutral text-neutral-content sm:rounded-lg rounded-sm shadow-lg ",
-                      "sm:w-64 w-[40svw]",
-                      "sm:text-sm",
-                      "sm:px-2 sm:py-1",
-                      {
-                        "w-[30svw]": m.x > 90 || zoom() === 2,
-                        "text-[1.5svw]": zoom() === 2,
-                        "text-[2.5svw]": zoom() === 1,
-                        "px-2 py-1": zoom() === 1,
-                        "px-1 py-0.5": zoom() === 2,
-
-                        "-translate-x-6/10": m.x > 90,
-                        "-translate-x-8/12": m.x > 90 && zoom() === 2,
-                      },
-                    )}
-                    style={{
-                      transform: `${activeMarker() === i ? activeTransform() : m.transform || ""}`,
-                      "transform-style": "preserve-3d",
-                    }}
-                  >
-                    {m.text}
+                  <div class={cn("animate-tooltip-in absolute bottom-full left-1/2 mb-2 z-10")}>
+                    <div
+                      class={cn(
+                        "scale-50 origin-bottom transition-transform duration-700 border-1 bg-neutral text-neutral-content sm:rounded-lg rounded-sm shadow-lg ",
+                        "font-jetbrains-mono",
+                        "sm:w-64 w-[40svw]",
+                        "sm:text-sm",
+                        "sm:px-2 sm:py-1",
+                        {
+                          "w-[30svw]": m.x > 90 || zoom() === 2,
+                          "text-[1.5svw]": zoom() === 2,
+                          "text-[2.5svw]": zoom() === 1,
+                          "px-2 py-1": zoom() === 1,
+                          "px-1 py-0.5": zoom() === 2,
+                          "-translate-x-1/2": m.x <= 90,
+                          "-translate-x-6/10": m.x > 90,
+                          "-translate-x-8/12": m.x > 90 && zoom() === 2,
+                        },
+                      )}
+                      style={{
+                        transform: `${activeMarker() === i ? activeTransform() : m.transform || ""}`,
+                        "transform-style": "preserve-3d",
+                      }}
+                    >
+                      {m.text}
+                    </div>
                   </div>
                 )}
               </div>
