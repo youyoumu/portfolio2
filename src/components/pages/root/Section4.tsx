@@ -1,6 +1,7 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { useHoverBlink } from "#/hooks/blink";
+import { useSlide } from "#/hooks/slide";
 import { cn } from "#/lib/utils";
 import { IconZoom } from "@tabler/icons-solidjs";
 import { createMemo, createSignal, type JSX } from "solid-js";
@@ -78,7 +79,11 @@ export function Section4() {
   const isMobile = useIsMobile();
 
   const [sentenceRef, setSentenceRef] = createSignal<HTMLParagraphElement>();
-  useHoverBlink(createMemo(() => [sentenceRef()]), { targetOpacity: 0.4 });
+  useHoverBlink(createMemo(() => [sentenceRef()]));
+  useSlide(
+    createMemo(() => sentenceRef()),
+    { targetOpacity: 0.4, start: "top 95%", end: "top 50%" },
+  );
 
   function toggleZoom() {
     if (zoom() === 1) {
@@ -281,7 +286,7 @@ export function Section4() {
 
       <p
         ref={setSentenceRef}
-        class="absolute text-xs font-jetbrains-mono opacity-40 max-w-xs bottom-18/100 right-10/100 text-neutral-content text-right"
+        class="absolute text-xs font-jetbrains-mono max-w-xs bottom-18/100 right-10/100 text-neutral-content text-right"
       >
         [04] Peek into my cozy workspace, where all the magic and a lot of snacking happens.
       </p>

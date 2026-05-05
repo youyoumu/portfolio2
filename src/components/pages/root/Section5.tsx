@@ -1,6 +1,7 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { useHoverBlink } from "#/hooks/blink";
+import { useSlide } from "#/hooks/slide";
 import { cn } from "#/lib/utils";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { useSearch } from "@tanstack/solid-router";
@@ -56,7 +57,11 @@ export function Section5() {
   const [footerRef2, setFooterRef1] = createSignal<HTMLSpanElement>();
   const [sentenceRef, setSentenceRef] = createSignal<HTMLParagraphElement>();
   useHoverBlink(createMemo(() => [footerRef1(), footerRef2()]));
-  useHoverBlink(createMemo(() => [sentenceRef()]), { targetOpacity: 0.4 });
+  useHoverBlink(createMemo(() => [sentenceRef()]));
+  useSlide(
+    createMemo(() => sentenceRef()),
+    { targetOpacity: 0.4, start: "top 85%", end: "top 40%" },
+  );
 
   return (
     <div
@@ -86,7 +91,7 @@ export function Section5() {
       </div>
       <p
         ref={setSentenceRef}
-        class="text-xs text-neutral-content opacity-50 mt-2 font-jetbrains-mono max-w-xs text-center"
+        class="text-xs text-neutral-content mt-2 font-jetbrains-mono max-w-xs text-center"
       >
         [05] Always happy to connect and have a friendly chat about anything on your mind.
       </p>
