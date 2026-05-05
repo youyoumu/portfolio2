@@ -1,5 +1,5 @@
 import { CustomEase } from "gsap/CustomEase";
-import { onCleanup, onMount } from "solid-js";
+import { createSignal, onCleanup, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 
 const PAPER_SHEETS = [
@@ -18,6 +18,7 @@ const PAPER_SHEETS = [
 ] as const;
 
 export function PaperStackTransition() {
+  const [$containerRef, $setContainerRef] = createSignal<HTMLDivElement>();
   const [$sheetRefs, $setSheetRefs] = createStore<Record<string, HTMLDivElement>>({});
 
   const ease = CustomEase.create(
@@ -26,8 +27,9 @@ export function PaperStackTransition() {
   );
 
   onMount(() => {
+    const containerRef = $containerRef();
     const sheetRefs = Object.values($sheetRefs);
-    if (sheetRefs.length === 0) return;
+    if (!containerRef || sheetRefs.length === 0) return;
     const tl = gsap.timeline();
 
     const position = (i: number, length: number) => {
@@ -51,13 +53,17 @@ export function PaperStackTransition() {
         );
       });
 
+    tl.to(containerRef, {
+      opacity: 0,
+    });
+
     onCleanup(() => {
       tl.kill();
     });
   });
 
   return (
-    <div class="fixed inset-0 z-20 overflow-hidden pointer-events-none">
+    <div class="fixed inset-0 z-20 overflow-hidden pointer-events-none" ref={$setContainerRef}>
       {PAPER_SHEETS.map((sheet, i) => (
         <div
           ref={(ref) => $setSheetRefs(i.toString(), ref)}
