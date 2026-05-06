@@ -1,5 +1,5 @@
 import { SimplexNoise } from "./noise";
-import { getDynamicViewportDelta } from "./utils";
+import { createObjSignal, getDynamicViewportDelta } from "./utils";
 
 const TWO_PI = Math.PI * 2;
 
@@ -26,6 +26,8 @@ export class GameOfLife {
   noise: SimplexNoise;
   shape: CellShape;
 
+  signal;
+
   constructor({
     width,
     height,
@@ -50,6 +52,10 @@ export class GameOfLife {
     this.grid = new Uint8Array(width * height);
     this.nextGrid = new Uint8Array(width * height);
     this.injectionMask = new Uint8Array(width * height); // 0 = normal, 1 = locked (video-injected)
+
+    this.signal = {
+      generation: createObjSignal(0),
+    };
     this.randomize();
 
     // Prepare canvas once
@@ -74,6 +80,7 @@ export class GameOfLife {
   }
 
   randomize(percentage: number = 0.4) {
+    this.signal.generation.set(0);
     const scale = 0.05;
     const seed = Math.random() * 1000;
     for (let y = 0; y < this.height; y++) {
@@ -255,6 +262,7 @@ export class GameOfLife {
   /* eslint-disable prefer-const */
   density = 1;
   next() {
+    this.signal.generation.set((v) => v + 1);
     this.nextGrid.fill(0);
     let aliveCount = 0;
 

@@ -156,6 +156,9 @@ export function RootPage() {
             <IconCell class="size-6 hover:rotate-90 transition-transform" />
           </button>
         </div>
+        <div class="fixed bottom-6 left-6 flex gap-4 mix-blend-difference text-neutral-content font-jetbrains-mono font-bold text-xl">
+          {background.gameOfLife.signal.generation.get()}
+        </div>
       </ContentsPortal>
       <ContentsPortal mount={document.getElementById("curtain")}>
         <div class="fixed top-0 left-0 overflow-hidden h-dvh w-full pointer-events-none">
