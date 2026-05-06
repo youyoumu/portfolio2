@@ -2,6 +2,7 @@ import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { useHoverBlink } from "#/hooks/blink";
 import { useSlide } from "#/hooks/slide";
+import { track } from "#/lib/umami";
 import { cn } from "#/lib/utils";
 import { IconCopy, IconMail } from "@tabler/icons-solidjs";
 import { useSearch } from "@tanstack/solid-router";
@@ -114,7 +115,14 @@ export function Section5() {
       <footer class="text-neutral-content text-sm absolute bottom-40 left-0 right-0 flex flex-col gap-1 items-center justify-center">
         <span ref={setFooterRef2}>
           Cooked 🍙 using{" "}
-          <a class="underline cursor-pointer" href="https://www.solidjs.com/" target="_blank">
+          <a
+            class="underline cursor-pointer"
+            href="https://www.solidjs.com/"
+            target="_blank"
+            onClick={() => {
+              track("footer:solidjs");
+            }}
+          >
             SolidJS
           </a>
         </span>
@@ -123,6 +131,9 @@ export function Section5() {
           class="opacity-50 font-jetbrains-mono text-xs underline"
           href={`https://github.com/youyoumu/portfolio2/commit/${__COMMIT_SHA__}`}
           target="_blank"
+          onClick={() => {
+            track("footer:commit-sha");
+          }}
         >
           {typeof __COMMIT_SHA__ !== "undefined" ? __COMMIT_SHA__.slice(0, 7) : null}
         </a>
@@ -141,9 +152,13 @@ function ContactItem(props: {
   const labelClass = cn("underline text-sm sm:text-base leading-tight font-jetbrains-mono");
   const containerClass = cn("flex items-center gap-1 cursor-pointer");
 
+  const onClick = () => {
+    track(`contact-item:${props.label}`);
+  };
+
   if (props.href) {
     return (
-      <a target="_blank" class={containerClass} href={props.href}>
+      <a target="_blank" class={containerClass} href={props.href} onClick={onClick}>
         <props.icon class="size-5" />
         <span ref={props.ref} class={labelClass}>
           {props.label}
@@ -159,6 +174,7 @@ function ContactItem(props: {
           <div
             class={containerClass}
             onClick={async () => {
+              onClick();
               if (!props.copyText) return;
               await navigator.clipboard.writeText(props.copyText);
             }}

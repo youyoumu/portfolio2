@@ -2,6 +2,7 @@ import { useGeneralContext } from "#/context/GeneralContext";
 import { env } from "#/env";
 import { useBackground } from "#/hooks/background";
 import { useHoverBlink } from "#/hooks/blink";
+import { track } from "#/lib/umami";
 import { IconCell, IconDice3 } from "@tabler/icons-solidjs";
 import { createMemo, createSignal, type ParentComponent } from "solid-js";
 import { Show } from "solid-js";
@@ -42,6 +43,8 @@ export function RootPage() {
   const background = useBackground();
   const { $sections, onSnapCompletes } = useGeneralContext();
   const [crtRef, setCrtRef] = createSignal<HTMLDivElement>();
+  const [randomCount, setRandomCount] = createSignal(0);
+  const [pulseCount, setPulseCount] = createSignal(0);
 
   createEffect(() => {
     gsap.to($sections(), {
@@ -134,6 +137,8 @@ export function RootPage() {
               background.gameOfLife.randomize();
               background.gameOfLife.next();
               background.gameOfLife.updateCanvas();
+              setRandomCount((c) => c + 1);
+              track(`fun-button:randomize`, { count: randomCount() });
             }}
           >
             <IconDice3 class="size-6 hover:rotate-90 transition-transform" />
@@ -144,6 +149,8 @@ export function RootPage() {
             onClick={() => {
               background.gameOfLife.next();
               background.gameOfLife.pulse();
+              setPulseCount((c) => c + 1);
+              track(`fun-button:pulse`, { count: pulseCount() });
             }}
           >
             <IconCell class="size-6 hover:rotate-90 transition-transform" />

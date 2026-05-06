@@ -44,6 +44,7 @@ export class Visualizer {
   onStart;
   onStop;
   onSeek;
+  onMusicEnd;
   music;
   volume;
 
@@ -61,6 +62,7 @@ export class Visualizer {
     }) => void;
     onStop: (param: { pause: boolean; isSeek: boolean }) => void;
     onSeek: ({ target }: { target: number }) => void;
+    onMusicEnd: () => void;
     music: keyof typeof musicList;
     volume?: number;
   }) {
@@ -71,6 +73,7 @@ export class Visualizer {
     this.onSeek = init.onSeek;
     this.music = init.music;
     this.volume = init.volume ?? 0.1;
+    this.onMusicEnd = init.onMusicEnd;
 
     this.signal = {
       elapsedTime: createObjSignal(0),
@@ -224,6 +227,7 @@ export class Visualizer {
       });
       this.source.onended = () => {
         this.stop({ loop: this.loop });
+        this.onMusicEnd();
       };
 
       this.signal.elapsedTime.set(this.getTime());

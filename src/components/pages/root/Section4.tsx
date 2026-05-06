@@ -2,6 +2,7 @@ import { useGeneralContext } from "#/context/GeneralContext";
 import { useIsMobile } from "#/hooks";
 import { useHoverBlink } from "#/hooks/blink";
 import { useSlide } from "#/hooks/slide";
+import { track } from "#/lib/umami";
 import { cn } from "#/lib/utils";
 import { IconZoom } from "@tabler/icons-solidjs";
 import { createMemo, createSignal, Show, type JSX } from "solid-js";
@@ -15,6 +16,7 @@ type Marker = {
   y: number;
   text: JSX.Element;
   transform?: string;
+  tag?: string;
 };
 
 const markers: Marker[] = [
@@ -22,59 +24,69 @@ const markers: Marker[] = [
     x: 54,
     y: 47,
     text: "I use Neovim as my primary code editor. I’ve been using it since January 2025.",
+    tag: "neovim",
   },
   {
     x: 52,
     y: 68,
     text: "Pressplay APOLLO61 Lite, a 60% keyboard. I still use this for gaming, but I switched to a split keyboard for everyday use.",
+    tag: "apollo61",
   },
   {
     x: 44,
     y: 78,
     text: "A custom split keyboard with a Corne layout. I switched to this recently and I’m still getting used to it.",
     transform: "rotateX(-15deg) rotateY(20deg) skewX(5deg)",
+    tag: "corne-split",
   },
   {
     x: 84,
     y: 81,
     text: "Vertical mouse, because using a regular mouse for long periods hurts my hand. Model: Rexus Cliff.",
     transform: "rotateX(3deg) rotateY(-9deg) rotateZ(11deg) skewX(11deg)",
+    tag: "rexus-cliff",
   },
   {
     x: 71,
     y: 74,
     text: "Logitech G102, which I mainly use for FPS games because it’s more precise for aiming compared to my vertical mouse.",
     transform: "rotateY(5deg) rotateZ(-3deg) skewX(-5deg)",
+    tag: "g102",
   },
   {
     x: 19,
     y: 77,
     text: "I play some games. In recent years, I’ve played Minecraft, Factorio, Counter-Strike 2, and Zenless Zone Zero. Currently, I mostly use this controller for ZZZ and reviewing my Anki cards. Model: Logitech F310.",
     transform: "rotateY(9deg) rotateZ(-7deg) skewX(-5deg)",
+    tag: "f310",
   },
   {
     x: 83,
     y: 33,
     text: "This is my main PC. I dual boot NixOS and Windows. I mainly use Linux for everything it supports, and Windows for some games.",
     transform: "rotateY(-11deg) rotateZ(-4deg) skewX(-5deg)",
+    tag: "main-pc",
   },
   {
     x: 82,
     y: 51,
     text: "I also have a home server (a MiniPC I SSH into). I use it to host some of my projects, game servers (Minecraft and Factorio), and apps with Docker.",
     transform: "rotateY(-15deg) rotateZ(3deg)",
+    tag: "home-server",
   },
   {
     x: 21,
     y: 28,
     text: "SteelSeries Arctis 5, in use since 2019.",
     transform: "rotateZ(7deg) skewX(9deg)",
+    tag: "arctis-5",
   },
   {
     x: 93,
     y: 62,
     text: "This is Anki, a flashcard program I use to learn Japanese. I started in November 2023, and my current level is around JLPT N3. I plan to take the JLPT N2 exam next year.",
     transform: "rotateY(-20deg) rotateZ(5deg) skewX(5deg)",
+    tag: "anki",
   },
 ];
 
@@ -304,7 +316,10 @@ export function Section4() {
                   left: `${m.x}%`,
                   transform: "translate(-50%, -50%)",
                 }}
-                onMouseEnter={() => setHoveredMarker(i)}
+                onMouseEnter={() => {
+                  track.d(`gallery:1`, { tag: m.tag ?? "" });
+                  setHoveredMarker(i);
+                }}
                 onMouseLeave={() => setHoveredMarker(null)}
                 onClick={(e) => {
                   if (!import.meta.env.DEV) return;

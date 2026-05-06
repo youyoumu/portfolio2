@@ -1,6 +1,7 @@
 import { useGeneralContext } from "#/context/GeneralContext";
 import { useHoverBlink } from "#/hooks/blink";
 import { useSlide } from "#/hooks/slide";
+import { track } from "#/lib/umami";
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-solidjs";
 import { createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -128,6 +129,9 @@ export function Section3() {
               target="_blank"
               class="link block hover:underline-offset-2 text-lg"
               rel="noopener"
+              onClick={() => {
+                track("project-item:see-more");
+              }}
             >
               see more
             </a>
@@ -187,6 +191,10 @@ function ProjectItem(props: {
     }
   });
 
+  const onClick = (type: "repo" | "live" | "url") => {
+    track(`project-item:${props.title}`, { type });
+  };
+
   return (
     <li ref={props.ref} class="flex flex-col">
       <div
@@ -199,17 +207,17 @@ function ProjectItem(props: {
         <span class="text-lg">{props.title}</span>
         <div class="flex items-center">
           {props.repo && (
-            <a href={props.repo} target="_blank" rel="noopener">
+            <a href={props.repo} target="_blank" rel="noopener" onClick={() => onClick("repo")}>
               <IconBrandGithub class={props.iconClass} />
             </a>
           )}
           {props.live && (
-            <a href={props.live} target="_blank" rel="noopener">
+            <a href={props.live} target="_blank" rel="noopener" onClick={() => onClick("live")}>
               <IconExternalLink class={props.iconClass} />
             </a>
           )}
           {props.url && (
-            <a href={props.url} target="_blank" rel="noopener">
+            <a href={props.url} target="_blank" rel="noopener" onClick={() => onClick("url")}>
               <IconExternalLink class={props.iconClass} />
             </a>
           )}

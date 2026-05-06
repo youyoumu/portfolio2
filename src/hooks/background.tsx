@@ -3,6 +3,7 @@ import { useGeneralContext } from "#/context/GeneralContext";
 import { BadApple } from "#/lib/bad-apple";
 import { GameOfLife } from "#/lib/game-of-life";
 import { Lyrics } from "#/lib/lyrics";
+import { track } from "#/lib/umami";
 import { getDynamicViewportDelta } from "#/lib/utils";
 import { badAppleLyrics } from "#/lib/vars";
 import { Visualizer } from "#/lib/visualizer";
@@ -102,6 +103,9 @@ export function useBackground() {
         console.error(e);
       });
     },
+    onMusicEnd: () => {
+      track("visualizer:music-end", { music: visualizer.music });
+    },
     music: "bad-apple-ft-sekai-off-vocal",
     volume: isMobile() ? MAX_VOLUME : 0.1,
   });
@@ -154,11 +158,13 @@ export function useBackground() {
       music={visualizer.signal.musicInfo.get()}
       onProgressChange={(progress) => {
         visualizer.seek(undefined, progress);
+        track.d("audio-control:progress", { progress });
       }}
       onVolumeChange={(percentage) => {
         const actualVolume = (percentage / 100) * MAX_VOLUME;
         visualizer.setVolume(actualVolume);
         visualizer.signal.volume.set(actualVolume);
+        track.d("audio-control:volume", { percentage });
       }}
       onPlayPause={() => {
         $setGeneral("musicPlayed", true);
@@ -169,14 +175,17 @@ export function useBackground() {
           visualizer.play({ resume: true });
           setPlaying(true);
         }
+        track(`audio-control:${playing() ? "play" : "pause"}`, { music: visualizer.music });
       }}
       onSkipBack={() => {
         $setGeneral("musicPlayed", true);
         visualizer.skip(-1);
+        track("audio-control:skip-back", { music: visualizer.music });
       }}
       onSkipForward={() => {
         $setGeneral("musicPlayed", true);
         visualizer.skip();
+        track("audio-control:skip-forward", { music: visualizer.music });
       }}
     />
   );
